@@ -22,10 +22,6 @@ public class JsonArray {
         return this.jsonArray.size();
     }
 
-    public String getStringByIndex(int index) {
-        return (String) this.jsonArray.get(index);
-    }
-
     public JsonObject getJsonObjectByIndex(int index) {
         return (JsonObject) this.jsonArray.get(index);
     }

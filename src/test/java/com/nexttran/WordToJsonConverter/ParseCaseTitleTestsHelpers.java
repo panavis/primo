@@ -1,9 +1,9 @@
 package com.nexttran.WordToJsonConverter;
 
 import com.nexttran.WordToJsonConverter.Constants.Keywords;
+import com.nexttran.WordToJsonConverter.Wrappers.JsonArray;
+import com.nexttran.WordToJsonConverter.Wrappers.JsonObject;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -22,12 +22,12 @@ public class ParseCaseTitleTestsHelpers {
         return actualCaseTitles;
     }
 
-    static ArrayList<String> getExpectedCaseTitles(ArrayList<JSONObject> expectedJsonContent) {
+    static ArrayList<String> getExpectedCaseTitles(ArrayList<JsonObject> expectedJsonContent) {
         ArrayList<String> expectedCaseTitles = new ArrayList<>();
-        for (JSONObject caseFile : expectedJsonContent) {
-            JSONArray caseContent = (JSONArray) caseFile.get(Keywords.CASE);
-            JSONObject titleObject = (JSONObject) caseContent.get(0);
-            expectedCaseTitles.add((String) titleObject.get(Keywords.TITLE));
+        for (JsonObject caseFile : expectedJsonContent) {
+            JsonArray caseContent =  caseFile.getArrayByKey(Keywords.CASE);
+            JsonObject titleObject = caseContent.getJsonObjectByIndex(0);
+            expectedCaseTitles.add(titleObject.getStringByKey(Keywords.TITLE));
         }
         return expectedCaseTitles;
     }

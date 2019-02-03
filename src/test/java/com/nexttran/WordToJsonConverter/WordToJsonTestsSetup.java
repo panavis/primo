@@ -1,15 +1,13 @@
 package com.nexttran.WordToJsonConverter;
 
+import com.nexttran.WordToJsonConverter.Wrappers.JsonObject;
+import com.nexttran.WordToJsonConverter.Wrappers.JsonParser;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.openxml4j.opc.OPCPackage;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import org.junit.BeforeClass;
 
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,7 +17,7 @@ public class WordToJsonTestsSetup {
 
     private static File expectedJsonFolder = new File("/home/amucunguzi/Documents/cases_manually/json_expected");
     private static File wordFolder = new File("/home/amucunguzi/Documents/cases_manually/word_sample");
-    static ArrayList<JSONObject> expectedJsonContent = new ArrayList<>();
+    static ArrayList<JsonObject> expectedJsonContent = new ArrayList<>();
     static ArrayList<XWPFDocument> wordDocxData = new ArrayList<>();
 
     @BeforeClass
@@ -29,7 +27,7 @@ public class WordToJsonTestsSetup {
 
         for (String jsonPath : expectedJsonPaths) {
             if (isJsonDocument(jsonPath))  {
-                JSONObject caseObject = readCaseJsonFile(jsonPath);
+                JsonObject caseObject = readCaseJsonFile(jsonPath);
                 expectedJsonContent.add(caseObject);
             }
         }
@@ -45,17 +43,24 @@ public class WordToJsonTestsSetup {
         }
     }
 
-    private static JSONObject readCaseJsonFile(String jsonPath) {
-        JSONParser jsonParser = new JSONParser();
-        JSONObject caseObject = new JSONObject();
-        try {
-            caseObject = (JSONObject) jsonParser.parse(new FileReader(jsonPath));
+//    private static JSONObject readCaseJsonFile(String jsonPath) {
+//        JSONParser jsonParser = new JSONParser();
+//        JSONObject caseObject = new JSONObject();
+//
+//        JsonObject jsonObject = new JsonObject();
+//
+//        try {
+//            caseObject = (JSONObject) jsonParser.parse(new FileReader(jsonPath));
+//            jsonObject = JsonParser.parseJsonObject(caseObject);
+//
+//        } catch (IOException | ParseException e) {
+//            e.printStackTrace();
+//        }
+//        return caseObject;
+//    }
 
-
-        } catch (IOException | ParseException e) {
-            e.printStackTrace();
-        }
-        return caseObject;
+    private static JsonObject readCaseJsonFile(String jsonPath) {
+        return JsonParser.parseJsonFile(jsonPath);
     }
 
     private static boolean isJsonDocument(String filePath) {

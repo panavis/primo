@@ -5,9 +5,6 @@ import com.nexttran.WordToJsonConverter.ResultTypes.CaseSectionResult;
 import com.nexttran.WordToJsonConverter.Wrappers.JsonArray;
 import com.nexttran.WordToJsonConverter.Wrappers.JsonObject;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -38,8 +35,8 @@ class ParseCasePartiesTestsHelpers {
         String actualPartyContent = getActualContentForSubsection(
                 partiesActualContent, subsectionIndex, subheading, heading).toString();
 
-        JSONObject expectedParty = getExpectedSubsection(caseIndex, subsectionIndex, heading);
-        String expectedPartyContent = expectedParty.get(subheading).toString();
+        JsonObject expectedParty = getExpectedSubsection(caseIndex, subsectionIndex, heading);
+        String expectedPartyContent = expectedParty.getArrayByKey(subheading).toString();
         return new ExpectedActualContent(expectedPartyContent,
                 actualPartyContent);
     }
@@ -58,12 +55,12 @@ class ParseCasePartiesTestsHelpers {
         return actualPlaintiff.getArrayByKey(subsectionName);
     }
 
-    private static JSONObject getExpectedSubsection(int caseIndex, int subsectionIndex, String sectionName) {
-        JSONObject commCourtHuye2011Json = WordToJsonTestsSetup.expectedJsonContent.get(caseIndex);
-        JSONArray expectedCase = (JSONArray) commCourtHuye2011Json.get(Keywords.CASE);
-        JSONObject expectedPartiesSection = (JSONObject) expectedCase.get(1);
-        JSONArray expectedPartiesSubSections = (JSONArray) expectedPartiesSection.get(sectionName);
-        return (JSONObject) expectedPartiesSubSections.get(subsectionIndex);
+    private static JsonObject getExpectedSubsection(int caseIndex, int subsectionIndex, String sectionName) {
+        JsonObject expectedCaseJsonObject = WordToJsonTestsSetup.expectedJsonContent.get(caseIndex);
+        JsonArray expectedCase = expectedCaseJsonObject.getArrayByKey(Keywords.CASE);
+        JsonObject expectedPartiesSection = expectedCase.getJsonObjectByIndex(1);
+        JsonArray expectedPartiesSubSections = expectedPartiesSection.getArrayByKey(sectionName);
+        return  expectedPartiesSubSections.getJsonObjectByIndex(subsectionIndex);
     }
 
     static void assertExactContentEquals(String expected, String actual) {

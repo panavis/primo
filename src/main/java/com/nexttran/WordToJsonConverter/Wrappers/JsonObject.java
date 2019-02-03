@@ -30,4 +30,8 @@ public class JsonObject {
         return (JsonArray) this.jsonObject.get(key);
     }
 
+    @Override
+    public String toString() {
+        return this.jsonObject.toString();
+    }
 }
