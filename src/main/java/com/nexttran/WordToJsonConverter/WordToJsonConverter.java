@@ -13,7 +13,7 @@ import org.apache.poi.xwpf.usermodel.XWPFRun;
 
 
 import java.util.*;
-import java.util.stream.Collectors;
+
 
 public class WordToJsonConverter {
 
@@ -25,9 +25,7 @@ public class WordToJsonConverter {
 
     WordToJsonConverter(XWPFDocument wordDocument) {
         this.partiesSubsections = new JsonArray();
-        this.paragraphs = wordDocument.getParagraphs().stream()
-                                                            .filter(para -> !para.getText().trim().isEmpty())
-                                                            .collect(Collectors.toList());
+        this.paragraphs = ConverterInitializer.getNonEmptyParagraphs(wordDocument);
         this.postParagraphBlanks = ConverterInitializer.getPostParagraphBlanks(wordDocument);
         this.listParagraphs = ConverterInitializer.getListParagraphs(this.paragraphs);
         this.docNumbering = DocNumbering.getDocNumbering(this.paragraphs);

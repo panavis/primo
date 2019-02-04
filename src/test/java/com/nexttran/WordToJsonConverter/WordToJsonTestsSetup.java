@@ -43,22 +43,6 @@ public class WordToJsonTestsSetup {
         }
     }
 
-//    private static JSONObject readCaseJsonFile(String jsonPath) {
-//        JSONParser jsonParser = new JSONParser();
-//        JSONObject caseObject = new JSONObject();
-//
-//        JsonObject jsonObject = new JsonObject();
-//
-//        try {
-//            caseObject = (JSONObject) jsonParser.parse(new FileReader(jsonPath));
-//            jsonObject = JsonParser.parseJsonObject(caseObject);
-//
-//        } catch (IOException | ParseException e) {
-//            e.printStackTrace();
-//        }
-//        return caseObject;
-//    }
-
     private static JsonObject readCaseJsonFile(String jsonPath) {
         return JsonParser.parseJsonFile(jsonPath);
     }

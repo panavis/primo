@@ -6,21 +6,27 @@ import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
-public class ConverterInitializer {
+class ConverterInitializer {
 
-    public static Map<Integer, Integer> getPostParagraphBlanks(XWPFDocument wordDocument) {
+    static List<XWPFParagraph> getNonEmptyParagraphs(XWPFDocument wordDocument) {
+        return wordDocument.getParagraphs().stream()
+                .filter(para -> !para.getText().trim().isEmpty())
+                .collect(Collectors.toList());
+    }
+
+    static Map<Integer, Integer> getPostParagraphBlanks(XWPFDocument wordDocument) {
         Map<Integer, Integer> blanksAfterParagraph = new HashMap<>();
         int actualParagraph = 0;
         List<XWPFParagraph> paragraphs = wordDocument.getParagraphs();
-        for (int index = 0; index < paragraphs.size(); index++) {
+        for (XWPFParagraph paragraph : paragraphs) {
 
-            String paragraphText = paragraphs.get(index).getText().trim();
+            String paragraphText = paragraph.getText().trim();
             if (!(paragraphText.isEmpty())) {
                 blanksAfterParagraph.put(actualParagraph, 1);
                 actualParagraph++;
-            }
-            else if (paragraphText.isEmpty() && blanksAfterParagraph.size() != 0)
+            } else if (blanksAfterParagraph.size() != 0)
                 increaseParagraphBlanksCount(blanksAfterParagraph);
         }
         return blanksAfterParagraph;
@@ -32,7 +38,7 @@ public class ConverterInitializer {
         blanksAfterParagraph.put(lastParagraphIndex, currentBlanks + 1);
     }
 
-    public static Map<Integer, Boolean> getListParagraphs(List<XWPFParagraph> paragraphs) {
+    static Map<Integer, Boolean> getListParagraphs(List<XWPFParagraph> paragraphs) {
         Map<Integer, Boolean> numberedParagraphs = new HashMap<>();
 
         for (int index = 0; index < paragraphs.size(); index++) {
