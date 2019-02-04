@@ -1,7 +1,7 @@
 package com.nexttran.WordToJsonConverter;
 
 import com.nexttran.WordToJsonConverter.Constants.Keywords;
-import com.nexttran.WordToJsonConverter.ResultTypes.CaseSectionResult;
+import com.nexttran.WordToJsonConverter.ResultTypes.SectionResult;
 import com.nexttran.WordToJsonConverter.Wrappers.JsonArray;
 import com.nexttran.WordToJsonConverter.Wrappers.JsonObject;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
@@ -22,10 +22,10 @@ class ParseCasePartiesTestsHelpers {
     }
 
     private static JsonObject getActualPartiesWholeSection(int wordDocIndex) {
-        XWPFDocument commCourtHuye2011Docx = WordToJsonTestsSetup.wordDocxData.get(wordDocIndex);
-        WordToJsonConverter converter = new WordToJsonConverter(commCourtHuye2011Docx);
-        int partiesSectionBeginningParagraph = converter.getCaseTitle().getNextParagraph();
-        CaseSectionResult partiesSectionResult = converter.getCaseParties(partiesSectionBeginningParagraph);
+        XWPFDocument wordDocument = TestsSetup.wordDocxData.get(wordDocIndex);
+        WordToJsonConverter converter = TestsSetup.getConverterObject(wordDocument);
+        converter.parseCaseSections();
+        SectionResult partiesSectionResult = converter.parsedCase.get(1);
         return partiesSectionResult.getSectionContent();
     }
 
@@ -56,7 +56,7 @@ class ParseCasePartiesTestsHelpers {
     }
 
     private static JsonObject getExpectedSubsection(int caseIndex, int subsectionIndex, String sectionName) {
-        JsonObject expectedCaseJsonObject = WordToJsonTestsSetup.expectedJsonContent.get(caseIndex);
+        JsonObject expectedCaseJsonObject = TestsSetup.expectedJsonContent.get(caseIndex);
         JsonArray expectedCase = expectedCaseJsonObject.getArrayByKey(Keywords.CASE);
         JsonObject expectedPartiesSection = expectedCase.getJsonObjectByIndex(1);
         JsonArray expectedPartiesSubSections = expectedPartiesSection.getArrayByKey(sectionName);

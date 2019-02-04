@@ -2,12 +2,12 @@ package com.nexttran.WordToJsonConverter.ResultTypes;
 
 import com.nexttran.WordToJsonConverter.Wrappers.JsonObject;
 
-public class CaseSectionResult {
+public class SectionResult {
 
     private JsonObject sectionContent;
     private int nextParagraph;
 
-    public CaseSectionResult(JsonObject sectionContent, int nextParagraph) {
+    public SectionResult(JsonObject sectionContent, int nextParagraph) {
         this.sectionContent = sectionContent;
         this.nextParagraph = nextParagraph;
     }
