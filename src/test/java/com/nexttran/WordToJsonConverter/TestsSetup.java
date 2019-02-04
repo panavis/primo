@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 
-public class WordToJsonTestsSetup {
+public class TestsSetup {
 
     private static File expectedJsonFolder = new File("/home/amucunguzi/Documents/cases_manually/json_expected");
     private static File wordFolder = new File("/home/amucunguzi/Documents/cases_manually/word_sample");
@@ -22,7 +22,7 @@ public class WordToJsonTestsSetup {
 
     @BeforeClass
     public static void setUp() {
-        File[] allFilesInExpectedJsonFolder = WordToJsonTestsSetup.expectedJsonFolder.listFiles();
+        File[] allFilesInExpectedJsonFolder = TestsSetup.expectedJsonFolder.listFiles();
         ArrayList<String> expectedJsonPaths = getSortedFilePaths(allFilesInExpectedJsonFolder);
 
         for (String jsonPath : expectedJsonPaths) {
@@ -32,7 +32,7 @@ public class WordToJsonTestsSetup {
             }
         }
 
-        File[] allFilesInWordFolder = WordToJsonTestsSetup.wordFolder.listFiles();
+        File[] allFilesInWordFolder = TestsSetup.wordFolder.listFiles();
         ArrayList<String> wordFilePaths = getSortedFilePaths(allFilesInWordFolder);
 
         for (String wordPath : wordFilePaths) {
@@ -71,6 +71,13 @@ public class WordToJsonTestsSetup {
 
     private static boolean isWordDocument(String wordPath) {
         return wordPath.endsWith(".docx");
+    }
+
+    static WordToJsonConverter getConverterObject(XWPFDocument wordDocument) {
+        WordParagraph wordParagraph = new WordParagraph(wordDocument);
+        TitleSectionParser titleSectionParser = new TitleSectionParser(wordParagraph);
+        PartiesSectionParser partiesSectionParser = new PartiesSectionParser(wordParagraph);
+        return new WordToJsonConverter(titleSectionParser, partiesSectionParser);
     }
 }
 
