@@ -14,9 +14,8 @@ public class ParseCasePartiesTests {
 
     @BeforeClass
     public static void setUp() {
-        WordToJsonTestsSetup.setUp();
+        TestsSetup.setUp();
     }
-
 
     @Test
     public void comm_court_huye_2011_PartiesSectionHas_HABURANA_asJsonKey() {

@@ -9,13 +9,13 @@ public class ParseCaseTitleTests {
 
     @BeforeClass
     public static void setUp() {
-        WordToJsonTestsSetup.setUp();
+        TestsSetup.setUp();
     }
 
     @Test
     public void getCaseTitleShouldReturnTheTitleOfACaseFromItsWordDocument() {
-        ArrayList<String> actualCaseTitles = ParseCaseTitleTestsHelpers.getActualCaseTitles(WordToJsonTestsSetup.wordDocxData);
-        ArrayList<String> expectedCaseTitles = ParseCaseTitleTestsHelpers.getExpectedCaseTitles(WordToJsonTestsSetup.expectedJsonContent);
+        ArrayList<String> actualCaseTitles = ParseCaseTitleTestsHelpers.getActualCaseTitles(TestsSetup.wordDocxData);
+        ArrayList<String> expectedCaseTitles = ParseCaseTitleTestsHelpers.getExpectedCaseTitles(TestsSetup.expectedJsonContent);
         ParseCaseTitleTestsHelpers.compareExpectedToActualTitles(actualCaseTitles, expectedCaseTitles);
     }
 

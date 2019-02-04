@@ -1,6 +1,7 @@
 package com.nexttran.WordToJsonConverter;
 
 import com.nexttran.WordToJsonConverter.Constants.Keywords;
+import com.nexttran.WordToJsonConverter.ResultTypes.SectionResult;
 import com.nexttran.WordToJsonConverter.Wrappers.JsonArray;
 import com.nexttran.WordToJsonConverter.Wrappers.JsonObject;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
@@ -10,13 +11,16 @@ import java.util.Iterator;
 
 import static org.junit.Assert.assertEquals;
 
-public class ParseCaseTitleTestsHelpers {
+class ParseCaseTitleTestsHelpers {
 
     static ArrayList<String> getActualCaseTitles(ArrayList<XWPFDocument> wordDocxData) {
         ArrayList<String> actualCaseTitles = new ArrayList<>();
         for (XWPFDocument wordDoc : wordDocxData) {
-            WordToJsonConverter converter = new WordToJsonConverter(wordDoc);
-            String jsonTitle = converter.getCaseTitle().getSectionContent().getStringByKey(Keywords.TITLE);
+            WordToJsonConverter converter = TestsSetup.getConverterObject(wordDoc);
+            converter.parseCaseSections();
+            SectionResult titleResult = converter.parsedCase.get(0);
+            JsonObject titleObject = titleResult.getSectionContent();
+            String jsonTitle = titleObject.getStringByKey(Keywords.TITLE);
             actualCaseTitles.add(jsonTitle);
         }
         return actualCaseTitles;
