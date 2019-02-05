@@ -12,7 +12,7 @@ import java.util.Map;
 
 class WordParagraph {
 
-    final List<XWPFParagraph> paragraphs;
+    private final List<XWPFParagraph> paragraphs;
     private final Map<Integer, Integer> postParagraphBlanks;
     private final Map<Integer, Boolean> listParagraphs;
 
@@ -22,8 +22,17 @@ class WordParagraph {
         this.listParagraphs = ConverterInitializer.getListParagraphs(this.paragraphs);
     }
 
+
+    XWPFParagraph getParagraph(int paragraphIndex) {
+        return this.paragraphs.get(paragraphIndex);
+    }
+
+    int numberOfParagraphs() {
+        return this.paragraphs.size();
+    }
+
     boolean isSectionHeading(int paragraphIndex) {
-        XWPFParagraph paragraph = this.paragraphs.get(paragraphIndex);
+        XWPFParagraph paragraph = getParagraph(paragraphIndex);
         List<XWPFRun> paragraphRuns = paragraph.getRuns();
         XWPFRun firstRun = paragraphRuns.get(0);
 
@@ -37,7 +46,7 @@ class WordParagraph {
     }
 
     boolean startsSubjectMatterSection(int paragraphIndex) {
-        XWPFParagraph currentParagraph = this.paragraphs.get(paragraphIndex);
+        XWPFParagraph currentParagraph = getParagraph(paragraphIndex);
         boolean subjectMatterStart = false;
         for (String heading : Headings.ALL_SUBJECT_MATTER_HEADINGS) {
             if (currentParagraph.getText().toUpperCase().startsWith(heading))
@@ -50,7 +59,7 @@ class WordParagraph {
         paragraphIndex++;
         while (nextParagraphIsNotHeading(paragraphIndex)) {
             String emptyLines = getBlankLines(paragraphIndex-1);
-            paragraphText += emptyLines + this.paragraphs.get(paragraphIndex).getText();
+            paragraphText += emptyLines + getParagraph(paragraphIndex).getText();
             paragraphIndex++;
         }
         return new TextParagraphIndex(paragraphText, paragraphIndex);
@@ -68,7 +77,7 @@ class WordParagraph {
     }
 
     boolean isContentOnSameLine(int paragraphIndex) {
-        String paragraphText = this.paragraphs.get(paragraphIndex).getText();
+        String paragraphText = getParagraph(paragraphIndex).getText();
         String[] textParts = paragraphText.split(Format.COLON);
         boolean onSameLine = false;
         if (textParts.length == 2 && !textParts[1].isEmpty())
@@ -77,7 +86,7 @@ class WordParagraph {
     }
 
     boolean hasColonAndContentOnSameLine(int paragraphIndex) {
-        String paragraphText = this.paragraphs.get(paragraphIndex).getText();
+        String paragraphText = getParagraph(paragraphIndex).getText();
         String[] textParts = paragraphText.split(Format.COLON);
         int numberOfParts = textParts.length;
         String firstPart = textParts[0];
@@ -90,7 +99,7 @@ class WordParagraph {
 
     String getCaseSensitiveRunText(int paragraphIndex) {
         String runText = "";
-        List<XWPFRun> runs = this.paragraphs.get(paragraphIndex).getRuns();
+        List<XWPFRun> runs = getParagraph(paragraphIndex).getRuns();
         for (XWPFRun run : runs) {
             if (StringFormatting.isCaseSensitive(run.text()))
                 runText = run.text();
@@ -99,11 +108,11 @@ class WordParagraph {
     }
 
     String getParagraphFirstWord(int paragraphIndex) {
-        String paragraphText = this.paragraphs.get(paragraphIndex).getText().trim();
+        String paragraphText = getParagraph(paragraphIndex).getText().trim();
         return paragraphText.split(" ")[0];
     }
 
     boolean contentIsOnNextLine(int paragraphIndex) {
-        return this.paragraphs.get(paragraphIndex).getText().endsWith(Format.COLON);
+        return getParagraph(paragraphIndex).getText().endsWith(Format.COLON);
     }
 }

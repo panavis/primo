@@ -16,13 +16,12 @@ class TitleSectionParser {
 
     SectionResult parseCaseTitle() {
         String caseTitle = "";
-
         int paragraphIndex;
-        for (paragraphIndex = 0; paragraphIndex < this.wordParagraph.paragraphs.size(); paragraphIndex++) {
+        for (paragraphIndex = 0; paragraphIndex < this.wordParagraph.numberOfParagraphs(); paragraphIndex++) {
 
             String firstWord = this.wordParagraph.getParagraphFirstWord(paragraphIndex);
             if (firstWord.equals(Headings.URUKIKO)) {
-                XWPFParagraph currentParagraph = this.wordParagraph.paragraphs.get(paragraphIndex);
+                XWPFParagraph currentParagraph = this.wordParagraph.getParagraph(paragraphIndex);
                 caseTitle = currentParagraph.getText();
                 break;
             }

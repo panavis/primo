@@ -1,10 +1,7 @@
 package com.nexttran.WordToJsonConverter;
 
 import com.nexttran.WordToJsonConverter.ResultTypes.SectionResult;
-
-
 import java.util.*;
-
 
 public class WordToJsonConverter {
 
