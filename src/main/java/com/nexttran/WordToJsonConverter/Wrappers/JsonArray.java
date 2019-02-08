@@ -1,6 +1,6 @@
 package com.nexttran.WordToJsonConverter.Wrappers;
 
-import org.json.simple.JSONArray;
+import org.json.JSONArray;
 
 public class JsonArray {
 
@@ -10,16 +10,16 @@ public class JsonArray {
         this.jsonArray = new JSONArray();
     }
 
-    public void addValue(String value) {
-        this.jsonArray.add(value);
+    public void putValue(String value) {
+        this.jsonArray.put(value);
     }
 
-    public void addValue(JsonObject jsonObject) {
-        this.jsonArray.add(jsonObject);
+    public void putValue(JsonObject jsonObject) {
+        this.jsonArray.put(jsonObject);
     }
 
     public int getSize() {
-        return this.jsonArray.size();
+        return this.jsonArray.length();
     }
 
     public JsonObject getJsonObjectByIndex(int index) {

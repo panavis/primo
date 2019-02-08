@@ -18,14 +18,14 @@ class JsonCreator {
 
     static JsonArray getJsonArrayWithString(String value) {
         JsonArray jsonArray = new JsonArray();
-        jsonArray.addValue(StringFormatting.removeStartingOrTrailingColons(value).trim());
+        jsonArray.putValue(StringFormatting.removeStartingOrTrailingColons(value).trim());
         return jsonArray;
     }
 
     static JsonArray getJsonArrayFromStringArray(String[] content) {
         JsonArray jsonArray = new JsonArray();
         for (String subContent : content)
-            jsonArray.addValue(StringFormatting.removeStartingOrTrailingColons(subContent).trim());
+            jsonArray.putValue(StringFormatting.removeStartingOrTrailingColons(subContent).trim());
         return jsonArray;
     }
 }

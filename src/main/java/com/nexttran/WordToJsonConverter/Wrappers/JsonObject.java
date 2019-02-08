@@ -1,6 +1,6 @@
 package com.nexttran.WordToJsonConverter.Wrappers;
 
-import org.json.simple.JSONObject;
+import org.json.JSONObject;
 
 public class JsonObject {
 
@@ -19,7 +19,7 @@ public class JsonObject {
     }
 
     public boolean hasKey(String key) {
-        return this.jsonObject.containsKey(key);
+        return this.jsonObject.has(key);
     }
 
     public String getStringByKey(String key) {

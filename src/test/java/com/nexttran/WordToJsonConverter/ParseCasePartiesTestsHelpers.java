@@ -25,7 +25,7 @@ class ParseCasePartiesTestsHelpers {
         XWPFDocument wordDocument = TestsSetup.wordDocxData.get(wordDocIndex);
         WordToJsonConverter converter = TestsSetup.getConverterObject(wordDocument);
         converter.parseCaseSections();
-        SectionResult partiesSectionResult = converter.parsedCase.get(1);
+        SectionResult partiesSectionResult = converter.getParsedCaseSection(Keywords.PARTIES);
         return partiesSectionResult.getSectionContent();
     }
 

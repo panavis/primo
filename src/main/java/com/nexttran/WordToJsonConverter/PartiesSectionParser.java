@@ -62,10 +62,10 @@ class PartiesSectionParser {
         String[] subsectionItems = subsectionContent.split(Format.DOUBLE_BLANK);
 
         if (subsectionItems.length == 1)
-            this.partiesSubsections.addValue(getJsonObject(subsectionName, getJsonArrayWithString(subsectionContent)));
+            this.partiesSubsections.putValue(getJsonObject(subsectionName, getJsonArrayWithString(subsectionContent)));
         else {
             JsonArray jsonArray = getJsonArrayFromStringArray(subsectionItems);
-            this.partiesSubsections.addValue(getJsonObject(subsectionName, jsonArray));
+            this.partiesSubsections.putValue(getJsonObject(subsectionName, jsonArray));
         }
     }
 

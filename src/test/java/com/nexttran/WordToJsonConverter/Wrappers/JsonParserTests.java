@@ -1,8 +1,8 @@
 package com.nexttran.WordToJsonConverter.Wrappers;
 
 import com.nexttran.WordToJsonConverter.Constants.Keywords;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -40,15 +40,15 @@ public class JsonParserTests {
         String one = "one";
         String two = "two";
         JSONArray unwrappedJsonArray = new JSONArray();
-        unwrappedJsonArray.add(one);
-        unwrappedJsonArray.add(two);
+        unwrappedJsonArray.put(one);
+        unwrappedJsonArray.put(two);
         JSONObject unwrappedJsonObject = new JSONObject();
         unwrappedJsonObject.put(Keywords.CASE, unwrappedJsonArray);
         JsonObject actualWrappedJsonObject = JsonParser.parseJsonObject(unwrappedJsonObject);
 
         JsonArray wrappedJsonArray = new JsonArray();
-        wrappedJsonArray.addValue(one);
-        wrappedJsonArray.addValue(two);
+        wrappedJsonArray.putValue(one);
+        wrappedJsonArray.putValue(two);
         JsonObject expectedJsonObject = new JsonObject();
         expectedJsonObject.addNameValuePair(Keywords.CASE, wrappedJsonArray);
 
@@ -70,7 +70,7 @@ public class JsonParserTests {
                                         new String[] {nestedName},
                                         new String[] {nestedValue});
         JSONArray unwrappedJsonArray = new JSONArray();
-        unwrappedJsonArray.add(nestedUnwrappedJsonObject);
+        unwrappedJsonArray.put(nestedUnwrappedJsonObject);
         JSONObject topLevelUnwrappedJsonObject = new JSONObject();
         topLevelUnwrappedJsonObject.put(Keywords.CASE, unwrappedJsonArray);
         JsonObject actualWrappedJsonObject = JsonParser.parseJsonObject(topLevelUnwrappedJsonObject);
@@ -78,7 +78,7 @@ public class JsonParserTests {
         JsonObject nestedWrappedJsonObject = new JsonObject();
         nestedWrappedJsonObject.addNameValuePair(nestedName, nestedValue);
         JsonArray wrappedJsonArray = new JsonArray();
-        wrappedJsonArray.addValue(nestedWrappedJsonObject);
+        wrappedJsonArray.putValue(nestedWrappedJsonObject);
         JsonObject topLevelExpectedJsonObject = new JsonObject();
         topLevelExpectedJsonObject.addNameValuePair(Keywords.CASE, wrappedJsonArray);
 
@@ -106,8 +106,8 @@ public class JsonParserTests {
                 new String[]{nestedNameTwo},
                 new String[]{nestedValueTwo});
         JSONArray unwrappedJsonArray = new JSONArray();
-        unwrappedJsonArray.add(nestedUnwrappedJsonObjectOne);
-        unwrappedJsonArray.add(nestedUnwrappedJsonObjectTwo);
+        unwrappedJsonArray.put(nestedUnwrappedJsonObjectOne);
+        unwrappedJsonArray.put(nestedUnwrappedJsonObjectTwo);
 
         JSONObject topLevelUnwrappedJsonObject = new JSONObject();
         topLevelUnwrappedJsonObject.put(Keywords.CASE, unwrappedJsonArray);
@@ -118,8 +118,8 @@ public class JsonParserTests {
         JsonObject nestedWrappedJsonObjectTwo = new JsonObject();
         nestedWrappedJsonObjectTwo.addNameValuePair(nestedNameTwo, nestedValueTwo);
         JsonArray wrappedJsonArray = new JsonArray();
-        wrappedJsonArray.addValue(nestedWrappedJsonObjectOne);
-        wrappedJsonArray.addValue(nestedWrappedJsonObjectTwo);
+        wrappedJsonArray.putValue(nestedWrappedJsonObjectOne);
+        wrappedJsonArray.putValue(nestedWrappedJsonObjectTwo);
         JsonObject topLevelExpectedJsonObject = new JsonObject();
         topLevelExpectedJsonObject.addNameValuePair(Keywords.CASE, wrappedJsonArray);
 
@@ -143,11 +143,11 @@ public class JsonParserTests {
         JSONObject levelTwoUnwrappedJsonObject = new JSONObject();
         levelTwoUnwrappedJsonObject.put(nameLevelTwo, valueLevelTwo);
         JSONArray levelTwoUnwrappedJsonArray = new JSONArray();
-        levelTwoUnwrappedJsonArray.add(levelTwoUnwrappedJsonObject);
+        levelTwoUnwrappedJsonArray.put(levelTwoUnwrappedJsonObject);
         JSONObject levelOneUnwrappedJsonObject = new JSONObject();
         levelOneUnwrappedJsonObject.put(nameLevelOne, levelTwoUnwrappedJsonArray);
         JSONArray levelOneUnwrappedJsonArray = new JSONArray();
-        levelOneUnwrappedJsonArray.add(levelOneUnwrappedJsonObject);
+        levelOneUnwrappedJsonArray.put(levelOneUnwrappedJsonObject);
         JSONObject topLevelUnwrappedJsonObject = new JSONObject();
         topLevelUnwrappedJsonObject.put(Keywords.CASE, levelOneUnwrappedJsonArray);
         JsonObject expectedJsonObject = JsonParser.parseJsonObject(topLevelUnwrappedJsonObject);
@@ -155,11 +155,11 @@ public class JsonParserTests {
         JsonObject levelTwoWrappedJsonObject = new JsonObject();
         levelTwoWrappedJsonObject.addNameValuePair(nameLevelTwo, valueLevelTwo);
         JsonArray levelTwoWrappedJsonArray = new JsonArray();
-        levelTwoWrappedJsonArray.addValue(levelTwoWrappedJsonObject);
+        levelTwoWrappedJsonArray.putValue(levelTwoWrappedJsonObject);
         JsonObject levelOneWrappedJsonObject = new JsonObject();
         levelOneWrappedJsonObject.addNameValuePair(nameLevelOne, levelTwoWrappedJsonArray);
         JsonArray levelOneWrappedJsonArray = new JsonArray();
-        levelOneWrappedJsonArray.addValue(levelOneWrappedJsonObject);
+        levelOneWrappedJsonArray.putValue(levelOneWrappedJsonObject);
         JsonObject topLevelWrappedJsonObject = new JsonObject();
         topLevelWrappedJsonObject.addNameValuePair(Keywords.CASE, levelOneWrappedJsonArray);
 

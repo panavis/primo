@@ -18,7 +18,7 @@ class ParseCaseTitleTestsHelpers {
         for (XWPFDocument wordDoc : wordDocxData) {
             WordToJsonConverter converter = TestsSetup.getConverterObject(wordDoc);
             converter.parseCaseSections();
-            SectionResult titleResult = converter.parsedCase.get(0);
+            SectionResult titleResult = converter.getParsedCaseSection(Keywords.TITLE);
             JsonObject titleObject = titleResult.getSectionContent();
             String jsonTitle = titleObject.getStringByKey(Keywords.TITLE);
             actualCaseTitles.add(jsonTitle);
