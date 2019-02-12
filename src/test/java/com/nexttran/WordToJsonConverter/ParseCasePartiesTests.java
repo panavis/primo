@@ -436,7 +436,6 @@ public class ParseCasePartiesTests {
         ParseCasePartiesTestsHelpers.assertExactContentEquals(content.expectedContent, content.actualContent);
     }
 
-    @Ignore("Test: Implement 'numbering'")
     @Test
     public void comm_court_nyarugenge_2016_Parties_UREGWA_subsectionMatchesExpectedContent() {
         ExpectedActualContent content = ParseCasePartiesTestsHelpers.getExpectedAndActualContentForSubsection(5, 1, Headings.ABABURANA, Headings.ABAREGWA);
@@ -468,7 +467,6 @@ public class ParseCasePartiesTests {
         ParseCasePartiesTestsHelpers.assertExactContentEquals(content.expectedContent, content.actualContent);
     }
 
-    @Ignore("Test: Implement 'numbering'")
     @Test
     public void interm_court_huye_2018_226_Parties_UREGWA_subsectionMatchesExpectedContent() {
         ExpectedActualContent content = ParseCasePartiesTestsHelpers.getExpectedAndActualContentForSubsection(13, 2, Headings.HABURANA, Headings.UREGWA);

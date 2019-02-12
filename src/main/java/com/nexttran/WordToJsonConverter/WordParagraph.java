@@ -4,6 +4,7 @@ import com.nexttran.WordToJsonConverter.Constants.Format;
 import com.nexttran.WordToJsonConverter.Constants.Headings;
 import com.nexttran.WordToJsonConverter.ResultTypes.TextParagraphIndex;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFNumbering;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 
@@ -15,11 +16,14 @@ class WordParagraph {
     private final List<XWPFParagraph> paragraphs;
     private final Map<Integer, Integer> postParagraphBlanks;
     private final Map<Integer, Boolean> listParagraphs;
+    private final Map<Integer, String> paragraphsNumbering;
 
     WordParagraph(XWPFDocument wordDocument) {
         this.paragraphs = ConverterInitializer.getNonEmptyParagraphs(wordDocument);
         this.postParagraphBlanks = ConverterInitializer.getPostParagraphBlanks(wordDocument);
         this.listParagraphs = ConverterInitializer.getListParagraphs(this.paragraphs);
+        XWPFNumbering numbering = wordDocument.getNumbering();
+        this.paragraphsNumbering = ConverterInitializer.getParagraphsNumbering(numbering, this.paragraphs);
     }
 
 
@@ -56,10 +60,13 @@ class WordParagraph {
     }
 
     TextParagraphIndex getMoreParagraphsIfAny(String paragraphText, int paragraphIndex) {
+        paragraphText = this.paragraphsNumbering.get(paragraphIndex) + paragraphText;
         paragraphIndex++;
         while (nextParagraphIsNotHeading(paragraphIndex)) {
+            String numbering = this.paragraphsNumbering.get(paragraphIndex);
             String emptyLines = getBlankLines(paragraphIndex-1);
-            paragraphText += emptyLines + getParagraph(paragraphIndex).getText();
+            String currentParagraphText = numbering + getParagraph(paragraphIndex).getText();
+            paragraphText += emptyLines + currentParagraphText;
             paragraphIndex++;
         }
         return new TextParagraphIndex(paragraphText, paragraphIndex);

@@ -1,6 +1,7 @@
 package com.nexttran.WordToJsonConverter;
 
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFNumbering;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 
 import java.util.HashMap;
@@ -49,5 +50,9 @@ class ConverterInitializer {
                 numberedParagraphs.put(index, false);
         }
         return numberedParagraphs;
+    }
+
+    static Map<Integer, String> getParagraphsNumbering(XWPFNumbering numbering, List<XWPFParagraph> paragraphs) {
+        return DocNumbering.getParagraphsNumbering(numbering, paragraphs);
     }
 }
