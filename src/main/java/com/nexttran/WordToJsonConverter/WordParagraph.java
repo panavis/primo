@@ -7,7 +7,6 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFNumbering;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
-
 import java.util.List;
 import java.util.Map;
 
@@ -59,28 +58,43 @@ class WordParagraph {
         return subjectMatterStart;
     }
 
-    TextParagraphIndex getMoreParagraphsIfAny(String paragraphText, int paragraphIndex) {
-        paragraphText = this.paragraphsNumbering.get(paragraphIndex) + paragraphText;
+    TextParagraphIndex getMoreParagraphsIfAny(String firstParagraph, int paragraphIndex) {
+        StringBuilder subsectionParagraphs= new StringBuilder();
+        firstParagraph = addNumberingIfAny(paragraphIndex, firstParagraph.trim());
+        subsectionParagraphs.append(firstParagraph);
         paragraphIndex++;
         while (nextParagraphIsNotHeading(paragraphIndex)) {
-            String numbering = this.paragraphsNumbering.get(paragraphIndex);
             String emptyLines = getBlankLines(paragraphIndex-1);
-            String currentParagraphText = numbering + getParagraph(paragraphIndex).getText();
-            paragraphText += emptyLines + currentParagraphText;
+            String paragraph = getParagraph(paragraphIndex).getText().trim();
+            String numbered = addNumberingIfAny(paragraphIndex, paragraph);
+            String paragraphText = emptyLines + numbered;
+            subsectionParagraphs.append(paragraphText);
             paragraphIndex++;
         }
-        return new TextParagraphIndex(paragraphText, paragraphIndex);
-    }
-
-    private boolean nextParagraphIsNotHeading(int paragraphIndex) {
-        return !(isSectionHeading(paragraphIndex));
+        return new TextParagraphIndex(subsectionParagraphs.toString(), paragraphIndex);
     }
 
     private String getBlankLines(int paragraphIndex) {
         int blanks = this.postParagraphBlanks.get(paragraphIndex);
-        if (blanks < 2 && this.listParagraphs.get(paragraphIndex))
-            blanks = 2;
+        if (isListParagraphAndHasNumbering(paragraphIndex)) blanks = 2;
         return StringFormatting.duplicateLineSeparator(blanks);
+    }
+
+    private Boolean isListParagraphAndHasNumbering(int paragraphIndex) {
+        return this.listParagraphs.get(paragraphIndex) &&
+                this.paragraphsNumbering.get(paragraphIndex).length() != 0;
+    }
+
+    private String addNumberingIfAny(int paragraphIndex, String paragraph) {
+        String newParagraph = paragraph;
+        if (this.isListParagraphAndHasNumbering(paragraphIndex)) {
+            newParagraph = this.paragraphsNumbering.get(paragraphIndex) + paragraph;
+        }
+        return newParagraph;
+    }
+
+    private boolean nextParagraphIsNotHeading(int paragraphIndex) {
+        return !(isSectionHeading(paragraphIndex));
     }
 
     boolean isContentOnSameLine(int paragraphIndex) {

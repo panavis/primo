@@ -1,5 +1,6 @@
 package com.nexttran.WordToJsonConverter;
 
+import com.nexttran.WordToJsonConverter.Constants.Format;
 import org.apache.poi.xwpf.usermodel.XWPFAbstractNum;
 import org.apache.poi.xwpf.usermodel.XWPFNumbering;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
@@ -21,8 +22,10 @@ class DocNumbering {
     private Map<Integer, String> numberingFormatDisplays;
     private Map<Integer, Integer> numberingCountStart;
     private Map<Integer, String> paragraphsNumbering;
+    private List<XWPFParagraph> paragraphs;
 
     private DocNumbering(XWPFNumbering numbering, List<XWPFParagraph> paragraphs) {
+        this.paragraphs = paragraphs;
         this.numbering = numbering;
         this.uniqueNumIds = new ArrayList<>();
         this.numberingTracker = new HashMap<>();
@@ -46,14 +49,7 @@ class DocNumbering {
 
                 if (!docNumbering.uniqueNumIds.contains(numIdValue)) {
                     docNumbering.uniqueNumIds.add(numIdValue);
-                    BigInteger abstractNumIndex = docNumbering.numbering.getAbstractNumID(numId);
-                    XWPFAbstractNum abstractNum = numbering.getAbstractNum(abstractNumIndex);
-                    CTAbstractNum ctAbstractNum = abstractNum.getCTAbstractNum();
-                    int abstractNumLvlIndex = paragraph.getNumIlvl().intValue();
-                    CTLvl abstractNumLvl = ctAbstractNum.getLvlArray(abstractNumLvlIndex);
-                    docNumbering.saveNumCountStart(numIdValue, abstractNumLvl);
-                    docNumbering.saveNumFormatName(numIdValue, abstractNumLvl);
-                    docNumbering.saveNumFormatDisplay(numIdValue, abstractNumLvl);
+                    docNumbering.saveNumIdProperties(paragraph, numId, numIdValue);
                 }
                 docNumbering.addParagraphNumberingPrefix(i, numIdValue);
             }
@@ -61,6 +57,21 @@ class DocNumbering {
                 docNumbering.addDefaultNumberingPrefix(i);
         }
         return docNumbering.paragraphsNumbering;
+    }
+
+    private void saveNumIdProperties(XWPFParagraph paragraph, BigInteger numId, int numIdValue) {
+        CTLvl abstractNumLvl = this.getAbstractNumLvl(paragraph, numId);
+        this.saveNumCountStart(numIdValue, abstractNumLvl);
+        this.saveNumFormatName(numIdValue, abstractNumLvl);
+        this.saveNumFormatDisplay(numIdValue, abstractNumLvl);
+    }
+
+    private CTLvl getAbstractNumLvl(XWPFParagraph paragraph, BigInteger numId) {
+        BigInteger abstractNumIndex = this.numbering.getAbstractNumID(numId);
+        XWPFAbstractNum abstractNum = this.numbering.getAbstractNum(abstractNumIndex);
+        CTAbstractNum ctAbstractNum = abstractNum.getCTAbstractNum();
+        int abstractNumLvlIndex = paragraph.getNumIlvl().intValue();
+        return ctAbstractNum.getLvlArray(abstractNumLvlIndex);
     }
 
     private void addParagraphNumberingPrefix(int paragraphIndex, int numIdValue) {
@@ -99,7 +110,7 @@ class DocNumbering {
     }
 
     private void addDefaultNumberingPrefix(int paragraphIndex) {
-        this.paragraphsNumbering.put(paragraphIndex, "");
+        this.paragraphsNumbering.put(paragraphIndex, Format.EMPTY_STRING);
     }
 
     private void saveNumFormatDisplay(int numIdValue, CTLvl abstractNumLvl) {

@@ -1,17 +1,19 @@
 package com.nexttran.WordToJsonConverter.ResultTypes;
 
+import java.util.List;
+
 public class TextParagraphIndex {
 
-    private String paragraphText;
+    private String subsectionParagraphs;
     private int paragraphIndex;
 
-    public TextParagraphIndex(String paragraphText, int paragraphIndex) {
-        this.paragraphText = paragraphText;
+    public TextParagraphIndex(String subsectionParagraphs, int paragraphIndex) {
+        this.subsectionParagraphs = subsectionParagraphs;
         this.paragraphIndex = paragraphIndex;
     }
 
-    public String getParagraphText() {
-        return this.paragraphText;
+    public String getSubsectionParagraphs() {
+        return this.subsectionParagraphs;
     }
 
     public int getParagraphIndex() {

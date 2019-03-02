@@ -100,22 +100,23 @@ class PartiesSectionParser {
     private int addPartiesSameLineSubsection(int paragraphIndex) {
         XWPFParagraph currentParagraph = this.wordParagraph.getParagraph(paragraphIndex);
         String partyHeading = getHeadingFromParagraph(paragraphIndex);
-        String partyContent = currentParagraph.getText().substring(partyHeading.length());
-        TextParagraphIndex textParagraphIndex = this.wordParagraph.getMoreParagraphsIfAny(partyContent, paragraphIndex);
-        partyContent = textParagraphIndex.getParagraphText();
-        addSubsectionContent(partyHeading, partyContent);
+        String firstParagraph = currentParagraph.getText().substring(partyHeading.length());
+        TextParagraphIndex textParagraphIndex = this.wordParagraph.getMoreParagraphsIfAny(
+                                                firstParagraph, paragraphIndex);
+        String subsectionParagraphs = textParagraphIndex.getSubsectionParagraphs();
+        addSubsectionContent(partyHeading, subsectionParagraphs);
         return textParagraphIndex.getParagraphIndex() - 1;
     }
 
     private int AddSubsectionOnNextLine(int paragraphIndex) {
         String subsectionName = getHeadingFromParagraph(paragraphIndex);
         paragraphIndex++;
-        String paragraphText = this.wordParagraph.getParagraph(paragraphIndex).getText();
+        String firstParagraph = this.wordParagraph.getParagraph(paragraphIndex).getText();
         TextParagraphIndex textParagraphIndex = this.wordParagraph.getMoreParagraphsIfAny(
-                paragraphText, paragraphIndex);
+                                            firstParagraph, paragraphIndex);
         paragraphIndex = textParagraphIndex.getParagraphIndex();
-        paragraphText = textParagraphIndex.getParagraphText();
-        addSubsectionContent(subsectionName, paragraphText);
+        String subsectionParagraphs = textParagraphIndex.getSubsectionParagraphs();
+        addSubsectionContent(subsectionName, subsectionParagraphs);
         return paragraphIndex - 1;
     }
 }
