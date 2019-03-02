@@ -4,7 +4,6 @@ import com.nexttran.WordToJsonConverter.Constants.Headings;
 import com.nexttran.WordToJsonConverter.Wrappers.JsonArray;
 import com.nexttran.WordToJsonConverter.Wrappers.JsonObject;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -88,67 +87,72 @@ public class ParseCasePartiesTests {
 
     @Test
     public void comm_court_huye_2011_PartiesSectionHasTwoSubsections() {
-        ParseCasePartiesTestsHelpers.assertPartiesHasCorrectNumberOfSubsections(0, Headings.HABURANA, 2);
+        ParseCasePartiesTestsHelpers.assertCorrectNumberOfSubsections(0, Headings.HABURANA, 2);
     }
 
     @Test
     public void comm_court_huye_2016_PartiesSectionHasTwoSubsections() {
-        ParseCasePartiesTestsHelpers.assertPartiesHasCorrectNumberOfSubsections(1, Headings.ABABURANA, 3);
+        ParseCasePartiesTestsHelpers.assertCorrectNumberOfSubsections(1, Headings.ABABURANA, 3);
     }
 
     @Test
     public void comm_court_huye_2018_PartiesSectionHasTwoSubsections() {
-        ParseCasePartiesTestsHelpers.assertPartiesHasCorrectNumberOfSubsections(2, Headings.HABURANA, 2);
+        ParseCasePartiesTestsHelpers.assertCorrectNumberOfSubsections(2, Headings.HABURANA, 2);
     }
 
     @Test
     public void comm_court_musanze_2011_PartiesSectionHasTwoSubsections() {
-        ParseCasePartiesTestsHelpers.assertPartiesHasCorrectNumberOfSubsections(3, Headings.HABURANA, 2);
+        ParseCasePartiesTestsHelpers.assertCorrectNumberOfSubsections(3, Headings.HABURANA, 2);
     }
 
     @Test
     public void comm_court_nyarugenge_2014_PartiesSectionHasTwoSubsections() {
-        ParseCasePartiesTestsHelpers.assertPartiesHasCorrectNumberOfSubsections(4, Headings.HABURANA, 2);
+        ParseCasePartiesTestsHelpers.assertCorrectNumberOfSubsections(4, Headings.HABURANA, 2);
     }
 
     @Test
     public void comm_court_nyarugenge_2016_PartiesSectionHasTwoSubsections() {
-        ParseCasePartiesTestsHelpers.assertPartiesHasCorrectNumberOfSubsections(5, Headings.ABABURANA, 2);
+        ParseCasePartiesTestsHelpers.assertCorrectNumberOfSubsections(5, Headings.ABABURANA, 2);
     }
 
     @Test
     public void comm_high_court_2016_PartiesSectionHasTwoSubsections() {
-        ParseCasePartiesTestsHelpers.assertPartiesHasCorrectNumberOfSubsections(6, Headings.HABURANA, 2);
+        ParseCasePartiesTestsHelpers.assertCorrectNumberOfSubsections(6, Headings.HABURANA, 2);
     }
 
     @Test
     public void interm_court_huye_2008_PartiesSectionHasTwoSubsections() {
-        ParseCasePartiesTestsHelpers.assertPartiesHasCorrectNumberOfSubsections(10, Headings.ABABURANYI, 2);
+        ParseCasePartiesTestsHelpers.assertCorrectNumberOfSubsections(10, Headings.ABABURANYI, 2);
     }
 
     @Test
     public void interm_court_huye_2016_PartiesSectionHasTwoSubsections() {
-        ParseCasePartiesTestsHelpers.assertPartiesHasCorrectNumberOfSubsections(12, Headings.HABURANA, 2);
+        ParseCasePartiesTestsHelpers.assertCorrectNumberOfSubsections(12, Headings.HABURANA, 2);
     }
 
     @Test
     public void interm_court_huye_2018_226_PartiesSectionHasTwoSubsections() {
-        ParseCasePartiesTestsHelpers.assertPartiesHasCorrectNumberOfSubsections(13, Headings.HABURANA, 3);
+        ParseCasePartiesTestsHelpers.assertCorrectNumberOfSubsections(13, Headings.HABURANA, 3);
     }
 
     @Test
     public void interm_court_huye_2018_aff_PartiesSectionHasTwoSubsections() {
-        ParseCasePartiesTestsHelpers.assertPartiesHasCorrectNumberOfSubsections(14, Headings.HABURANA, 2);
+        ParseCasePartiesTestsHelpers.assertCorrectNumberOfSubsections(14, Headings.HABURANA, 2);
     }
 
     @Test
     public void primary_court_nzige_2011_rp0003_PartiesSectionHasTwoSubsections() {
-        ParseCasePartiesTestsHelpers.assertPartiesHasCorrectNumberOfSubsections(15, Headings.ABABURANYI, 2);
+        ParseCasePartiesTestsHelpers.assertCorrectNumberOfSubsections(15, Headings.ABABURANYI, 2);
     }
 
     @Test
     public void primary_court_nzige_2011_rp0020_PartiesSectionHasTwoSubsections() {
-        ParseCasePartiesTestsHelpers.assertPartiesHasCorrectNumberOfSubsections(16, Headings.ABABURANYI, 2);
+        ParseCasePartiesTestsHelpers.assertCorrectNumberOfSubsections(16, Headings.ABABURANYI, 2);
+    }
+
+    @Test
+    public void supreme_court_com_2009_PartiesSectionHasTwoSubsections() {
+        ParseCasePartiesTestsHelpers.assertCorrectNumberOfSubsections(17, Headings.HABURANA, 2);
     }
 
     @Test

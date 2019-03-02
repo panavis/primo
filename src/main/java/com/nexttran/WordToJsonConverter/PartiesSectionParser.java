@@ -32,25 +32,31 @@ class PartiesSectionParser {
     }
 
     private HeadingParagraphIndex findPartiesSectionHeading(int beginningParagraph) {
-        String potentialSectionHeading = "";
+        String firstHeading = "";
         int paragraphIndex;
         paragraphIndex = beginningParagraph;
         while (paragraphIndex < this.wordParagraph.numberOfParagraphs()) {
-            if (this.wordParagraph.isSectionHeading(paragraphIndex)) {
-                potentialSectionHeading = getHeadingFromParagraph(paragraphIndex);
-            }
-            potentialSectionHeading = Headings.PARTIES_HEADINGS.contains(potentialSectionHeading) ?
-                    potentialSectionHeading : this.wordParagraph.getCaseSensitiveRunText(paragraphIndex);
-
-            if (!potentialSectionHeading.isEmpty())
+            firstHeading = getFirstHeading(firstHeading, paragraphIndex);
+            if (!firstHeading.isEmpty())
                 break;
             paragraphIndex++;
         }
-        String partiesHeading = Headings.PARTIES_HEADINGS.contains(potentialSectionHeading) ?
-                potentialSectionHeading : Headings.HABURANA;
+        String partiesHeading = firstHeading;
+        if (!Headings.PARTIES_HEADINGS.contains(firstHeading)) {
+            partiesHeading = Headings.HABURANA;
+            paragraphIndex--;
+        }
         return new HeadingParagraphIndex(partiesHeading, paragraphIndex);
     }
 
+    private String getFirstHeading(String firstHeading, int paragraphIndex) {
+        if (this.wordParagraph.isSectionHeading(paragraphIndex)) {
+            firstHeading = getHeadingFromParagraph(paragraphIndex);
+        }
+        firstHeading = Headings.PARTIES_HEADINGS.contains(firstHeading) ?
+                firstHeading : this.wordParagraph.getCaseSensitiveRunText(paragraphIndex);
+        return firstHeading;
+    }
 
     private void addSubsectionContent(String subsectionName, String subsectionContent) {
         String[] subsectionItems = subsectionContent.split(Format.DOUBLE_BLANK);

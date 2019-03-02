@@ -15,7 +15,7 @@ class ParseCasePartiesTestsHelpers {
         assertTrue(partiesSectionContent.hasKey(heading));
     }
 
-    static void assertPartiesHasCorrectNumberOfSubsections(int caseIndex, String heading, int numberOfSubsections) {
+    static void assertCorrectNumberOfSubsections(int caseIndex, String heading, int numberOfSubsections) {
         JsonObject partiesSectionContent = getActualPartiesWholeSection(caseIndex);
         JsonArray partiesSubSections = partiesSectionContent.getArrayByKey(heading);
         assertEquals(numberOfSubsections, partiesSubSections.getSize());
