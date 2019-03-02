@@ -63,7 +63,8 @@ class WordParagraph {
 
     private boolean isOneWordAndIsUpperCase(int pIndex) {
         String text = this.paragraphs.get(pIndex).getText();
-        return text.equals(text.toUpperCase()) && text.split(" ").length == 1;
+        return text.equals(text.toUpperCase()) && text.split(" ").length == 1 &&
+                text.matches("^[a-zA-Z]");
     }
 
     boolean startsSubjectMatterSection(int paragraphIndex) {

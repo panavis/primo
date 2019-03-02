@@ -20,10 +20,6 @@ public class Headings {
             "ABABURANA",
             "ABABURANYI"));
 
-    public static final List<String> PARTIES_SUBHEADINGS = new ArrayList<>(Arrays.asList(
-           "UWAJURIYE"
-    ));
-
     public static final List<String> SUBJECT_MATTER_HEADINGS = new ArrayList<>(
                                                 Arrays.asList("IKIREGERWA", "IKIBURANWA",
                                                         "IBYAHA AREGWA", "ICYAHA ASHINJWA",

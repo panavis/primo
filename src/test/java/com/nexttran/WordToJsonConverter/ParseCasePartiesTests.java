@@ -4,6 +4,7 @@ import com.nexttran.WordToJsonConverter.Constants.Headings;
 import com.nexttran.WordToJsonConverter.Wrappers.JsonArray;
 import com.nexttran.WordToJsonConverter.Wrappers.JsonObject;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -233,6 +234,12 @@ public class ParseCasePartiesTests {
     }
 
     @Test
+    public void supreme_court_comm_2009_PartiesSectionsHas_UWAJURIYE_subsection() {
+        JsonObject actualParty = ParseCasePartiesTestsHelpers.getActualPartiesSubsection(17, Headings.HABURANA, 0);
+        assertTrue(actualParty.hasKey(Headings.UWAJURIYE));
+    }
+
+    @Test
     public void comm_court_huye_2011_PartiesSectionHas_UREGWA_subsection() {
         JsonObject actualParty = ParseCasePartiesTestsHelpers.getActualPartiesSubsection(0, Headings.HABURANA, 1);
         assertTrue(actualParty.hasKey(Headings.UREGWA));
@@ -320,6 +327,12 @@ public class ParseCasePartiesTests {
     @Test
     public void primary_court_nzige_2011_rp0020_PartiesSectionHas_UREGWA_subsection() {
         JsonObject actualParty = ParseCasePartiesTestsHelpers.getActualPartiesSubsection(16, Headings.ABABURANYI, 1);
+        assertTrue(actualParty.hasKey(Headings.UREGWA));
+    }
+
+    @Test
+    public void supreme_court_comm_2009_PartiesSectionsHas_UREGWA_subsection() {
+        JsonObject actualParty = ParseCasePartiesTestsHelpers.getActualPartiesSubsection(17, Headings.HABURANA, 1);
         assertTrue(actualParty.hasKey(Headings.UREGWA));
     }
 
@@ -416,6 +429,12 @@ public class ParseCasePartiesTests {
     }
 
     @Test
+    public void supreme_court_comm_2009_Parties_UWAJURIYE_subsectionMatchesExpectedContent() {
+        ExpectedActualContent content = ParseCasePartiesTestsHelpers.getExpectedAndActualContentForSubsection(17, 0, Headings.HABURANA, Headings.UWAJURIYE);
+        ParseCasePartiesTestsHelpers.assertExactContentEquals(content.expectedContent, content.actualContent);
+    }
+
+    @Test
     public void comm_court_huye_2011_Parties_UREGWA_subsectionMatchesExpectedContent() {
         ExpectedActualContent content = ParseCasePartiesTestsHelpers.getExpectedAndActualContentForSubsection(0, 1, Headings.HABURANA, Headings.UREGWA);
         ParseCasePartiesTestsHelpers.assertExactContentEquals(content.expectedContent, content.actualContent);
@@ -498,6 +517,12 @@ public class ParseCasePartiesTests {
     public void primary_court_nzige_2011_rp0020_Parties_UREGWA_subsectionMatchesExpectedContent() {
         ExpectedActualContent content = ParseCasePartiesTestsHelpers.getExpectedAndActualContentForSubsection(16, 1, Headings.ABABURANYI, Headings.UREGWA);
         ParseCasePartiesTestsHelpers.assertContentLengthEquals(content.expectedContent, content.actualContent);
+    }
+
+    @Test
+    public void supreme_court_comm_2009_Parties_UREGWA_subsectionMatchesExpectedContent() {
+        ExpectedActualContent content = ParseCasePartiesTestsHelpers.getExpectedAndActualContentForSubsection(17, 1, Headings.HABURANA, Headings.UREGWA);
+        ParseCasePartiesTestsHelpers.assertExactContentEquals(content.expectedContent, content.actualContent);
     }
 
     @Test
