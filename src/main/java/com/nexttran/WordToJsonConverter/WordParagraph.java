@@ -43,20 +43,22 @@ class WordParagraph {
                 ParagraphRun.isFirstRunBoldAndSecondRunsStartsWithColon(paragraphRuns) ||
                 ParagraphRun.isFirstRunCapitalizedAndEndsWithColon(paragraph, firstRun) ||
                 ParagraphRun.isFirstRunHighlyIndentedAndCapitalized(paragraph, firstRun) ||
-                ParagraphRun.isFirstRunBoldAndEndsWithColon(firstRun) ||
+                ParagraphRun.isFirstRunBoldAndEndsWithColon(paragraph) ||
                 hasColonAndContentOnSameLine(paragraphIndex) ||
                 isOneWordAndIsUpperCase(paragraphIndex)
         );
     }
 
     boolean hasColonAndContentOnSameLine(int paragraphIndex) {
-        String paragraphText = getParagraph(paragraphIndex).getText();
+        XWPFParagraph paragraph = getParagraph(paragraphIndex);
+        String paragraphText = paragraph.getText();
         String[] textParts = paragraphText.split(Format.COLON);
         int numberOfParts = textParts.length;
         String firstPart = textParts[0];
 
         boolean colonAndContent = false;
-        if (numberOfParts == 2 && firstPart.length() > 3 && StringFormatting.isTextCapitalized(firstPart))
+        if (numberOfParts == 2 && firstPart.length() > 3 &&
+                (StringFormatting.isTextCapitalized(firstPart) || ParagraphRun.isFirstRunBold(paragraph)))
             colonAndContent = true;
         return colonAndContent;
     }

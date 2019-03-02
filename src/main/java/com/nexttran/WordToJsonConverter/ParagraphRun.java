@@ -25,13 +25,19 @@ class ParagraphRun {
         return StringFormatting.isTextCapitalized(firstRun.text()) && paragraph.getText().endsWith(Format.COLON);
     }
 
-    static boolean isFirstRunBoldAndEndsWithColon(XWPFRun firstRun) {
-        return firstRun.isBold() && firstRun.text().endsWith(Format.COLON);
+    static boolean isFirstRunBoldAndEndsWithColon(XWPFParagraph paragraph) {
+        return ParagraphRun.isFirstRunBold(paragraph) && paragraph.getText().endsWith(Format.COLON);
     }
 
     static boolean isFirstRunUnderlined(XWPFRun firstRun) {
         int underlinePattern = firstRun.getUnderline().getValue();
         return underlinePattern == 1 || underlinePattern == 4;
+    }
+
+    static boolean isFirstRunBold(XWPFParagraph paragraph) {
+        List<XWPFRun> paragraphRuns = paragraph.getRuns();
+        XWPFRun firstRun = paragraphRuns.get(0);
+        return firstRun.isBold();
     }
 
 }
