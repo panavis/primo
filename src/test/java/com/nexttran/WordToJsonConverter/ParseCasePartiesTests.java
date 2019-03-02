@@ -82,6 +82,11 @@ public class ParseCasePartiesTests {
     }
 
     @Test
+    public void supreme_court_comm_2009_PartiesSectionsHas_HABURANA_asJsonKey() {
+        ParseCasePartiesTestsHelpers.assertJsonContainsPartiesSection(17, Headings.HABURANA);
+    }
+
+    @Test
     public void comm_court_huye_2011_PartiesSectionHasTwoSubsections() {
         ParseCasePartiesTestsHelpers.assertPartiesHasCorrectNumberOfSubsections(0, Headings.HABURANA, 2);
     }

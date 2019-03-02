@@ -44,14 +44,32 @@ class WordParagraph {
                 ParagraphRun.isFirstRunCapitalizedAndEndsWithColon(paragraph, firstRun) ||
                 ParagraphRun.isFirstRunHighlyIndentedAndCapitalized(paragraph, firstRun) ||
                 ParagraphRun.isFirstRunBoldAndEndsWithColon(firstRun) ||
-                hasColonAndContentOnSameLine(paragraphIndex)
+                hasColonAndContentOnSameLine(paragraphIndex) ||
+                isOneWordAndIsUpperCase(paragraphIndex)
         );
+    }
+
+    boolean hasColonAndContentOnSameLine(int paragraphIndex) {
+        String paragraphText = getParagraph(paragraphIndex).getText();
+        String[] textParts = paragraphText.split(Format.COLON);
+        int numberOfParts = textParts.length;
+        String firstPart = textParts[0];
+
+        boolean colonAndContent = false;
+        if (numberOfParts == 2 && firstPart.length() > 3 && StringFormatting.isTextCapitalized(firstPart))
+            colonAndContent = true;
+        return colonAndContent;
+    }
+
+    private boolean isOneWordAndIsUpperCase(int pIndex) {
+        String text = this.paragraphs.get(pIndex).getText();
+        return text.equals(text.toUpperCase()) && text.split(" ").length == 1;
     }
 
     boolean startsSubjectMatterSection(int paragraphIndex) {
         XWPFParagraph currentParagraph = getParagraph(paragraphIndex);
         boolean subjectMatterStart = false;
-        for (String heading : Headings.ALL_SUBJECT_MATTER_HEADINGS) {
+        for (String heading : Headings.SUBJECT_MATTER_HEADINGS) {
             if (currentParagraph.getText().toUpperCase().startsWith(heading))
                 subjectMatterStart = true;
         }
@@ -87,9 +105,8 @@ class WordParagraph {
 
     private String addNumberingIfAny(int paragraphIndex, String paragraph) {
         String newParagraph = paragraph;
-        if (this.isListParagraphAndHasNumbering(paragraphIndex)) {
+        if (this.isListParagraphAndHasNumbering(paragraphIndex))
             newParagraph = this.paragraphsNumbering.get(paragraphIndex) + paragraph;
-        }
         return newParagraph;
     }
 
@@ -104,18 +121,6 @@ class WordParagraph {
         if (textParts.length == 2 && !textParts[1].isEmpty())
             onSameLine = true;
         return onSameLine;
-    }
-
-    boolean hasColonAndContentOnSameLine(int paragraphIndex) {
-        String paragraphText = getParagraph(paragraphIndex).getText();
-        String[] textParts = paragraphText.split(Format.COLON);
-        int numberOfParts = textParts.length;
-        String firstPart = textParts[0];
-
-        boolean colonAndContent = false;
-        if (numberOfParts == 2 && firstPart.length() > 3 && StringFormatting.isTextCapitalized(firstPart))
-            colonAndContent = true;
-        return colonAndContent;
     }
 
     String getCaseSensitiveRunText(int paragraphIndex) {

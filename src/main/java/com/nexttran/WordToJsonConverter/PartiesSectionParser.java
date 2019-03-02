@@ -34,27 +34,21 @@ class PartiesSectionParser {
     private HeadingParagraphIndex findPartiesSectionHeading(int beginningParagraph) {
         String potentialSectionHeading = "";
         int paragraphIndex;
-        for (paragraphIndex = beginningParagraph; paragraphIndex < this.wordParagraph.numberOfParagraphs(); paragraphIndex++) {
-            potentialSectionHeading = getPartiesHeading(paragraphIndex, beginningParagraph);
+        paragraphIndex = beginningParagraph;
+        while (paragraphIndex < this.wordParagraph.numberOfParagraphs()) {
+            if (this.wordParagraph.isSectionHeading(paragraphIndex)) {
+                potentialSectionHeading = getHeadingFromParagraph(paragraphIndex);
+            }
+            potentialSectionHeading = Headings.PARTIES_HEADINGS.contains(potentialSectionHeading) ?
+                    potentialSectionHeading : this.wordParagraph.getCaseSensitiveRunText(paragraphIndex);
+
             if (!potentialSectionHeading.isEmpty())
                 break;
+            paragraphIndex++;
         }
-        String partiesSectionHeading = potentialSectionHeading;
-        return new HeadingParagraphIndex(partiesSectionHeading, paragraphIndex);
-    }
-
-    private String getPartiesHeading(int paragraphIndex, int beginningParagraph) {
-        String potentialSectionHeading = "";
-        String paragraphText = this.wordParagraph.getParagraph(paragraphIndex).getText().trim();
-
-        if (this.wordParagraph.isSectionHeading(paragraphIndex))
-            potentialSectionHeading = getHeadingFromParagraph(paragraphIndex);
-
-        else if ((paragraphIndex == beginningParagraph) && (Headings.ALL_PARTIES_HEADINGS.contains(paragraphText)))
-            potentialSectionHeading = getHeadingFromParagraph(paragraphIndex);
-
-        return Headings.ALL_PARTIES_HEADINGS.contains(potentialSectionHeading)?
-                potentialSectionHeading : this.wordParagraph.getCaseSensitiveRunText(paragraphIndex) ;
+        String partiesHeading = Headings.PARTIES_HEADINGS.contains(potentialSectionHeading) ?
+                potentialSectionHeading : Headings.HABURANA;
+        return new HeadingParagraphIndex(partiesHeading, paragraphIndex);
     }
 
 

@@ -15,10 +15,16 @@ public class Headings {
     public static final String UWAJURIYE = "UWAJURIYE";
     public static final String ABAREGWA = "ABAREGWA";
     public static final String  URUKIKO = "URUKIKO";
+    public static final List<String> PARTIES_HEADINGS = new ArrayList<>(Arrays.asList(
+            "HABURANA",
+            "ABABURANA",
+            "ABABURANYI"));
 
+    public static final List<String> PARTIES_SUBHEADINGS = new ArrayList<>(Arrays.asList(
+           "UWAJURIYE"
+    ));
 
-    public static final List<String> ALL_PARTIES_HEADINGS = new ArrayList<>(Arrays.asList("HABURANA", "ABABURANA"));
-    public static final List<String> ALL_SUBJECT_MATTER_HEADINGS = new ArrayList<>(
+    public static final List<String> SUBJECT_MATTER_HEADINGS = new ArrayList<>(
                                                 Arrays.asList("IKIREGERWA", "IKIBURANWA",
                                                         "IBYAHA AREGWA", "ICYAHA ASHINJWA",
                                                         "ICYAHA AREGWA"));
