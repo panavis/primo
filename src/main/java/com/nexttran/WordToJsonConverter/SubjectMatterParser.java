@@ -11,27 +11,40 @@ import java.util.Arrays;
 class SubjectMatterParser {
 
     private WordParagraph wordParagraph;
-    private JsonObject sectionContent;
 
     SubjectMatterParser(WordParagraph wordParagraph) {
         this.wordParagraph = wordParagraph;
-        this.sectionContent = new JsonObject();
     }
 
     SectionResult parse(int startParagraph) {
-        String heading = this.wordParagraph.getHeadingFromParagraph(startParagraph);
+        String heading = getSubjectMatterHeading(startParagraph);
+        String body = getSubjectMatterBody(startParagraph);
+        JsonObject sectionContent = getSectionContent(heading, body);
+        return new SectionResult(sectionContent, startParagraph);
+    }
+
+    private String getSubjectMatterHeading(int startParagraph) {
+        return this.wordParagraph.getHeadingFromParagraph(startParagraph);
+    }
+
+    private String getSubjectMatterBody(int startParagraph) {
         String[] bodyArray = this.wordParagraph.getParagraph(startParagraph).getText().split(":");
         String[] bodyNoHeading = Arrays.copyOfRange(bodyArray, 1, bodyArray.length);
         String body = String.join(" ", bodyNoHeading).trim();
         body = body.equals(Format.EMPTY_STRING) ?
                 this.wordParagraph.getParagraph(++startParagraph).getText() : body;
+        return body;
+    }
+
+    private JsonObject getSectionContent(String heading, String body) {
         JsonObject nestedJson = new JsonObject();
         JsonArray sectionNestedArray = new JsonArray();
         sectionNestedArray.putValue(body);
         nestedJson.addNameValuePair(heading, sectionNestedArray);
         JsonArray sectionArray = new JsonArray();
         sectionArray.putValue(nestedJson);
-        this.sectionContent.addNameValuePair(Keywords.SUBJECT_MATTER, sectionArray);
-        return new SectionResult(this.sectionContent, startParagraph);
+        JsonObject sectionContent = new JsonObject();
+        sectionContent.addNameValuePair(Keywords.SUBJECT_MATTER, sectionArray);
+        return sectionContent;
     }
 }
