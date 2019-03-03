@@ -10,19 +10,18 @@ import com.nexttran.WordToJsonConverter.Wrappers.JsonObject;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 
 import static com.nexttran.WordToJsonConverter.JsonCreator.*;
-import static com.nexttran.WordToJsonConverter.StringFormatting.removeStartingOrTrailingColons;
 
-class PartiesSectionParser {
+class PartiesParser {
 
     private WordParagraph wordParagraph;
     private JsonArray partiesSubsections;
 
-    PartiesSectionParser(WordParagraph wordParagraph) {
+    PartiesParser(WordParagraph wordParagraph) {
         this.wordParagraph = wordParagraph;
         this.partiesSubsections = new JsonArray();
     }
 
-    SectionResult parseCaseParties(int beginningParagraph) {
+    SectionResult parse(int beginningParagraph) {
         HeadingParagraphIndex partiesSectionHeading = findPartiesSectionHeading(beginningParagraph);
         int paragraphIndex = partiesSectionHeading.getParagraphIndex();
         paragraphIndex = getPartiesSubsections(paragraphIndex);
@@ -51,7 +50,7 @@ class PartiesSectionParser {
 
     private String getFirstHeading(String firstHeading, int paragraphIndex) {
         if (this.wordParagraph.isSectionHeading(paragraphIndex)) {
-            firstHeading = getHeadingFromParagraph(paragraphIndex);
+            firstHeading = this.wordParagraph.getHeadingFromParagraph(paragraphIndex);
         }
         firstHeading = Headings.PARTIES_HEADINGS.contains(firstHeading) ?
                 firstHeading : this.wordParagraph.getCaseSensitiveRunText(paragraphIndex);
@@ -69,14 +68,6 @@ class PartiesSectionParser {
         }
     }
 
-    private String getHeadingFromParagraph(int paragraphIndex) {
-        String currentParagraph = this.wordParagraph.getParagraph(paragraphIndex).getText();
-        String sectionHeading = currentParagraph;
-
-        if (this.wordParagraph.hasColonAndContentOnSameLine(paragraphIndex))
-            sectionHeading = currentParagraph.split(Format.COLON)[0];
-        return removeStartingOrTrailingColons(sectionHeading);
-    }
     private int getPartiesSubsections(int paragraphIndex) {
         for (paragraphIndex++; paragraphIndex < this.wordParagraph.numberOfParagraphs(); paragraphIndex++) {
             if (this.wordParagraph.startsSubjectMatterSection(paragraphIndex))
@@ -99,7 +90,7 @@ class PartiesSectionParser {
 
     private int addPartiesSameLineSubsection(int paragraphIndex) {
         XWPFParagraph currentParagraph = this.wordParagraph.getParagraph(paragraphIndex);
-        String partyHeading = getHeadingFromParagraph(paragraphIndex);
+        String partyHeading = wordParagraph.getHeadingFromParagraph(paragraphIndex);
         String firstParagraph = currentParagraph.getText().substring(partyHeading.length());
         TextParagraphIndex textParagraphIndex = this.wordParagraph.getMoreParagraphsIfAny(
                                                 firstParagraph, paragraphIndex);
@@ -109,7 +100,7 @@ class PartiesSectionParser {
     }
 
     private int AddSubsectionOnNextLine(int paragraphIndex) {
-        String subsectionName = getHeadingFromParagraph(paragraphIndex);
+        String subsectionName = wordParagraph.getHeadingFromParagraph(paragraphIndex);
         paragraphIndex++;
         String firstParagraph = this.wordParagraph.getParagraph(paragraphIndex).getText();
         TextParagraphIndex textParagraphIndex = this.wordParagraph.getMoreParagraphsIfAny(

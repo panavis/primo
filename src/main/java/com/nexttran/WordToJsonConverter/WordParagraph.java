@@ -7,8 +7,12 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFNumbering;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
+
 import java.util.List;
 import java.util.Map;
+
+import static com.nexttran.WordToJsonConverter.StringFormatting.removeStartingOrTrailingColons;
 
 class WordParagraph {
 
@@ -27,7 +31,13 @@ class WordParagraph {
 
 
     XWPFParagraph getParagraph(int paragraphIndex) {
-        return this.paragraphs.get(paragraphIndex);
+        XWPFParagraph paragraph = this.paragraphs.get(0);
+        try {
+            paragraph = this.paragraphs.get(paragraphIndex);
+        } catch (IndexOutOfBoundsException e) {
+            System.out.println("Exception in WordParagraph: IndexOutOfBoundsException");
+        }
+        return paragraph;
     }
 
     int numberOfParagraphs() {
@@ -143,5 +153,14 @@ class WordParagraph {
 
     boolean contentIsOnNextLine(int paragraphIndex) {
         return getParagraph(paragraphIndex).getText().endsWith(Format.COLON);
+    }
+
+    String getHeadingFromParagraph(int paragraphIndex) {
+        String currentParagraph = getParagraph(paragraphIndex).getText();
+        String sectionHeading = currentParagraph;
+
+        if (hasColonAndContentOnSameLine(paragraphIndex))
+            sectionHeading = currentParagraph.split(Format.COLON)[0];
+        return removeStartingOrTrailingColons(sectionHeading);
     }
 }

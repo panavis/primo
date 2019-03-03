@@ -75,9 +75,10 @@ public class TestsSetup {
 
     static WordToJsonConverter getConverterObject(XWPFDocument wordDocument) {
         WordParagraph wordParagraph = new WordParagraph(wordDocument);
-        TitleSectionParser titleSectionParser = new TitleSectionParser(wordParagraph);
-        PartiesSectionParser partiesSectionParser = new PartiesSectionParser(wordParagraph);
-        return new WordToJsonConverter(titleSectionParser, partiesSectionParser);
+        TitleParser titleParser = new TitleParser(wordParagraph);
+        PartiesParser partiesParser = new PartiesParser(wordParagraph);
+        SubjectMatterParser subjectMatterParser = new SubjectMatterParser(wordParagraph);
+        return new WordToJsonConverter(titleParser, partiesParser, subjectMatterParser);
     }
 }
 

@@ -7,20 +7,28 @@ import java.util.*;
 public class WordToJsonConverter {
 
     private Map<String, SectionResult> parsedCase;
-    private TitleSectionParser titleSectionParser;
-    private PartiesSectionParser partiesSectionParser;
+    private TitleParser titleParser;
+    private PartiesParser partiesParser;
+    private SubjectMatterParser subjectMatterParser;
 
-    WordToJsonConverter(TitleSectionParser titleSectionParser, PartiesSectionParser partiesSectionParser) {
+    WordToJsonConverter(TitleParser titleParser, PartiesParser partiesParser,
+                        SubjectMatterParser subjectMatterParser) {
         this.parsedCase = new HashMap<>();
-        this.titleSectionParser = titleSectionParser;
-        this.partiesSectionParser = partiesSectionParser;
+        this.titleParser = titleParser;
+        this.partiesParser = partiesParser;
+        this.subjectMatterParser = subjectMatterParser;
     }
 
     void parseCaseSections() {
         int nextParagraph;
-        this.parsedCase.put(Keywords.TITLE, this.titleSectionParser.parseCaseTitle());
+        SectionResult caseTitle = this.titleParser.parse();
+        this.parsedCase.put(Keywords.TITLE, caseTitle);
         nextParagraph = this.parsedCase.get(Keywords.TITLE).getNextParagraph();
-        this.parsedCase.put(Keywords.PARTIES, this.partiesSectionParser.parseCaseParties(nextParagraph));
+        SectionResult caseParties = this.partiesParser.parse(nextParagraph);
+        this.parsedCase.put(Keywords.PARTIES, caseParties);
+        nextParagraph = this.parsedCase.get(Keywords.PARTIES).getNextParagraph();
+        SectionResult caseSubjectMatter = this.subjectMatterParser.parse(nextParagraph);
+        this.parsedCase.put(Keywords.SUBJECT_MATTER, caseSubjectMatter);
     }
 
     SectionResult getParsedCaseSection(String section) {
