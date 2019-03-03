@@ -1,5 +1,6 @@
 package com.nexttran.WordToJsonConverter;
 
+import com.nexttran.WordToJsonConverter.Constants.Format;
 import com.nexttran.WordToJsonConverter.Constants.Keywords;
 import com.nexttran.WordToJsonConverter.ResultTypes.SectionResult;
 import com.nexttran.WordToJsonConverter.Wrappers.JsonArray;
@@ -22,6 +23,8 @@ class SubjectMatterParser {
         String[] bodyArray = this.wordParagraph.getParagraph(startParagraph).getText().split(":");
         String[] bodyNoHeading = Arrays.copyOfRange(bodyArray, 1, bodyArray.length);
         String body = String.join(" ", bodyNoHeading).trim();
+        body = body.equals(Format.EMPTY_STRING) ?
+                this.wordParagraph.getParagraph(++startParagraph).getText() : body;
         JsonObject nestedJson = new JsonObject();
         JsonArray sectionNestedArray = new JsonArray();
         sectionNestedArray.putValue(body);

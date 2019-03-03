@@ -33,17 +33,22 @@ public class ParseCaseSubjectMatterTests {
     }
 
     @Test
-    public void comm_court_huye_2011_hasSubjectMatterHasOneSubsection() {
+    public void comm_court_huye_2011_SubjectMatterHasOneSubsection() {
         JsonArray subjectMatterArray = getSubjectMatterSectionJsonArray(0);
         assertEquals(1, subjectMatterArray.getSize());
     }
 
     @Test
-    public void interm_court_huye_2018_226_hasSubjectMatterHasOneSubsection() {
+    public void interm_court_huye_2018_226_SubjectMatterHasOneSubsection() {
         JsonArray subjectMatterArray = getSubjectMatterSectionJsonArray(13);
         assertEquals(1, subjectMatterArray.getSize());
     }
 
+    @Test
+    public void primary_court_nzige_2011_SubjectMatterHasOneSubsection() {
+        JsonArray subjectMatterArray = getSubjectMatterSectionJsonArray(15);
+        assertEquals(1, subjectMatterArray.getSize());
+    }
     @Test
     public void comm_court_huye_2011_has_Ikiregerwa_subheading() {
         JsonObject subsection = getSubjectMatterSubsection(0);
@@ -57,6 +62,12 @@ public class ParseCaseSubjectMatterTests {
     }
 
     @Test
+    public void primary_court_nzige_2011_has_Icyaha_Ashinjwa_subheading() {
+        JsonObject subsection = getSubjectMatterSubsection(15);
+        assertTrue(subsection.hasKey(Headings.ICYAHA_ASHINJWA));
+    }
+
+    @Test
     public void comm_court_huye_2011_subsectionHasANestedArrayWithLengthOne() {
         JsonObject subsection = getSubjectMatterSubsection(0);
         JsonArray actualSubsectionArray = subsection.getArrayByKey(Headings.IKIREGERWA);
@@ -67,6 +78,13 @@ public class ParseCaseSubjectMatterTests {
     public void interm_court_huye_2018_226_subsectionHasANestedArrayWithLengthOne() {
         JsonObject subsection = getSubjectMatterSubsection(13);
         JsonArray actualSubsectionArray = subsection.getArrayByKey(Headings.ICYAHA_AREGWA);
+        assertEquals(1, actualSubsectionArray.getSize());
+    }
+
+    @Test
+    public void primary_court_nzige_2011_subsectionHasANestedArrayWithLengthOne() {
+        JsonObject subsection = getSubjectMatterSubsection(15);
+        JsonArray actualSubsectionArray = subsection.getArrayByKey(Headings.ICYAHA_ASHINJWA);
         assertEquals(1, actualSubsectionArray.getSize());
     }
 
@@ -103,5 +121,13 @@ public class ParseCaseSubjectMatterTests {
         assertEquals(expectedSubsectionContent, actualSubsectionContent);
     }
 
+    @Test
+    public void primary_court_nzige_2011_subjectMatterMatchesExpectedContent() {
+        String actualSubsectionContent = getActualSubsectionContent(15,
+                Headings.ICYAHA_ASHINJWA);
+        String expectedSubsectionContent = getExpectedSubsectionContent(15,
+                Headings.ICYAHA_ASHINJWA);
+        assertEquals(expectedSubsectionContent, actualSubsectionContent);
+    }
 
 }

@@ -17,6 +17,7 @@ public class Headings {
     public static final String IKIREGERWA = "IKIREGERWA";
     public static final String  URUKIKO = "URUKIKO";
     public static final String ICYAHA_AREGWA = "ICYAHA AREGWA";
+    public static final String ICYAHA_ASHINJWA = "ICYAHA ASHINJWA";
     public static final List<String> PARTIES_HEADINGS = new ArrayList<>(Arrays.asList(
             "HABURANA",
             "ABABURANA",
