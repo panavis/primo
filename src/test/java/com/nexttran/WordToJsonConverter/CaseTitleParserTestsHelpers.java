@@ -11,12 +11,12 @@ import java.util.Iterator;
 
 import static org.junit.Assert.assertEquals;
 
-class ParseCaseTitleTestsHelpers {
+class CaseTitleParserTestsHelpers {
 
     static ArrayList<String> getActualCaseTitles(ArrayList<XWPFDocument> wordDocxData) {
         ArrayList<String> actualCaseTitles = new ArrayList<>();
         for (XWPFDocument wordDoc : wordDocxData) {
-            WordToJsonConverter converter = TestsSetup.getConverterObject(wordDoc);
+            Converter converter = TestsSetup.getConverterObject(wordDoc, "title");
             converter.parseCaseSections();
             SectionResult titleResult = converter.getParsedCaseSection(Keywords.TITLE);
             JsonObject titleObject = titleResult.getSectionContent();

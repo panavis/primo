@@ -4,15 +4,15 @@ import com.nexttran.WordToJsonConverter.Constants.Keywords;
 import com.nexttran.WordToJsonConverter.ResultTypes.SectionResult;
 import java.util.*;
 
-public class WordToJsonConverter {
+class Converter {
 
     private Map<String, SectionResult> parsedCase;
-    private TitleParser titleParser;
-    private PartiesParser partiesParser;
-    private SubjectMatterParser subjectMatterParser;
+    private ICaseTitle titleParser;
+    private ICaseParties partiesParser;
+    private ICaseSubjectMatter subjectMatterParser;
 
-    WordToJsonConverter(TitleParser titleParser, PartiesParser partiesParser,
-                        SubjectMatterParser subjectMatterParser) {
+    Converter(ICaseTitle titleParser, ICaseParties partiesParser,
+              ICaseSubjectMatter subjectMatterParser) {
         this.parsedCase = new HashMap<>();
         this.titleParser = titleParser;
         this.partiesParser = partiesParser;

@@ -7,8 +7,6 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFNumbering;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
-
 import java.util.List;
 import java.util.Map;
 
@@ -59,7 +57,7 @@ class WordParagraph {
         );
     }
 
-    boolean hasColonAndContentOnSameLine(int paragraphIndex) {
+    private boolean hasColonAndContentOnSameLine(int paragraphIndex) {
         XWPFParagraph paragraph = getParagraph(paragraphIndex);
         String paragraphText = paragraph.getText();
         String[] textParts = paragraphText.split(Format.COLON);
@@ -73,8 +71,8 @@ class WordParagraph {
         return colonAndContent;
     }
 
-    private boolean isOneWordAndIsUpperCase(int pIndex) {
-        String text = this.paragraphs.get(pIndex).getText();
+    private boolean isOneWordAndIsUpperCase(int paragraphIndex) {
+        String text = this.paragraphs.get(paragraphIndex).getText();
         return text.equals(text.toUpperCase()) && text.split(" ").length == 1 &&
                 text.matches("^[a-zA-Z]");
     }
@@ -162,5 +160,12 @@ class WordParagraph {
         if (hasColonAndContentOnSameLine(paragraphIndex))
             sectionHeading = currentParagraph.split(Format.COLON)[0];
         return removeStartingOrTrailingColons(sectionHeading);
+    }
+
+    String getParagraphWithNumbering(int paragraphIndex) {
+        String text = getParagraph(paragraphIndex).getText();
+        if (this.listParagraphs.get(paragraphIndex))
+            text = this.paragraphsNumbering.get(paragraphIndex) + text;
+        return text;
     }
 }

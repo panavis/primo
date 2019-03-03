@@ -8,7 +8,7 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-class ParseCasePartiesTestsHelpers {
+class CasePartiesParserTestsHelpers {
 
     static void assertJsonContainsPartiesSection(int caseIndex, String heading) {
         JsonObject partiesSectionContent = getActualPartiesWholeSection(caseIndex);
@@ -23,7 +23,7 @@ class ParseCasePartiesTestsHelpers {
 
     private static JsonObject getActualPartiesWholeSection(int wordDocIndex) {
         XWPFDocument wordDocument = TestsSetup.wordDocxData.get(wordDocIndex);
-        WordToJsonConverter converter = TestsSetup.getConverterObject(wordDocument);
+        Converter converter = TestsSetup.getConverterObject(wordDocument, "parties");
         converter.parseCaseSections();
         SectionResult partiesSectionResult = converter.getParsedCaseSection(Keywords.PARTIES);
         return partiesSectionResult.getSectionContent();

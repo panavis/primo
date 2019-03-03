@@ -15,6 +15,7 @@ public class Headings {
     public static final String UWAJURIYE = "UWAJURIYE";
     public static final String ABAREGWA = "ABAREGWA";
     public static final String IKIREGERWA = "IKIREGERWA";
+    public static final String IKIBURANWA = "IKIBURANWA";
     public static final String  URUKIKO = "URUKIKO";
     public static final String ICYAHA_AREGWA = "ICYAHA AREGWA";
     public static final String ICYAHA_ASHINJWA = "ICYAHA ASHINJWA";

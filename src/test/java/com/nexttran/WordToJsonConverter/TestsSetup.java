@@ -1,12 +1,11 @@
 package com.nexttran.WordToJsonConverter;
 
+import com.nexttran.WordToJsonConverter.ResultTypes.SectionResult;
 import com.nexttran.WordToJsonConverter.Wrappers.JsonObject;
 import com.nexttran.WordToJsonConverter.Wrappers.JsonParser;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.openxml4j.opc.OPCPackage;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
-import org.junit.BeforeClass;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -20,7 +19,6 @@ public class TestsSetup {
     static ArrayList<JsonObject> expectedJsonContent = new ArrayList<>();
     static ArrayList<XWPFDocument> wordDocxData = new ArrayList<>();
 
-    @BeforeClass
     public static void setUp() {
         File[] allFilesInExpectedJsonFolder = TestsSetup.expectedJsonFolder.listFiles();
         ArrayList<String> expectedJsonPaths = getSortedFilePaths(allFilesInExpectedJsonFolder);
@@ -73,13 +71,28 @@ public class TestsSetup {
         return wordPath.endsWith(".docx");
     }
 
-    static WordToJsonConverter getConverterObject(XWPFDocument wordDocument) {
+    static Converter getConverterObject(XWPFDocument wordDocument, String section) {
         WordParagraph wordParagraph = new WordParagraph(wordDocument);
-        TitleParser titleParser = new TitleParser(wordParagraph);
-        PartiesParser partiesParser = new PartiesParser(wordParagraph);
-        SubjectMatterParser subjectMatterParser = new SubjectMatterParser(wordParagraph);
-        return new WordToJsonConverter(titleParser, partiesParser, subjectMatterParser);
+        CaseTitleParser titleParser = new CaseTitleParser(wordParagraph);
+        ICaseParties partiesParser = (section.equals("parties") || section.equals("subject_matter")) ?
+                                new CasePartiesParser(wordParagraph) : new MockPartiesParser();
+        ICaseSubjectMatter subjectMatterParser = section.equals("subject_matter") ?
+                                new CaseSubjectMatterParser(wordParagraph) : new MockSubjectMatterParser();
+        return new Converter(titleParser, partiesParser, subjectMatterParser);
     }
 }
 
+class MockPartiesParser implements ICaseParties {
+
+    public SectionResult parse(int startParagraph) {
+        return new SectionResult(new JsonObject(), 0);
+    }
+}
+
+class MockSubjectMatterParser implements ICaseSubjectMatter {
+
+    public SectionResult parse(int startParagraph) {
+        return new SectionResult(new JsonObject(), 0);
+    }
+}
 

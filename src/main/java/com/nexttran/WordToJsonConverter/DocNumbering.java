@@ -103,6 +103,10 @@ class DocNumbering {
                 numberingString = formatDisplay.replaceAll("%\\d", numberingLetter);
                 break;
             }
+            case "bullet": {
+                numberingString = "-";
+                break;
+            }
             default:
                 numberingString = "";
         }

@@ -11,17 +11,17 @@ import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 
 import static com.nexttran.WordToJsonConverter.JsonCreator.*;
 
-class PartiesParser {
+class CasePartiesParser implements ICaseParties {
 
     private WordParagraph wordParagraph;
     private JsonArray partiesSubsections;
 
-    PartiesParser(WordParagraph wordParagraph) {
+    CasePartiesParser(WordParagraph wordParagraph) {
         this.wordParagraph = wordParagraph;
         this.partiesSubsections = new JsonArray();
     }
 
-    SectionResult parse(int beginningParagraph) {
+    public SectionResult parse(int beginningParagraph) {
         HeadingParagraphIndex partiesSectionHeading = findPartiesSectionHeading(beginningParagraph);
         int paragraphIndex = partiesSectionHeading.getParagraphIndex();
         paragraphIndex = getPartiesSubsections(paragraphIndex);

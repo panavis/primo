@@ -8,15 +8,15 @@ import com.nexttran.WordToJsonConverter.Wrappers.JsonObject;
 
 import java.util.Arrays;
 
-class SubjectMatterParser {
+class CaseSubjectMatterParser implements ICaseSubjectMatter {
 
     private WordParagraph wordParagraph;
 
-    SubjectMatterParser(WordParagraph wordParagraph) {
+    CaseSubjectMatterParser(WordParagraph wordParagraph) {
         this.wordParagraph = wordParagraph;
     }
 
-    SectionResult parse(int startParagraph) {
+    public SectionResult parse(int startParagraph) {
         String heading = getSubjectMatterHeading(startParagraph);
         String body = getSubjectMatterBody(startParagraph);
         JsonObject sectionContent = getSectionContent(heading, body);
@@ -33,7 +33,21 @@ class SubjectMatterParser {
         String body = String.join(" ", bodyNoHeading).trim();
         body = body.equals(Format.EMPTY_STRING) ?
                 this.wordParagraph.getParagraph(++startParagraph).getText() : body;
-        return body;
+
+        int paragraphIndex = startParagraph + 1;
+        StringBuilder bodyContent = new StringBuilder(body);
+        while(isStillSubjectMatterSection(paragraphIndex)) {
+            bodyContent.append(Format.LINE_SEPARATOR)
+                    .append(this.wordParagraph.getParagraphWithNumbering(paragraphIndex));
+            paragraphIndex++;
+        }
+
+        return bodyContent.toString();
+    }
+
+    private boolean isStillSubjectMatterSection(int paragraphIndex) {
+        String text = this.wordParagraph.getParagraph(paragraphIndex).getText().toLowerCase();
+        return !(text.contains("imiterere") && text.contains("y") && text.contains("urubanza"));
     }
 
     private JsonObject getSectionContent(String heading, String body) {
