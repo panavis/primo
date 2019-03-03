@@ -31,17 +31,14 @@ class CaseSubjectMatterParser implements ICaseSubjectMatter {
         String[] bodyArray = this.wordParagraph.getParagraph(startParagraph).getText().split(":");
         String[] bodyNoHeading = Arrays.copyOfRange(bodyArray, 1, bodyArray.length);
         String body = String.join(" ", bodyNoHeading).trim();
-        body = body.equals(Format.EMPTY_STRING) ?
-                this.wordParagraph.getParagraph(++startParagraph).getText() : body;
 
         int paragraphIndex = startParagraph + 1;
         StringBuilder bodyContent = new StringBuilder(body);
         while(isStillSubjectMatterSection(paragraphIndex)) {
-            bodyContent.append(Format.LINE_SEPARATOR)
-                    .append(this.wordParagraph.getParagraphWithNumbering(paragraphIndex));
+            bodyContent.append(bodyContent.length() == 0 ? "" : Format.LINE_SEPARATOR)
+                        .append(this.wordParagraph.getParagraphWithNumbering(paragraphIndex));
             paragraphIndex++;
         }
-
         return bodyContent.toString();
     }
 
