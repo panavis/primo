@@ -1,5 +1,6 @@
 package com.nexttran.WordToJsonConverter;
 
+import com.nexttran.WordToJsonConverter.Constants.Headings;
 import com.nexttran.WordToJsonConverter.Constants.Keywords;
 import com.nexttran.WordToJsonConverter.ResultTypes.SectionResult;
 import com.nexttran.WordToJsonConverter.Wrappers.JsonArray;
@@ -27,6 +28,16 @@ public class ParseCaseSubjectMatterTests {
         return subjectMatterContent.getArrayByKey(Keywords.SUBJECT_MATTER);
     }
 
+    private JsonObject getSubjectMatterSubsection(int wordDocIndex) {
+        return getSubjectMatterSectionJsonArray(wordDocIndex).getJsonObjectByIndex(0);
+    }
+
+    @Test
+    public void comm_court_huye_2011_hasSubjectMatterHasOneSubsection() {
+        JsonArray subjectMatterArray = getSubjectMatterSectionJsonArray(0);
+        assertEquals(1, subjectMatterArray.getSize());
+    }
+
     @Test
     public void interm_court_huye_2018_226_hasSubjectMatterHasOneSubsection() {
         JsonArray subjectMatterArray = getSubjectMatterSectionJsonArray(13);
@@ -34,31 +45,63 @@ public class ParseCaseSubjectMatterTests {
     }
 
     @Test
-    public void interm_court_huye_2018_226_has_Icyaha_Aregwa_subheading() {
-        JsonArray subjectMatterArray = getSubjectMatterSectionJsonArray(13);
-        JsonObject subsection = subjectMatterArray.getJsonObjectByIndex(0);
-        assertTrue(subsection.hasKey("ICYAHA AREGWA"));
+    public void comm_court_huye_2011_has_Ikiregerwa_subheading() {
+        JsonObject subsection = getSubjectMatterSubsection(0);
+        assertTrue(subsection.hasKey(Headings.IKIREGERWA));
     }
 
     @Test
-    public void interm_court_huye_2018_226_subsectionHasANestedArrayWithLengthOne() {
-        JsonArray subjectMatterArray = getSubjectMatterSectionJsonArray(13);
-        JsonObject subsection = subjectMatterArray.getJsonObjectByIndex(0);
-        JsonArray actualSubsectionArray = subsection.getArrayByKey("ICYAHA AREGWA");
+    public void interm_court_huye_2018_226_has_Icyaha_Aregwa_subheading() {
+        JsonObject subsection = getSubjectMatterSubsection(13);
+        assertTrue(subsection.hasKey(Headings.ICYAHA_AREGWA));
+    }
+
+    @Test
+    public void comm_court_huye_2011_subsectionHasANestedArrayWithLengthOne() {
+        JsonObject subsection = getSubjectMatterSubsection(0);
+        JsonArray actualSubsectionArray = subsection.getArrayByKey(Headings.IKIREGERWA);
         assertEquals(1, actualSubsectionArray.getSize());
     }
 
     @Test
-    public void interm_court_huye_2018_226_subjectMatterMatchesExpectedContent() {
-        JsonArray subjectMatterArray = getSubjectMatterSectionJsonArray(13);
+    public void interm_court_huye_2018_226_subsectionHasANestedArrayWithLengthOne() {
+        JsonObject subsection = getSubjectMatterSubsection(13);
+        JsonArray actualSubsectionArray = subsection.getArrayByKey(Headings.ICYAHA_AREGWA);
+        assertEquals(1, actualSubsectionArray.getSize());
+    }
+
+    private String getActualSubsectionContent(int wordDocIndex, String heading) {
+        JsonArray subjectMatterArray = getSubjectMatterSectionJsonArray(wordDocIndex);
         JsonObject subsection = subjectMatterArray.getJsonObjectByIndex(0);
-        JsonArray actualSubsectionArray = subsection.getArrayByKey("ICYAHA AREGWA");
-        JsonObject expectedCaseJsonObject = TestsSetup.expectedJsonContent.get(13);
+        return subsection.getArrayByKey(heading).toString();
+    }
+
+    private String getExpectedSubsectionContent(int jsonDocIndex, String heading) {
+        JsonObject expectedCaseJsonObject = TestsSetup.expectedJsonContent.get(jsonDocIndex);
         JsonArray expectedCase = expectedCaseJsonObject.getArrayByKey(Keywords.CASE);
         JsonObject expectedSection = expectedCase.getJsonObjectByIndex(2);
         JsonArray expectedSubjectMatterArray = expectedSection.getArrayByKey(Keywords.SUBJECT_MATTER);
-        JsonArray expectedSubsectionArray = expectedSubjectMatterArray.getJsonObjectByIndex(0)
-                                            .getArrayByKey("ICYAHA AREGWA");
-        assertEquals(expectedSubsectionArray.toString(), actualSubsectionArray.toString());
+        return expectedSubjectMatterArray.getJsonObjectByIndex(0)
+                .getArrayByKey(heading).toString();
     }
+
+    @Test
+    public void comm_court_huye_2011_subjectMatterMatchesExpectedContent() {
+        String actualSubsectionContent = getActualSubsectionContent(0,
+                Headings.IKIREGERWA);
+        String expectedSubsectionArray = getExpectedSubsectionContent(0,
+                Headings.IKIREGERWA);
+        assertEquals(expectedSubsectionArray, actualSubsectionContent);
+    }
+
+    @Test
+    public void interm_court_huye_2018_226_subjectMatterMatchesExpectedContent() {
+        String actualSubsectionContent = getActualSubsectionContent(13,
+                Headings.ICYAHA_AREGWA);
+        String expectedSubsectionContent = getExpectedSubsectionContent(13,
+                Headings.ICYAHA_AREGWA);
+        assertEquals(expectedSubsectionContent, actualSubsectionContent);
+    }
+
+
 }

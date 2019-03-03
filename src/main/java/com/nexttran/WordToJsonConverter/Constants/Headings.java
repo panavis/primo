@@ -14,14 +14,16 @@ public class Headings {
     public static final String ABAGOBOKESHWA = "ABAGOBOKESHWA";
     public static final String UWAJURIYE = "UWAJURIYE";
     public static final String ABAREGWA = "ABAREGWA";
+    public static final String IKIREGERWA = "IKIREGERWA";
     public static final String  URUKIKO = "URUKIKO";
+    public static final String ICYAHA_AREGWA = "ICYAHA AREGWA";
     public static final List<String> PARTIES_HEADINGS = new ArrayList<>(Arrays.asList(
             "HABURANA",
             "ABABURANA",
             "ABABURANYI"));
 
     public static final List<String> SUBJECT_MATTER_HEADINGS = new ArrayList<>(
-                                                Arrays.asList("IKIREGERWA", "IKIBURANWA",
+                                                Arrays.asList(Headings.IKIREGERWA, "IKIBURANWA",
                                                         "IBYAHA AREGWA", "ICYAHA ASHINJWA",
-                                                        "ICYAHA AREGWA"));
+                                                        Headings.ICYAHA_AREGWA));
 }
