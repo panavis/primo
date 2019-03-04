@@ -85,11 +85,32 @@ class CasePartiesParser implements ICaseParties {
         XWPFParagraph currentParagraph = this.wordParagraph.getParagraph(paragraphIndex);
         String partyHeading = wordParagraph.getHeadingFromParagraph(paragraphIndex);
         String firstParagraph = currentParagraph.getText().substring(partyHeading.length());
-        TextParagraphIndex textParagraphIndex = this.wordParagraph.getMoreParagraphsIfAny(
+        TextParagraphIndex textParagraphIndex = getMoreParagraphsIfAny(
                                                 firstParagraph, paragraphIndex);
         String subsectionParagraphs = textParagraphIndex.getSubsectionParagraphs();
         addSubsectionContent(partyHeading, subsectionParagraphs);
         return textParagraphIndex.getParagraphIndex() - 1;
+    }
+
+    private TextParagraphIndex getMoreParagraphsIfAny(String firstParagraph, int paragraphIndex) {
+        StringBuilder subsectionParagraphs= new StringBuilder();
+        firstParagraph = this.wordParagraph.addNumberingIfAny(paragraphIndex, firstParagraph.trim());
+        subsectionParagraphs.append(firstParagraph);
+        paragraphIndex++;
+        while (isInTheCurrentSubsection(paragraphIndex)) {
+            String emptyLines = this.wordParagraph.getBlankLines(paragraphIndex-1);
+            String paragraph = this.wordParagraph.getParagraph(paragraphIndex).getText().trim();
+            String numbered = this.wordParagraph.addNumberingIfAny(paragraphIndex, paragraph);
+            String paragraphText = emptyLines + numbered;
+            subsectionParagraphs.append(paragraphText);
+            paragraphIndex++;
+        }
+        return new TextParagraphIndex(subsectionParagraphs.toString(), paragraphIndex);
+    }
+
+    private boolean isInTheCurrentSubsection(int paragraphIndex) {
+        String text = this.wordParagraph.getParagraph(paragraphIndex).getText();
+        return !(this.wordParagraph.isSectionHeading(paragraphIndex)) && !CasePartiesParser.isProsecutor(text);
     }
 
     private void addSubsectionContent(String subsectionName, String subsectionContent) {
@@ -107,7 +128,7 @@ class CasePartiesParser implements ICaseParties {
         String subsectionName = wordParagraph.getHeadingFromParagraph(paragraphIndex);
         paragraphIndex++;
         String firstParagraph = this.wordParagraph.getParagraph(paragraphIndex).getText();
-        TextParagraphIndex textParagraphIndex = this.wordParagraph.getMoreParagraphsIfAny(
+        TextParagraphIndex textParagraphIndex = getMoreParagraphsIfAny(
                                             firstParagraph, paragraphIndex);
         paragraphIndex = textParagraphIndex.getParagraphIndex();
         String subsectionParagraphs = textParagraphIndex.getSubsectionParagraphs();
@@ -119,7 +140,7 @@ class CasePartiesParser implements ICaseParties {
         this.partiesSubsections.putValue(getJsonObject(Keywords.UBUSHINJACYAHA, getJsonArrayWithString(paragraphText)));
     }
 
-    static boolean isProsecutor(String text) {
+    private static boolean isProsecutor(String text) {
         return text.toLowerCase().contains(Keywords.UBUSHINJACYAHA);
     }
 }

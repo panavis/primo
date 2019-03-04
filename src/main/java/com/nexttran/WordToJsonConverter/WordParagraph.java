@@ -87,23 +87,7 @@ class WordParagraph {
         return subjectMatterStart;
     }
 
-    TextParagraphIndex getMoreParagraphsIfAny(String firstParagraph, int paragraphIndex) {
-        StringBuilder subsectionParagraphs= new StringBuilder();
-        firstParagraph = addNumberingIfAny(paragraphIndex, firstParagraph.trim());
-        subsectionParagraphs.append(firstParagraph);
-        paragraphIndex++;
-        while (isInTheCurrentSubsection(paragraphIndex)) {
-            String emptyLines = getBlankLines(paragraphIndex-1);
-            String paragraph = getParagraph(paragraphIndex).getText().trim();
-            String numbered = addNumberingIfAny(paragraphIndex, paragraph);
-            String paragraphText = emptyLines + numbered;
-            subsectionParagraphs.append(paragraphText);
-            paragraphIndex++;
-        }
-        return new TextParagraphIndex(subsectionParagraphs.toString(), paragraphIndex);
-    }
-
-    private String getBlankLines(int paragraphIndex) {
+    String getBlankLines(int paragraphIndex) {
         int blanks = this.postParagraphBlanks.get(paragraphIndex);
         if (isListParagraphAndHasNumbering(paragraphIndex)) blanks = 2;
         return StringFormatting.duplicateLineSeparator(blanks);
@@ -114,16 +98,11 @@ class WordParagraph {
                 this.paragraphsNumbering.get(paragraphIndex).length() != 0;
     }
 
-    private String addNumberingIfAny(int paragraphIndex, String paragraph) {
+    String addNumberingIfAny(int paragraphIndex, String paragraph) {
         String newParagraph = paragraph;
         if (this.isListParagraphAndHasNumbering(paragraphIndex))
             newParagraph = this.paragraphsNumbering.get(paragraphIndex) + paragraph;
         return newParagraph;
-    }
-
-    private boolean isInTheCurrentSubsection(int paragraphIndex) {
-        String text = getParagraph(paragraphIndex).getText();
-        return !(isSectionHeading(paragraphIndex)) && !CasePartiesParser.isProsecutor(text);
     }
 
     boolean isContentOnSameLine(int paragraphIndex) {
