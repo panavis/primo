@@ -2,7 +2,6 @@ package com.nexttran.WordToJsonConverter;
 
 import com.nexttran.WordToJsonConverter.Constants.Format;
 import com.nexttran.WordToJsonConverter.Constants.Headings;
-import com.nexttran.WordToJsonConverter.ResultTypes.TextParagraphIndex;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFNumbering;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
@@ -29,13 +28,7 @@ class WordParagraph {
 
 
     XWPFParagraph getParagraph(int paragraphIndex) {
-        XWPFParagraph paragraph = this.paragraphs.get(0);
-        try {
-            paragraph = this.paragraphs.get(paragraphIndex);
-        } catch (IndexOutOfBoundsException e) {
-            System.out.println("Exception in WordParagraph: IndexOutOfBoundsException");
-        }
-        return paragraph;
+        return this.paragraphs.get(paragraphIndex);
     }
 
     int numberOfParagraphs() {

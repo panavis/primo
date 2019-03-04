@@ -76,7 +76,7 @@ class CasePartiesParser implements ICaseParties {
             else if (this.wordParagraph.isContentOnSameLine(paragraphIndex))
                 paragraphIndex = addPartiesSameLineSubsection(paragraphIndex);
         } else if (isProsecutor(paragraphText)) {
-            addCriminalCaseProsecutor(paragraphText);
+            paragraphIndex = addCriminalCaseProsecutor(paragraphIndex, paragraphText);
         }
         return paragraphIndex;
     }
@@ -130,14 +130,19 @@ class CasePartiesParser implements ICaseParties {
         String firstParagraph = this.wordParagraph.getParagraph(paragraphIndex).getText();
         TextParagraphIndex textParagraphIndex = getMoreParagraphsIfAny(
                                             firstParagraph, paragraphIndex);
-        paragraphIndex = textParagraphIndex.getParagraphIndex();
         String subsectionParagraphs = textParagraphIndex.getSubsectionParagraphs();
         addSubsectionContent(subsectionName, subsectionParagraphs);
-        return paragraphIndex - 1;
+        return textParagraphIndex.getParagraphIndex() - 1;
     }
 
-    private void addCriminalCaseProsecutor(String paragraphText) {
-        this.partiesSubsections.putValue(getJsonObject(Keywords.UBUSHINJACYAHA, getJsonArrayWithString(paragraphText)));
+    private int addCriminalCaseProsecutor(int paragraphIndex, String firstParagraph) {
+        TextParagraphIndex textParagraphIndex = getMoreParagraphsIfAny(
+                firstParagraph, paragraphIndex);
+        String sectionContent = textParagraphIndex.getSubsectionParagraphs();
+        JsonArray prosecutorContent = new JsonArray();
+        prosecutorContent.putValue(sectionContent);
+        this.partiesSubsections.putValue(getJsonObject(Keywords.UBUSHINJACYAHA, prosecutorContent));
+        return textParagraphIndex.getParagraphIndex() - 1;
     }
 
     private static boolean isProsecutor(String text) {
