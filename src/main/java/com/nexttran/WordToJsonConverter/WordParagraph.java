@@ -92,7 +92,7 @@ class WordParagraph {
         firstParagraph = addNumberingIfAny(paragraphIndex, firstParagraph.trim());
         subsectionParagraphs.append(firstParagraph);
         paragraphIndex++;
-        while (nextParagraphIsNotHeading(paragraphIndex)) {
+        while (isInTheCurrentSubsection(paragraphIndex)) {
             String emptyLines = getBlankLines(paragraphIndex-1);
             String paragraph = getParagraph(paragraphIndex).getText().trim();
             String numbered = addNumberingIfAny(paragraphIndex, paragraph);
@@ -121,8 +121,9 @@ class WordParagraph {
         return newParagraph;
     }
 
-    private boolean nextParagraphIsNotHeading(int paragraphIndex) {
-        return !(isSectionHeading(paragraphIndex));
+    private boolean isInTheCurrentSubsection(int paragraphIndex) {
+        String text = getParagraph(paragraphIndex).getText();
+        return !(isSectionHeading(paragraphIndex)) && !CasePartiesParser.isProsecutor(text);
     }
 
     boolean isContentOnSameLine(int paragraphIndex) {

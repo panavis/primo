@@ -1,9 +1,11 @@
 package com.nexttran.WordToJsonConverter;
 
 import com.nexttran.WordToJsonConverter.Constants.Headings;
+import com.nexttran.WordToJsonConverter.Constants.Keywords;
 import com.nexttran.WordToJsonConverter.Wrappers.JsonArray;
 import com.nexttran.WordToJsonConverter.Wrappers.JsonObject;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -49,6 +51,16 @@ public class CasePartiesParserTests {
     @Test
     public void comm_high_court_2016_PartiesSectionHas_HABURANA_asJsonKey() {
         CasePartiesParserTestsHelpers.assertJsonContainsPartiesSection(6, Headings.HABURANA);
+    }
+
+    @Test
+    public void high_court_chamber_nyanza_2014_PartiesSectionsHas_HABURANA_asJsonKey() {
+        CasePartiesParserTestsHelpers.assertJsonContainsPartiesSection(7, Headings.HABURANA);
+    }
+
+    @Test
+    public void high_court_chamber_nyanza_2018_PartiesSectionsHas_HABURANA_asJsonKey() {
+        CasePartiesParserTestsHelpers.assertJsonContainsPartiesSection(8, Headings.HABURANA);
     }
 
     @Test
@@ -123,6 +135,17 @@ public class CasePartiesParserTests {
     @Test
     public void comm_high_court_2016_PartiesSectionHasTwoSubsections() {
         CasePartiesParserTestsHelpers.assertCorrectNumberOfSubsections(6, Headings.HABURANA, 2);
+    }
+
+    @Ignore
+    @Test
+    public void high_court_chamber_2014_PartiesSectionHasTwoSubsections() {
+        CasePartiesParserTestsHelpers.assertCorrectNumberOfSubsections(7, Headings.HABURANA, 2);
+    }
+
+    @Test
+    public void high_court_chamber_2018_PartiesSectionHasTwoSubsections() {
+        CasePartiesParserTestsHelpers.assertCorrectNumberOfSubsections(8, Headings.HABURANA, 2);
     }
 
     @Test
@@ -204,6 +227,12 @@ public class CasePartiesParserTests {
     @Test
     public void comm_high_court_2016_PartiesSectionHas_UWAJURIYE_subsection() {
         JsonObject actualParty = CasePartiesParserTestsHelpers.getActualPartiesSubsection(6, Headings.HABURANA, 0);
+        assertTrue(actualParty.hasKey(Headings.UWAJURIYE));
+    }
+
+    @Test
+    public void high_court_chamber_nyanza_2018_PartiesSectionsHas_UWAJURIYE_subsection() {
+        JsonObject actualParty = CasePartiesParserTestsHelpers.getActualPartiesSubsection(8, Headings.HABURANA, 0);
         assertTrue(actualParty.hasKey(Headings.UWAJURIYE));
     }
 
@@ -294,6 +323,12 @@ public class CasePartiesParserTests {
     public void comm_high_court_2016_PartiesSectionHas_UREGWA_subsection() {
         JsonObject actualParty = CasePartiesParserTestsHelpers.getActualPartiesSubsection(6, Headings.HABURANA, 1);
         assertTrue(actualParty.hasKey("UWAREZWE MU BUJURIRE"));
+    }
+
+    @Test
+    public void high_court_chamber_nyanza_2018_PartiesSectionHs_Prosecutor_subsection() {
+        JsonObject actualParty = CasePartiesParserTestsHelpers.getActualPartiesSubsection(8, Headings.HABURANA, 1);
+        assertTrue(actualParty.hasKey(Keywords.UBUSHINJACYAHA));
     }
 
     @Test
@@ -414,6 +449,12 @@ public class CasePartiesParserTests {
     }
 
     @Test
+    public void high_court_chamber_nyanza_Parties_UWAJURIYE_subsectionMatchesExpectedContent() {
+        ExpectedActualContent content = CasePartiesParserTestsHelpers.getExpectedAndActualContentForSubsection(8, 0, Headings.HABURANA, Headings.UWAJURIYE);
+        CasePartiesParserTestsHelpers.assertContentLengthEquals(content.expectedContent, content.actualContent);
+    }
+
+    @Test
     public void interm_court_huye_2008_Parties_UREGA_subsectionMatchesExpectedContent() {
         ExpectedActualContent content = CasePartiesParserTestsHelpers.getExpectedAndActualContentForSubsection(10, 0, Headings.ABABURANYI, Headings.UREGA);
         CasePartiesParserTestsHelpers.assertExactContentEquals(content.expectedContent, content.actualContent);
@@ -501,6 +542,13 @@ public class CasePartiesParserTests {
     public void comm_high_court_2016_Parties_UREGWA_subsectionMatchesExpectedContent() {
         ExpectedActualContent content = CasePartiesParserTestsHelpers.getExpectedAndActualContentForSubsection(6, 1,
                             Headings.HABURANA, "UWAREZWE MU BUJURIRE");
+        CasePartiesParserTestsHelpers.assertContentLengthEquals(content.expectedContent, content.actualContent);
+    }
+
+    @Test
+    public void high_court_chamber_nyanza_2018_Prosecutor_subsectionMatchesExpectedContent() {
+        ExpectedActualContent content = CasePartiesParserTestsHelpers.getExpectedAndActualContentForSubsection(8, 1,
+                Headings.HABURANA, Keywords.UBUSHINJACYAHA);
         CasePartiesParserTestsHelpers.assertContentLengthEquals(content.expectedContent, content.actualContent);
     }
 

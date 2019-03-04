@@ -2,6 +2,7 @@ package com.nexttran.WordToJsonConverter;
 
 import com.nexttran.WordToJsonConverter.Constants.Format;
 import com.nexttran.WordToJsonConverter.Constants.Headings;
+import com.nexttran.WordToJsonConverter.Constants.Keywords;
 import com.nexttran.WordToJsonConverter.ResultTypes.SectionResult;
 import com.nexttran.WordToJsonConverter.ResultTypes.HeadingParagraphIndex;
 import com.nexttran.WordToJsonConverter.ResultTypes.TextParagraphIndex;
@@ -57,17 +58,6 @@ class CasePartiesParser implements ICaseParties {
         return firstHeading;
     }
 
-    private void addSubsectionContent(String subsectionName, String subsectionContent) {
-        String[] subsectionItems = subsectionContent.split(Format.DOUBLE_BLANK);
-
-        if (subsectionItems.length == 1)
-            this.partiesSubsections.putValue(getJsonObject(subsectionName, getJsonArrayWithString(subsectionContent)));
-        else {
-            JsonArray jsonArray = getJsonArrayFromStringArray(subsectionItems);
-            this.partiesSubsections.putValue(getJsonObject(subsectionName, jsonArray));
-        }
-    }
-
     private int getPartiesSubsections(int paragraphIndex) {
         for (paragraphIndex++; paragraphIndex < this.wordParagraph.numberOfParagraphs(); paragraphIndex++) {
             if (this.wordParagraph.startsSubjectMatterSection(paragraphIndex))
@@ -78,12 +68,15 @@ class CasePartiesParser implements ICaseParties {
     }
 
     private int addPartiesSubsection(int paragraphIndex) {
+        String paragraphText = this.wordParagraph.getParagraph(paragraphIndex).getText();
         if (this.wordParagraph.isSectionHeading(paragraphIndex)) {
             if (this.wordParagraph.contentIsOnNextLine(paragraphIndex))
                 paragraphIndex = AddSubsectionOnNextLine(paragraphIndex);
 
             else if (this.wordParagraph.isContentOnSameLine(paragraphIndex))
                 paragraphIndex = addPartiesSameLineSubsection(paragraphIndex);
+        } else if (isProsecutor(paragraphText)) {
+            addCriminalCaseProsecutor(paragraphText);
         }
         return paragraphIndex;
     }
@@ -99,6 +92,17 @@ class CasePartiesParser implements ICaseParties {
         return textParagraphIndex.getParagraphIndex() - 1;
     }
 
+    private void addSubsectionContent(String subsectionName, String subsectionContent) {
+        String[] subsectionItems = subsectionContent.split(Format.DOUBLE_BLANK);
+
+        if (subsectionItems.length == 1)
+            this.partiesSubsections.putValue(getJsonObject(subsectionName, getJsonArrayWithString(subsectionContent)));
+        else {
+            JsonArray jsonArray = getJsonArrayFromStringArray(subsectionItems);
+            this.partiesSubsections.putValue(getJsonObject(subsectionName, jsonArray));
+        }
+    }
+
     private int AddSubsectionOnNextLine(int paragraphIndex) {
         String subsectionName = wordParagraph.getHeadingFromParagraph(paragraphIndex);
         paragraphIndex++;
@@ -109,5 +113,13 @@ class CasePartiesParser implements ICaseParties {
         String subsectionParagraphs = textParagraphIndex.getSubsectionParagraphs();
         addSubsectionContent(subsectionName, subsectionParagraphs);
         return paragraphIndex - 1;
+    }
+
+    private void addCriminalCaseProsecutor(String paragraphText) {
+        this.partiesSubsections.putValue(getJsonObject(Keywords.UBUSHINJACYAHA, getJsonArrayWithString(paragraphText)));
+    }
+
+    static boolean isProsecutor(String text) {
+        return text.toLowerCase().contains(Keywords.UBUSHINJACYAHA);
     }
 }
