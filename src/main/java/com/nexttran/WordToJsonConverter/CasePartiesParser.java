@@ -91,7 +91,7 @@ class CasePartiesParser implements ICaseParties {
     private int AddSubsectionOnNextLine(int paragraphIndex) {
         String subsectionName = wordParagraph.getHeadingFromParagraph(paragraphIndex);
         paragraphIndex++;
-        String firstParagraph = wordParagraph.getParagraph(paragraphIndex).getText();
+        String firstParagraph = wordParagraph.getParagraphWithNumbering(paragraphIndex);
         TextParagraphIndex textParagraphIndex = getMoreParagraphsIfAny(
                 firstParagraph, paragraphIndex);
         String subsectionParagraphs = textParagraphIndex.getSubsectionParagraphs();
@@ -112,13 +112,11 @@ class CasePartiesParser implements ICaseParties {
 
     private TextParagraphIndex getMoreParagraphsIfAny(String firstParagraph, int paragraphIndex) {
         StringBuilder subsectionParagraphs= new StringBuilder();
-        firstParagraph = wordParagraph.addNumberingIfAny(paragraphIndex, firstParagraph.trim());
         subsectionParagraphs.append(firstParagraph);
         paragraphIndex++;
         while (isInTheCurrentSubsection(paragraphIndex)) {
             String emptyLines = wordParagraph.getBlankLines(paragraphIndex-1);
-            String paragraph = wordParagraph.getParagraph(paragraphIndex).getText().trim();
-            String numbered = wordParagraph.addNumberingIfAny(paragraphIndex, paragraph);
+            String numbered = wordParagraph.getParagraphWithNumbering(paragraphIndex);
             String paragraphText = emptyLines + numbered;
             subsectionParagraphs.append(paragraphText);
             paragraphIndex++;

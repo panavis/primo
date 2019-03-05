@@ -91,13 +91,6 @@ class WordParagraph {
                 this.paragraphsNumbering.get(paragraphIndex).length() != 0;
     }
 
-    String addNumberingIfAny(int paragraphIndex, String paragraph) {
-        String newParagraph = paragraph;
-        if (this.isListParagraphAndHasNumbering(paragraphIndex))
-            newParagraph = this.paragraphsNumbering.get(paragraphIndex) + paragraph;
-        return newParagraph;
-    }
-
     boolean isContentOnSameLine(int paragraphIndex) {
         String paragraphText = getParagraph(paragraphIndex).getText();
         String[] textParts = paragraphText.split(Format.COLON);
@@ -144,7 +137,7 @@ class WordParagraph {
     }
 
     String getParagraphWithNumbering(int paragraphIndex) {
-        String text = getParagraph(paragraphIndex).getText();
+        String text = getParagraph(paragraphIndex).getText().trim();
         if (this.listParagraphs.get(paragraphIndex))
             text = this.paragraphsNumbering.get(paragraphIndex) + text;
         return text;
