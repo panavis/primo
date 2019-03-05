@@ -50,16 +50,18 @@ class CasePartiesParser implements ICaseParties {
     }
 
     private String getFirstHeading(String firstHeading, int paragraphIndex) {
-        if (this.wordParagraph.isSectionHeading(paragraphIndex)) {
+        if (this.wordParagraph.isSectionHeading(paragraphIndex))
             firstHeading = this.wordParagraph.getHeadingFromParagraph(paragraphIndex);
-        }
+
         firstHeading = Headings.PARTIES_HEADINGS.contains(firstHeading) ?
                 firstHeading : this.wordParagraph.getCaseSensitiveRunText(paragraphIndex);
         return firstHeading;
     }
 
     private int getPartiesSubsections(int paragraphIndex) {
-        for (paragraphIndex++; paragraphIndex < this.wordParagraph.numberOfParagraphs(); paragraphIndex++) {
+        for (paragraphIndex++;
+             paragraphIndex < this.wordParagraph.numberOfParagraphs();
+             paragraphIndex++) {
             if (this.wordParagraph.startsSubjectMatterSection(paragraphIndex))
                 break;
             paragraphIndex = addPartiesSubsection(paragraphIndex);
@@ -69,20 +71,36 @@ class CasePartiesParser implements ICaseParties {
 
     private int addPartiesSubsection(int paragraphIndex) {
         String paragraphText = this.wordParagraph.getParagraph(paragraphIndex).getText();
-        if (this.wordParagraph.isSectionHeading(paragraphIndex)) {
-            if (this.wordParagraph.contentIsOnNextLine(paragraphIndex))
-                paragraphIndex = AddSubsectionOnNextLine(paragraphIndex);
-
-            else if (this.wordParagraph.isContentOnSameLine(paragraphIndex))
-                paragraphIndex = addPartiesSameLineSubsection(paragraphIndex);
-        } else if (isProsecutor(paragraphText)) {
+         if (this.wordParagraph.isSectionHeading(paragraphIndex)) {
+             paragraphIndex = parseAndAddNormalSubsection(paragraphIndex);
+         } else if (isProsecutor(paragraphText)) {
             paragraphIndex = addCriminalCaseProsecutor(paragraphIndex, paragraphText);
         }
         return paragraphIndex;
     }
 
+    private int parseAndAddNormalSubsection(int paragraphIndex) {
+        if (this.wordParagraph.isContentOnNextLine(paragraphIndex))
+            paragraphIndex = AddSubsectionOnNextLine(paragraphIndex);
+
+        else if (this.wordParagraph.isContentOnSameLine(paragraphIndex))
+            paragraphIndex = addPartiesSameLineSubsection(paragraphIndex);
+        return paragraphIndex;
+    }
+
+    private int AddSubsectionOnNextLine(int paragraphIndex) {
+        String subsectionName = wordParagraph.getHeadingFromParagraph(paragraphIndex);
+        paragraphIndex++;
+        String firstParagraph = wordParagraph.getParagraph(paragraphIndex).getText();
+        TextParagraphIndex textParagraphIndex = getMoreParagraphsIfAny(
+                firstParagraph, paragraphIndex);
+        String subsectionParagraphs = textParagraphIndex.getSubsectionParagraphs();
+        addSubsectionContent(subsectionName, subsectionParagraphs);
+        return textParagraphIndex.getParagraphIndex() - 1;
+    }
+
     private int addPartiesSameLineSubsection(int paragraphIndex) {
-        XWPFParagraph currentParagraph = this.wordParagraph.getParagraph(paragraphIndex);
+        XWPFParagraph currentParagraph = wordParagraph.getParagraph(paragraphIndex);
         String partyHeading = wordParagraph.getHeadingFromParagraph(paragraphIndex);
         String firstParagraph = currentParagraph.getText().substring(partyHeading.length());
         TextParagraphIndex textParagraphIndex = getMoreParagraphsIfAny(
@@ -94,13 +112,13 @@ class CasePartiesParser implements ICaseParties {
 
     private TextParagraphIndex getMoreParagraphsIfAny(String firstParagraph, int paragraphIndex) {
         StringBuilder subsectionParagraphs= new StringBuilder();
-        firstParagraph = this.wordParagraph.addNumberingIfAny(paragraphIndex, firstParagraph.trim());
+        firstParagraph = wordParagraph.addNumberingIfAny(paragraphIndex, firstParagraph.trim());
         subsectionParagraphs.append(firstParagraph);
         paragraphIndex++;
         while (isInTheCurrentSubsection(paragraphIndex)) {
-            String emptyLines = this.wordParagraph.getBlankLines(paragraphIndex-1);
-            String paragraph = this.wordParagraph.getParagraph(paragraphIndex).getText().trim();
-            String numbered = this.wordParagraph.addNumberingIfAny(paragraphIndex, paragraph);
+            String emptyLines = wordParagraph.getBlankLines(paragraphIndex-1);
+            String paragraph = wordParagraph.getParagraph(paragraphIndex).getText().trim();
+            String numbered = wordParagraph.addNumberingIfAny(paragraphIndex, paragraph);
             String paragraphText = emptyLines + numbered;
             subsectionParagraphs.append(paragraphText);
             paragraphIndex++;
@@ -109,8 +127,8 @@ class CasePartiesParser implements ICaseParties {
     }
 
     private boolean isInTheCurrentSubsection(int paragraphIndex) {
-        String text = this.wordParagraph.getParagraph(paragraphIndex).getText();
-        return !(this.wordParagraph.isSectionHeading(paragraphIndex)) && !CasePartiesParser.isProsecutor(text);
+        String text = wordParagraph.getParagraph(paragraphIndex).getText();
+        return !(wordParagraph.isSectionHeading(paragraphIndex)) && !CasePartiesParser.isProsecutor(text);
     }
 
     private void addSubsectionContent(String subsectionName, String subsectionContent) {
@@ -122,17 +140,6 @@ class CasePartiesParser implements ICaseParties {
             JsonArray jsonArray = getJsonArrayFromStringArray(subsectionItems);
             this.partiesSubsections.putValue(getJsonObject(subsectionName, jsonArray));
         }
-    }
-
-    private int AddSubsectionOnNextLine(int paragraphIndex) {
-        String subsectionName = wordParagraph.getHeadingFromParagraph(paragraphIndex);
-        paragraphIndex++;
-        String firstParagraph = this.wordParagraph.getParagraph(paragraphIndex).getText();
-        TextParagraphIndex textParagraphIndex = getMoreParagraphsIfAny(
-                                            firstParagraph, paragraphIndex);
-        String subsectionParagraphs = textParagraphIndex.getSubsectionParagraphs();
-        addSubsectionContent(subsectionName, subsectionParagraphs);
-        return textParagraphIndex.getParagraphIndex() - 1;
     }
 
     private int addCriminalCaseProsecutor(int paragraphIndex, String firstParagraph) {

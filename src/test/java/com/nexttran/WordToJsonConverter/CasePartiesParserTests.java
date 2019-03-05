@@ -142,7 +142,7 @@ public class CasePartiesParserTests {
         CasePartiesParserTestsHelpers.assertCorrectNumberOfSubsections(6, Headings.HABURANA, 2);
     }
 
-    @Ignore
+
     @Test
     public void high_court_chamber_2014_PartiesSectionHasTwoSubsections() {
         CasePartiesParserTestsHelpers.assertCorrectNumberOfSubsections(7, Headings.HABURANA, 2);
@@ -237,6 +237,12 @@ public class CasePartiesParserTests {
     @Test
     public void comm_high_court_2016_PartiesSectionHas_UWAJURIYE_subsection() {
         JsonObject actualParty = CasePartiesParserTestsHelpers.getActualPartiesSubsection(6, Headings.HABURANA, 0);
+        assertTrue(actualParty.hasKey(Headings.UWAJURIYE));
+    }
+
+    @Test
+    public void comm_high_chamber_nyanza_2014_PartiesSectionHas_UWAJURIYE_subsection() {
+        JsonObject actualParty = CasePartiesParserTestsHelpers.getActualPartiesSubsection(7, Headings.HABURANA, 0);
         assertTrue(actualParty.hasKey(Headings.UWAJURIYE));
     }
 
@@ -339,6 +345,12 @@ public class CasePartiesParserTests {
     public void comm_high_court_2016_PartiesSectionHas_UREGWA_subsection() {
         JsonObject actualParty = CasePartiesParserTestsHelpers.getActualPartiesSubsection(6, Headings.HABURANA, 1);
         assertTrue(actualParty.hasKey("UWAREZWE MU BUJURIRE"));
+    }
+
+    @Test
+    public void high_court_chamber_nyanza_2014_PartiesSectionHas_UREGWA_subsection() {
+        JsonObject actualParty = CasePartiesParserTestsHelpers.getActualPartiesSubsection(7, Headings.HABURANA, 1);
+        assertTrue(actualParty.hasKey(Keywords.UBUSHINJACYAHA));
     }
 
     @Test
@@ -471,6 +483,12 @@ public class CasePartiesParserTests {
     }
 
     @Test
+    public void high_court_chamber_nyanza_2014_Parties_UWAJURIYE_subsectionMatchesExpectedContent() {
+        ExpectedActualContent content = CasePartiesParserTestsHelpers.getExpectedAndActualContentForSubsection(7, 0, Headings.HABURANA, Headings.UWAJURIYE);
+        CasePartiesParserTestsHelpers.assertContentLengthEquals(content.expectedContent, content.actualContent);
+    }
+
+    @Test
     public void high_court_chamber_nyanza_2018_Parties_UWAJURIYE_subsectionMatchesExpectedContent() {
         ExpectedActualContent content = CasePartiesParserTestsHelpers.getExpectedAndActualContentForSubsection(8, 0, Headings.HABURANA, Headings.UWAJURIYE);
         CasePartiesParserTestsHelpers.assertContentLengthEquals(content.expectedContent, content.actualContent);
@@ -570,6 +588,13 @@ public class CasePartiesParserTests {
     public void comm_high_court_2016_Parties_UREGWA_subsectionMatchesExpectedContent() {
         ExpectedActualContent content = CasePartiesParserTestsHelpers.getExpectedAndActualContentForSubsection(6, 1,
                             Headings.HABURANA, "UWAREZWE MU BUJURIRE");
+        CasePartiesParserTestsHelpers.assertContentLengthEquals(content.expectedContent, content.actualContent);
+    }
+
+    @Test
+    public void high_court_chamber_nyanza_2014_Prosecutor_subsectionMatchesExpectedContent() {
+        ExpectedActualContent content = CasePartiesParserTestsHelpers.getExpectedAndActualContentForSubsection(7, 1,
+                Headings.HABURANA, Keywords.UBUSHINJACYAHA);
         CasePartiesParserTestsHelpers.assertContentLengthEquals(content.expectedContent, content.actualContent);
     }
 

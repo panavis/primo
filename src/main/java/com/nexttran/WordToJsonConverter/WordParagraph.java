@@ -122,8 +122,16 @@ class WordParagraph {
         return paragraphText.split(" ")[0];
     }
 
-    boolean contentIsOnNextLine(int paragraphIndex) {
+    boolean isContentOnNextLine(int paragraphIndex) {
+        return lineEndsWithColon(paragraphIndex) || lineHasHeadingOnly(paragraphIndex);
+    }
+
+    private boolean lineEndsWithColon(int paragraphIndex) {
         return getParagraph(paragraphIndex).getText().endsWith(Format.COLON);
+    }
+
+    private boolean lineHasHeadingOnly(int paragraphIndex) {
+        return !(getParagraph(paragraphIndex).getText().contains(Format.COLON));
     }
 
     String getHeadingFromParagraph(int paragraphIndex) {
