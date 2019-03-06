@@ -1,5 +1,6 @@
 package com.nexttran.WordToJsonConverter;
 
+import com.nexttran.WordToJsonConverter.Constants.Format;
 import com.nexttran.WordToJsonConverter.Constants.Keywords;
 import com.nexttran.WordToJsonConverter.ResultTypes.SectionResult;
 import com.nexttran.WordToJsonConverter.Wrappers.JsonArray;
@@ -51,7 +52,9 @@ class CaseSubjectMatterParser implements ICaseSubjectMatter {
     private JsonObject getSectionContent(String heading, String body) {
         JsonObject nestedJson = new JsonObject();
         JsonArray sectionNestedArray = new JsonArray();
-        sectionNestedArray.putValue(body);
+        for (String paragraph : body.split(Format.DOUBLE_BLANK)) {
+            sectionNestedArray.putValue(paragraph);
+        }
         nestedJson.addNameValuePair(heading, sectionNestedArray);
         JsonArray sectionArray = new JsonArray();
         sectionArray.putValue(nestedJson);

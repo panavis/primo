@@ -176,12 +176,10 @@ public class CaseSubjectMatterParserTests {
         assertEquals(1, actualSubsectionArray.getSize());
     }
 
-    @Ignore
     @Test
     public void comm_high_court_2016_subsectionHasANestedArrayWithLengthThree() {
         JsonObject subsection = getSubjectMatterSubsection(6);
         JsonArray actualSubsectionArray = subsection.getArrayByKey(Headings.IKIBURANWA);
-        System.out.println(actualSubsectionArray);
         assertEquals(3, actualSubsectionArray.getSize());
     }
 
