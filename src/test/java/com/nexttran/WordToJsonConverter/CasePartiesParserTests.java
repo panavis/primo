@@ -393,7 +393,7 @@ public class CasePartiesParserTests {
     public void interm_court_huye_2018_226_Partie_UREGWA_Has_Two_subsections() {
         JsonObject actualParty = CasePartiesParserTestsHelpers.getActualPartiesSubsection(13, Headings.HABURANA, 2);
         JsonArray defendant = actualParty.getArrayByKey(Headings.UREGWA);
-        assertEquals(2, defendant.getSize());
+        assertEquals(1, defendant.getSize());
     }
 
     @Test
@@ -579,7 +579,7 @@ public class CasePartiesParserTests {
     }
 
     @Test
-    public void comm_court_nyarugenge_2016_Parties_UREGWA_subsectionMatchesExpectedContent() {
+    public void comm_court_nyarugenge_2016_Parties_ABAREGWA_subsectionMatchesExpectedContent() {
         ExpectedActualContent content = CasePartiesParserTestsHelpers.getExpectedAndActualContentForSubsection(5, 1, Headings.ABABURANA, Headings.ABAREGWA);
         CasePartiesParserTestsHelpers.assertExactContentEquals(content.expectedContent, content.actualContent);
     }

@@ -1,6 +1,5 @@
 package com.nexttran.WordToJsonConverter;
 
-import com.nexttran.WordToJsonConverter.Constants.Format;
 import com.nexttran.WordToJsonConverter.Constants.Keywords;
 import com.nexttran.WordToJsonConverter.ResultTypes.SectionResult;
 import com.nexttran.WordToJsonConverter.Wrappers.JsonArray;
@@ -24,26 +23,28 @@ class CaseSubjectMatterParser implements ICaseSubjectMatter {
     }
 
     private String getSubjectMatterHeading(int startParagraph) {
-        return this.wordParagraph.getHeadingFromParagraph(startParagraph);
+        return wordParagraph.getHeadingFromParagraph(startParagraph);
     }
 
     private String getSubjectMatterBody(int startParagraph) {
-        String[] bodyArray = this.wordParagraph.getParagraph(startParagraph).getText().split(":");
+        String[] bodyArray = wordParagraph.getParagraph(startParagraph).getText().split(":");
         String[] bodyNoHeading = Arrays.copyOfRange(bodyArray, 1, bodyArray.length);
         String body = String.join(" ", bodyNoHeading).trim();
 
         int paragraphIndex = startParagraph + 1;
-        StringBuilder bodyContent = new StringBuilder(body);
+        StringBuilder bodyContent = new StringBuilder();
+        bodyContent.append(body).append(bodyContent.length() == 0 ?
+                "" : wordParagraph.getBlankLinesAfterParagraph(startParagraph));
         while(isStillSubjectMatterSection(paragraphIndex)) {
-            bodyContent.append(bodyContent.length() == 0 ? "" : Format.LINE_SEPARATOR)
-                        .append(this.wordParagraph.getParagraphWithNumbering(paragraphIndex));
+            bodyContent.append(wordParagraph.getParagraphWithNumbering(paragraphIndex))
+                        .append(wordParagraph.getBlankLinesAfterParagraph(paragraphIndex));
             paragraphIndex++;
         }
-        return bodyContent.toString();
+        return bodyContent.toString().trim();
     }
 
     private boolean isStillSubjectMatterSection(int paragraphIndex) {
-        String text = this.wordParagraph.getParagraph(paragraphIndex).getText().toLowerCase();
+        String text = wordParagraph.getParagraph(paragraphIndex).getText().toLowerCase();
         return !(text.contains("imiterere") && text.contains("y") && text.contains("urubanza"));
     }
 

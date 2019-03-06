@@ -80,15 +80,9 @@ class WordParagraph {
         return subjectMatterStart;
     }
 
-    String getBlankLines(int paragraphIndex) {
+    String getBlankLinesAfterParagraph(int paragraphIndex) {
         int blanks = this.postParagraphBlanks.get(paragraphIndex);
-        if (isListParagraphAndHasNumbering(paragraphIndex)) blanks = 2;
         return StringFormatting.duplicateLineSeparator(blanks);
-    }
-
-    private Boolean isListParagraphAndHasNumbering(int paragraphIndex) {
-        return this.listParagraphs.get(paragraphIndex) &&
-                this.paragraphsNumbering.get(paragraphIndex).length() != 0;
     }
 
     boolean isContentOnSameLine(int paragraphIndex) {

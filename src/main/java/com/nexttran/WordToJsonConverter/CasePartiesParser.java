@@ -115,7 +115,7 @@ class CasePartiesParser implements ICaseParties {
         subsectionParagraphs.append(firstParagraph);
         paragraphIndex++;
         while (isInTheCurrentSubsection(paragraphIndex)) {
-            String emptyLines = wordParagraph.getBlankLines(paragraphIndex-1);
+            String emptyLines = wordParagraph.getBlankLinesAfterParagraph(paragraphIndex-1);
             String numbered = wordParagraph.getParagraphWithNumbering(paragraphIndex);
             String paragraphText = emptyLines + numbered;
             subsectionParagraphs.append(paragraphText);

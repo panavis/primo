@@ -7,6 +7,7 @@ import com.nexttran.WordToJsonConverter.Wrappers.JsonArray;
 import com.nexttran.WordToJsonConverter.Wrappers.JsonObject;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static junit.framework.TestCase.assertEquals;
@@ -55,6 +56,18 @@ public class CaseSubjectMatterParserTests {
         JsonArray subjectMatterArray = getSubjectMatterSectionJsonArray(4);
         assertEquals(1, subjectMatterArray.getSize());
     }
+
+    @Test
+    public void comm_court_nyarugenge_2016_SubjectMatterHasOneSubsection() {
+        JsonArray subjectMatterArray = getSubjectMatterSectionJsonArray(5);
+        assertEquals(1, subjectMatterArray.getSize());
+    }
+
+    @Test
+    public void comm_high_court_2016_SubjectMatterHasOneSubsection() {
+        JsonArray subjectMatterArray = getSubjectMatterSectionJsonArray(6);
+        assertEquals(1, subjectMatterArray.getSize());
+    }
     
     @Test
     public void interm_court_huye_2018_226_SubjectMatterHasOneSubsection() {
@@ -87,21 +100,27 @@ public class CaseSubjectMatterParserTests {
     }
 
     @Test
-    public void comm_court_huye_2018_has_Ikiburanwa_subheading() {
+    public void comm_court_huye_2018_has_Ikiregerwa_subheading() {
         JsonObject subsection = getSubjectMatterSubsection(2);
         assertTrue(subsection.hasKey(Headings.IKIREGERWA));
     }
 
     @Test
-    public void comm_court_nyarugenge_2014_has_Ikiburanwa_subheading() {
+    public void comm_court_nyarugenge_2014_has_Ikiregerwa_subheading() {
         JsonObject subsection = getSubjectMatterSubsection(4);
         assertTrue(subsection.hasKey(Headings.IKIREGERWA));
     }
 
     @Test
-    public void comm_court_nyarugenge_2016_has_Ikiburanwa_subheading() {
+    public void comm_court_nyarugenge_2016_has_Ikiregerwa_subheading() {
         JsonObject subsection = getSubjectMatterSubsection(5);
         assertTrue(subsection.hasKey(Headings.IKIREGERWA));
+    }
+
+    @Test
+    public void comm_high_court_2016_has_Ikiregerwa_subheading() {
+        JsonObject subsection = getSubjectMatterSubsection(6);
+        assertTrue(subsection.hasKey(Headings.IKIBURANWA));
     }
 
     @Test
@@ -155,6 +174,15 @@ public class CaseSubjectMatterParserTests {
         JsonObject subsection = getSubjectMatterSubsection(5);
         JsonArray actualSubsectionArray = subsection.getArrayByKey(Headings.IKIREGERWA);
         assertEquals(1, actualSubsectionArray.getSize());
+    }
+
+    @Ignore
+    @Test
+    public void comm_high_court_2016_subsectionHasANestedArrayWithLengthThree() {
+        JsonObject subsection = getSubjectMatterSubsection(6);
+        JsonArray actualSubsectionArray = subsection.getArrayByKey(Headings.IKIBURANWA);
+        System.out.println(actualSubsectionArray);
+        assertEquals(3, actualSubsectionArray.getSize());
     }
 
     @Test
