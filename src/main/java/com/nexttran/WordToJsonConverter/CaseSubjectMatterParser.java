@@ -28,20 +28,29 @@ class CaseSubjectMatterParser implements ICaseSubjectMatter {
     }
 
     private String getSubjectMatterBody(int startParagraph) {
-        String[] bodyArray = wordParagraph.getParagraph(startParagraph).getText().split(":");
-        String[] bodyNoHeading = Arrays.copyOfRange(bodyArray, 1, bodyArray.length);
-        String body = String.join(" ", bodyNoHeading).trim();
-
+        String body = getFirstParagraphOfBody(startParagraph);
         int paragraphIndex = startParagraph + 1;
         StringBuilder bodyContent = new StringBuilder();
         bodyContent.append(body).append(bodyContent.length() == 0 ?
                 "" : wordParagraph.getBlankLinesAfterParagraph(startParagraph));
         while(isStillSubjectMatterSection(paragraphIndex)) {
-            bodyContent.append(wordParagraph.getParagraphWithNumbering(paragraphIndex))
-                        .append(wordParagraph.getBlankLinesAfterParagraph(paragraphIndex));
+            addParagraphIfCaseSensitive(paragraphIndex, bodyContent);
             paragraphIndex++;
         }
         return bodyContent.toString().trim();
+    }
+
+    private void addParagraphIfCaseSensitive(int paragraphIndex, StringBuilder bodyContent) {
+        String paragraphText = wordParagraph.getParagraphWithNumbering(paragraphIndex);
+        if (StringFormatting.isCaseSensitive(paragraphText))
+            bodyContent.append(paragraphText)
+                    .append(wordParagraph.getBlankLinesAfterParagraph(paragraphIndex));
+    }
+
+    private String getFirstParagraphOfBody(int startParagraph) {
+        String[] bodyArray = wordParagraph.getParagraph(startParagraph).getText().split(":");
+        String[] bodyNoHeading = Arrays.copyOfRange(bodyArray, 1, bodyArray.length);
+        return String.join(" ", bodyNoHeading).trim();
     }
 
     private boolean isStillSubjectMatterSection(int paragraphIndex) {

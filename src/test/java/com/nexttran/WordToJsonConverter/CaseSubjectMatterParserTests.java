@@ -265,6 +265,16 @@ public class CaseSubjectMatterParserTests {
     }
 
     @Test
+    public void comm_high_court_2016_subjectMatterMatchesExpectedContent() {
+        String actualSubsectionContent = getActualSubsectionContent(6,
+                Headings.IKIBURANWA);
+        String expectedSubsectionArray = getExpectedSubsectionContent(6,
+                Headings.IKIBURANWA);
+        assertEquals(expectedSubsectionArray, actualSubsectionContent);
+    }
+
+
+    @Test
     public void interm_court_huye_2018_226_subjectMatterMatchesExpectedContent() {
         String actualSubsectionContent = getActualSubsectionContent(13,
                 Headings.ICYAHA_AREGWA);
