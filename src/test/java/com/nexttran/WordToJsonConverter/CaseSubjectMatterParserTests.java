@@ -85,10 +85,22 @@ public class CaseSubjectMatterParserTests {
         JsonArray subjectMatterArray = getSubjectMatterSectionJsonArray(9);
         assertEquals(1, subjectMatterArray.getSize());
     }
+
+    @Test
+    public void interm_court_huye_2015_SubjectMatterHasOneSubsection() {
+        JsonArray subjectMatterArray = getSubjectMatterSectionJsonArray(11);
+        assertEquals(1, subjectMatterArray.getSize());
+    }
     
     @Test
     public void interm_court_huye_2018_226_SubjectMatterHasOneSubsection() {
         JsonArray subjectMatterArray = getSubjectMatterSectionJsonArray(13);
+        assertEquals(1, subjectMatterArray.getSize());
+    }
+
+    @Test
+    public void interm_court_huye_2018_aff_SubjectMatterHasOneSubsection() {
+        JsonArray subjectMatterArray = getSubjectMatterSectionJsonArray(14);
         assertEquals(1, subjectMatterArray.getSize());
     }
 
@@ -101,6 +113,12 @@ public class CaseSubjectMatterParserTests {
     @Test
     public void primary_court_nzige_2011_0020_SubjectMatterHasOneSubsection() {
         JsonArray subjectMatterArray = getSubjectMatterSectionJsonArray(16);
+        assertEquals(1, subjectMatterArray.getSize());
+    }
+
+    @Test
+    public void supreme_court_comm_2009_SubjectMatterHasOneSubsection() {
+        JsonArray subjectMatterArray = getSubjectMatterSectionJsonArray(17);
         assertEquals(1, subjectMatterArray.getSize());
     }
 
@@ -159,9 +177,21 @@ public class CaseSubjectMatterParserTests {
     }
 
     @Test
+    public void interm_court_huye_2015_has_Ibyaha_Ashinjwa_subheading() {
+        JsonObject subsection = getSubjectMatterSubsection(11);
+        assertTrue(subsection.hasKey(Headings.IBYAHA_ASHINJWA));
+    }
+
+    @Test
     public void interm_court_huye_2018_226_has_Icyaha_Aregwa_subheading() {
         JsonObject subsection = getSubjectMatterSubsection(13);
         assertTrue(subsection.hasKey(Headings.ICYAHA_AREGWA));
+    }
+
+    @Test
+    public void interm_court_huye_2018_aff_has_Ikiregerwa_subheading() {
+        JsonObject subsection = getSubjectMatterSubsection(14);
+        assertTrue(subsection.hasKey(Headings.IKIREGERWA));
     }
 
     @Test
@@ -174,6 +204,12 @@ public class CaseSubjectMatterParserTests {
     public void primary_court_nzige_2011_0020_has_Icyaha_Ashinjwa_subheading() {
         JsonObject subsection = getSubjectMatterSubsection(16);
         assertTrue(subsection.hasKey("ICYAHA ashinjwa"));
+    }
+
+    @Test
+    public void supreme_court_comm_2009_has_Ikiregerwa_subheading() {
+        JsonObject subsection = getSubjectMatterSubsection(17);
+        assertTrue(subsection.hasKey(Headings.IKIREGERWA));
     }
 
     @Test
@@ -233,9 +269,16 @@ public class CaseSubjectMatterParserTests {
     }
 
     @Test
-    public void high_court_criminal_2011_subsectionHasANestedArrayWithLengthThree() {
+    public void high_court_criminal_2011_subsectionHasANestedArrayWithLengthOne() {
         JsonObject subsection = getSubjectMatterSubsection(9);
         JsonArray actualSubsectionArray = subsection.getArrayByKey(Headings.IKIREGERWA);
+        assertEquals(1, actualSubsectionArray.getSize());
+    }
+
+    @Test
+    public void interm_court_huye_2015_subsectionHasANestedArrayWithLengthOne() {
+        JsonObject subsection = getSubjectMatterSubsection(11);
+        JsonArray actualSubsectionArray = subsection.getArrayByKey(Headings.IBYAHA_ASHINJWA);
         assertEquals(1, actualSubsectionArray.getSize());
     }
 
@@ -243,6 +286,13 @@ public class CaseSubjectMatterParserTests {
     public void interm_court_huye_2018_226_subsectionHasANestedArrayWithLengthOne() {
         JsonObject subsection = getSubjectMatterSubsection(13);
         JsonArray actualSubsectionArray = subsection.getArrayByKey(Headings.ICYAHA_AREGWA);
+        assertEquals(1, actualSubsectionArray.getSize());
+    }
+
+    @Test
+    public void interm_court_huye_2018_aff_subsectionHasANestedArrayWithLengthOne() {
+        JsonObject subsection = getSubjectMatterSubsection(14);
+        JsonArray actualSubsectionArray = subsection.getArrayByKey(Headings.IKIREGERWA);
         assertEquals(1, actualSubsectionArray.getSize());
     }
 
@@ -258,6 +308,13 @@ public class CaseSubjectMatterParserTests {
         JsonObject subsection = getSubjectMatterSubsection(16);
         JsonArray actualSubsectionArray = subsection.getArrayByKey("ICYAHA ashinjwa");
         assertEquals(1, actualSubsectionArray.getSize());
+    }
+
+    @Test
+    public void supreme_court_comm_2009_subsectionHasANestedArrayWithLengthEight() {
+        JsonObject subsection = getSubjectMatterSubsection(17);
+        JsonArray actualSubsectionArray = subsection.getArrayByKey(Headings.IKIREGERWA);
+        assertEquals(8, actualSubsectionArray.getSize());
     }
 
     private String getActualSubsectionContent(int wordDocIndex, String heading) {
@@ -356,6 +413,15 @@ public class CaseSubjectMatterParserTests {
         assertEquals(expectedSubsectionArray, actualSubsectionContent);
     }
 
+    @Test
+    public void interm_court_huye_2015_subjectMatterMatchesExpectedContent() {
+        String actualSubsectionContent = getActualSubsectionContent(11,
+                Headings.IBYAHA_ASHINJWA);
+        String expectedSubsectionArray = getExpectedSubsectionContent(11,
+                Headings.IBYAHA_ASHINJWA);
+        assertEquals(expectedSubsectionArray, actualSubsectionContent);
+    }
+
 
     @Test
     public void interm_court_huye_2018_226_subjectMatterMatchesExpectedContent() {
@@ -363,6 +429,15 @@ public class CaseSubjectMatterParserTests {
                 Headings.ICYAHA_AREGWA);
         String expectedSubsectionContent = getExpectedSubsectionContent(13,
                 Headings.ICYAHA_AREGWA);
+        assertEquals(expectedSubsectionContent, actualSubsectionContent);
+    }
+
+    @Test
+    public void interm_court_huye_2018_aff_subjectMatterMatchesExpectedContent() {
+        String actualSubsectionContent = getActualSubsectionContent(14,
+                Headings.IKIREGERWA);
+        String expectedSubsectionContent = getExpectedSubsectionContent(14,
+                Headings.IKIREGERWA);
         assertEquals(expectedSubsectionContent, actualSubsectionContent);
     }
 
@@ -381,6 +456,15 @@ public class CaseSubjectMatterParserTests {
                 "ICYAHA ashinjwa");
         String expectedSubsectionContent = getExpectedSubsectionContent(16,
                 "ICYAHA ashinjwa");
+        assertEquals(expectedSubsectionContent, actualSubsectionContent);
+    }
+
+    @Test
+    public void supreme_court_comm_2009_subjectMatterMatchesExpectedContent() {
+        String actualSubsectionContent = getActualSubsectionContent(17,
+                Headings.IKIREGERWA);
+        String expectedSubsectionContent = getExpectedSubsectionContent(17,
+                Headings.IKIREGERWA);
         assertEquals(expectedSubsectionContent, actualSubsectionContent);
     }
 }
