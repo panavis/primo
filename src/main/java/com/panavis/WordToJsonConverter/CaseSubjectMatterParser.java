@@ -49,7 +49,14 @@ class CaseSubjectMatterParser implements ICaseSubjectMatter {
             addParagraphIfCaseSensitive(paragraphIndex, bodyContent);
             paragraphIndex++;
         }
+        if (hasAnotherSubjectMatterSubsection(paragraphIndex))
+            updateSubsectionStartAndNumber(paragraphIndex);
         return bodyContent.toString().trim();
+    }
+
+    private void updateSubsectionStartAndNumber(int paragraphIndex) {
+        numberOfSubsections++;
+        subsectionStart = paragraphIndex;
     }
 
     private void addParagraphIfCaseSensitive(int paragraphIndex, StringBuilder bodyContent) {
@@ -67,14 +74,16 @@ class CaseSubjectMatterParser implements ICaseSubjectMatter {
 
     private boolean isStillSubjectMatterSubsection(int paragraphIndex) {
         String text = wordParagraph.getParagraph(paragraphIndex).getText().toLowerCase();
-        for (String heading: Headings.SUBJECT_MATTER_HEADINGS) {
-            if (text.startsWith(heading.toLowerCase())) {
-                numberOfSubsections++;
-                subsectionStart = paragraphIndex;
-                return false;
-            }
-        }
+        if (hasAnotherSubjectMatterSubsection(paragraphIndex)) return false;
         return !(text.contains("imiterere") && text.contains("y"));
+    }
+
+    private boolean hasAnotherSubjectMatterSubsection(int paragraphIndex) {
+        String text = wordParagraph.getParagraph(paragraphIndex).getText().toLowerCase();
+        for (String heading: Headings.SUBJECT_MATTER_HEADINGS) {
+            if (text.startsWith(heading.toLowerCase())) return true;
+        }
+        return false;
     }
 
     private void addSubsectionContent(String heading, String body) {

@@ -336,108 +336,108 @@ public class CaseSubjectMatterParserTests {
         assertEquals(1, actualSubsectionArray.getSize());
     }
 
-    private String getActualSubsectionContent(int wordDocIndex, String heading) {
+    private String getActualSubsectionContent(int wordDocIndex, String heading, int subsectionIndex) {
         JsonArray subjectMatterArray = getSubjectMatterSectionJsonArray(wordDocIndex);
-        JsonObject subsection = subjectMatterArray.getJsonObjectByIndex(0);
+        JsonObject subsection = subjectMatterArray.getJsonObjectByIndex(subsectionIndex);
         return subsection.getArrayByKey(heading).toString();
     }
 
-    private String getExpectedSubsectionContent(int jsonDocIndex, String heading) {
+    private String getExpectedSubsectionContent(int jsonDocIndex, String heading, int subsectionIndex) {
         JsonObject expectedCaseJsonObject = TestsSetup.expectedJsonContent.get(jsonDocIndex);
         JsonArray expectedCase = expectedCaseJsonObject.getArrayByKey(Keywords.CASE);
         JsonObject expectedSection = expectedCase.getJsonObjectByIndex(2);
         JsonArray expectedSubjectMatterArray = expectedSection.getArrayByKey(Keywords.SUBJECT_MATTER);
-        return expectedSubjectMatterArray.getJsonObjectByIndex(0)
+        return expectedSubjectMatterArray.getJsonObjectByIndex(subsectionIndex)
                 .getArrayByKey(heading).toString();
     }
 
     @Test
     public void comm_court_huye_2011_subjectMatterMatchesExpectedContent() {
         String actualSubsectionContent = getActualSubsectionContent(0,
-                Headings.IKIREGERWA);
+                Headings.IKIREGERWA, 0);
         String expectedSubsectionArray = getExpectedSubsectionContent(0,
-                Headings.IKIREGERWA);
+                Headings.IKIREGERWA, 0);
         assertEquals(expectedSubsectionArray, actualSubsectionContent);
     }
 
     @Test
     public void comm_court_huye_2016_subjectMatterMatchesExpectedContent() {
         String actualSubsectionContent = getActualSubsectionContent(1,
-                Headings.IKIBURANWA);
+                Headings.IKIBURANWA, 0);
         String expectedSubsectionArray = getExpectedSubsectionContent(1,
-                Headings.IKIBURANWA);
+                Headings.IKIBURANWA, 0);
         assertEquals(expectedSubsectionArray, actualSubsectionContent);
     }
 
     @Test
     public void comm_court_huye_2018_subjectMatterMatchesExpectedContent() {
         String actualSubsectionContent = getActualSubsectionContent(2,
-                Headings.IKIREGERWA);
+                Headings.IKIREGERWA, 0);
         String expectedSubsectionArray = getExpectedSubsectionContent(2,
-                Headings.IKIREGERWA);
+                Headings.IKIREGERWA, 0);
         assertEquals(expectedSubsectionArray, actualSubsectionContent);
     }
 
     @Test
     public void comm_court_nyarugenge_2014_subjectMatterMatchesExpectedContent() {
         String actualSubsectionContent = getActualSubsectionContent(4,
-                Headings.IKIREGERWA);
+                Headings.IKIREGERWA, 0);
         String expectedSubsectionArray = getExpectedSubsectionContent(4,
-                Headings.IKIREGERWA);
+                Headings.IKIREGERWA, 0);
         assertEquals(expectedSubsectionArray, actualSubsectionContent);
     }
 
     @Test
     public void comm_court_nyarugenge_2016_subjectMatterMatchesExpectedContent() {
         String actualSubsectionContent = getActualSubsectionContent(5,
-                Headings.IKIREGERWA);
+                Headings.IKIREGERWA, 0);
         String expectedSubsectionArray = getExpectedSubsectionContent(5,
-                Headings.IKIREGERWA);
+                Headings.IKIREGERWA, 0);
         assertEquals(expectedSubsectionArray, actualSubsectionContent);
     }
 
     @Test
     public void comm_high_court_2016_subjectMatterMatchesExpectedContent() {
         String actualSubsectionContent = getActualSubsectionContent(6,
-                Headings.IKIBURANWA);
+                Headings.IKIBURANWA, 0);
         String expectedSubsectionArray = getExpectedSubsectionContent(6,
-                Headings.IKIBURANWA);
+                Headings.IKIBURANWA, 0);
         assertEquals(expectedSubsectionArray, actualSubsectionContent);
     }
 
     @Test
     public void high_court_chamber_nyanza_2014_subjectMatterMatchesExpectedContent() {
         String actualSubsectionContent = getActualSubsectionContent(7,
-                Headings.IKIREGERWA);
+                Headings.IKIREGERWA, 0);
         String expectedSubsectionArray = getExpectedSubsectionContent(7,
-                Headings.IKIREGERWA);
+                Headings.IKIREGERWA, 0);
         assertEquals(expectedSubsectionArray, actualSubsectionContent);
     }
 
     @Test
     public void high_court_chamber_nyanza_2018_subjectMatterMatchesExpectedContent() {
         String actualSubsectionContent = getActualSubsectionContent(8,
-                Headings.IKIBURANWA);
+                Headings.IKIBURANWA, 0);
         String expectedSubsectionArray = getExpectedSubsectionContent(8,
-                Headings.IKIBURANWA);
+                Headings.IKIBURANWA, 0);
         assertEquals(expectedSubsectionArray, actualSubsectionContent);
     }
 
     @Test
     public void high_court_criminal_2011_subjectMatterMatchesExpectedContent() {
         String actualSubsectionContent = getActualSubsectionContent(9,
-                Headings.IKIREGERWA);
+                Headings.IKIREGERWA, 0);
         String expectedSubsectionArray = getExpectedSubsectionContent(9,
-                Headings.IKIREGERWA);
+                Headings.IKIREGERWA, 0);
         assertEquals(expectedSubsectionArray, actualSubsectionContent);
     }
 
     @Test
     public void interm_court_huye_2015_subjectMatterMatchesExpectedContent() {
         String actualSubsectionContent = getActualSubsectionContent(11,
-                Headings.IBYAHA_ASHINJWA);
+                Headings.IBYAHA_ASHINJWA, 0);
         String expectedSubsectionArray = getExpectedSubsectionContent(11,
-                Headings.IBYAHA_ASHINJWA);
+                Headings.IBYAHA_ASHINJWA, 0);
         assertEquals(expectedSubsectionArray, actualSubsectionContent);
     }
 
@@ -445,54 +445,63 @@ public class CaseSubjectMatterParserTests {
     @Test
     public void interm_court_huye_2018_226_subjectMatterMatchesExpectedContent() {
         String actualSubsectionContent = getActualSubsectionContent(13,
-                Headings.ICYAHA_AREGWA);
+                Headings.ICYAHA_AREGWA, 0);
         String expectedSubsectionContent = getExpectedSubsectionContent(13,
-                Headings.ICYAHA_AREGWA);
+                Headings.ICYAHA_AREGWA, 0);
         assertEquals(expectedSubsectionContent, actualSubsectionContent);
     }
 
     @Test
     public void interm_court_huye_2018_aff_subjectMatterMatchesExpectedContent() {
         String actualSubsectionContent = getActualSubsectionContent(14,
-                Headings.IKIREGERWA);
+                Headings.IKIREGERWA, 0);
         String expectedSubsectionContent = getExpectedSubsectionContent(14,
-                Headings.IKIREGERWA);
+                Headings.IKIREGERWA, 0);
         assertEquals(expectedSubsectionContent, actualSubsectionContent);
     }
 
     @Test
     public void primary_court_nzige_2011_0003_subjectMatterMatchesExpectedContent() {
         String actualSubsectionContent = getActualSubsectionContent(15,
-                Headings.ICYAHA_ASHINJWA);
+                Headings.ICYAHA_ASHINJWA, 0);
         String expectedSubsectionContent = getExpectedSubsectionContent(15,
-                Headings.ICYAHA_ASHINJWA);
+                Headings.ICYAHA_ASHINJWA, 0);
         assertEquals(expectedSubsectionContent, actualSubsectionContent);
     }
 
     @Test
     public void primary_court_nzige_2011_0020_subjectMatterMatchesExpectedContent() {
         String actualSubsectionContent = getActualSubsectionContent(16,
-                "ICYAHA ashinjwa");
+                "ICYAHA ashinjwa", 0);
         String expectedSubsectionContent = getExpectedSubsectionContent(16,
-                "ICYAHA ashinjwa");
+                "ICYAHA ashinjwa", 0);
         assertEquals(expectedSubsectionContent, actualSubsectionContent);
     }
 
     @Test
     public void supreme_court_comm_2009_subjectMatterMatchesExpectedContent() {
         String actualSubsectionContent = getActualSubsectionContent(17,
-                Headings.IKIREGERWA);
+                Headings.IKIREGERWA, 0);
         String expectedSubsectionContent = getExpectedSubsectionContent(17,
-                Headings.IKIREGERWA);
+                Headings.IKIREGERWA, 0);
         assertEquals(expectedSubsectionContent, actualSubsectionContent);
     }
 
     @Test
-    public void supreme_court_comm_2017_subjectMatterMatchesExpectedContent() {
+    public void supreme_court_comm_2017_subjectMatterMatchesExpectedContentSubsectionOne() {
         String actualSubsectionContent = getActualSubsectionContent(18,
-                Headings.IKIBURANWA);
+                Headings.IKIBURANWA, 0);
         String expectedSubsectionContent = getExpectedSubsectionContent(18,
-                Headings.IKIBURANWA);
+                Headings.IKIBURANWA, 0);
+        assertEquals(expectedSubsectionContent, actualSubsectionContent);
+    }
+
+    @Test
+    public void supreme_court_comm_2017_subjectMatterMatchesExpectedContentSubsectionTwo() {
+        String actualSubsectionContent = getActualSubsectionContent(18,
+                Headings.IKIBURANWA, 1);
+        String expectedSubsectionContent = getExpectedSubsectionContent(18,
+                Headings.IKIBURANWA, 1);
         assertEquals(expectedSubsectionContent, actualSubsectionContent);
     }
 }
