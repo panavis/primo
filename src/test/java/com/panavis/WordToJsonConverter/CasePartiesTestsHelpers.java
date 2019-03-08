@@ -13,10 +13,10 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-class CasePartiesParserTestsHelpers {
+class CasePartiesTestsHelpers {
 
-    static List<JsonObject> allActualPartiesSections = new ArrayList<>();
-    static List<JsonObject> allExpectedPartiesSections = new ArrayList<>();
+    private static List<JsonObject> allActualPartiesSections = new ArrayList<>();
+    private static List<JsonObject> allExpectedPartiesSections = new ArrayList<>();
 
     static void setUpExpectedAndActualJsons() {
         setUpExpectedJsons();
@@ -60,7 +60,6 @@ class CasePartiesParserTestsHelpers {
         JsonObject partiesActualContent = getActualPartiesWholeSection(caseIndex);
         String actualPartyContent = getActualContentForSubsection(
                 partiesActualContent, subsectionIndex, subheading, heading).toString();
-
         JsonObject expectedParty = getExpectedSubsection(caseIndex, subsectionIndex, heading);
         String expectedPartyContent = expectedParty.getArrayByKey(subheading).toString();
         return new ExpectedActualContent(expectedPartyContent,
