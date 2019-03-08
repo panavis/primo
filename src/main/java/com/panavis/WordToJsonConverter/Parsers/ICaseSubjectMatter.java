@@ -1,8 +1,8 @@
-package com.panavis.WordToJsonConverter;
+package com.panavis.WordToJsonConverter.Parsers;
 
 import com.panavis.WordToJsonConverter.ResultTypes.SectionResult;
 
-public interface ICaseParties {
+public interface ICaseSubjectMatter {
 
     SectionResult parse(int startParagraph);
 }

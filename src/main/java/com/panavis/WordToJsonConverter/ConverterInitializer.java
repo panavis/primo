@@ -10,15 +10,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-class ConverterInitializer {
+public class ConverterInitializer {
 
-    static List<XWPFParagraph> getNonEmptyParagraphs(XWPFDocument wordDocument) {
+    public static List<XWPFParagraph> getNonEmptyParagraphs(XWPFDocument wordDocument) {
         return wordDocument.getParagraphs().stream()
                 .filter(para -> !para.getText().trim().isEmpty())
                 .collect(Collectors.toList());
     }
 
-    static Map<Integer, Integer> getPostParagraphBlanks(XWPFDocument wordDocument) {
+    public static Map<Integer, Integer> getPostParagraphBlanks(XWPFDocument wordDocument) {
         Map<Integer, Integer> blanksAfterParagraph = new HashMap<>();
         int actualParagraph = 0;
         List<XWPFParagraph> paragraphs = wordDocument.getParagraphs();
@@ -40,7 +40,7 @@ class ConverterInitializer {
         blanksAfterParagraph.put(lastParagraphIndex, currentBlanks + 1);
     }
 
-    static Map<Integer, Boolean> getListParagraphs(List<XWPFParagraph> paragraphs) {
+    public static Map<Integer, Boolean> getListParagraphs(List<XWPFParagraph> paragraphs) {
         Map<Integer, Boolean> numberedParagraphs = new HashMap<>();
 
         for (int index = 0; index < paragraphs.size(); index++) {
@@ -53,7 +53,7 @@ class ConverterInitializer {
         return numberedParagraphs;
     }
 
-    static Map<Integer, String> getParagraphsNumbering(XWPFNumbering numbering, List<XWPFParagraph> paragraphs) {
+    public static Map<Integer, String> getParagraphsNumbering(XWPFNumbering numbering, List<XWPFParagraph> paragraphs) {
         return Numbering.getParagraphsNumbering(numbering, paragraphs);
     }
 }

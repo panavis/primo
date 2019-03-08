@@ -1,4 +1,4 @@
-package com.panavis.WordToJsonConverter;
+package com.panavis.WordToJsonConverter.Parsers;
 
 import com.panavis.WordToJsonConverter.ResultTypes.SectionResult;
 

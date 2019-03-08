@@ -1,7 +1,9 @@
-package com.panavis.WordToJsonConverter;
+package com.panavis.WordToJsonConverter.Style;
 
 import com.panavis.WordToJsonConverter.Constants.Format;
 import com.panavis.WordToJsonConverter.Constants.Headings;
+import com.panavis.WordToJsonConverter.ConverterInitializer;
+import com.panavis.WordToJsonConverter.Utils.StringFormatting;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFNumbering;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
@@ -9,16 +11,16 @@ import org.apache.poi.xwpf.usermodel.XWPFRun;
 import java.util.List;
 import java.util.Map;
 
-import static com.panavis.WordToJsonConverter.StringFormatting.removeStartingOrTrailingColons;
+import static com.panavis.WordToJsonConverter.Utils.StringFormatting.removeStartingOrTrailingColons;
 
-class WordParagraph {
+public class WordParagraph {
 
     private final List<XWPFParagraph> paragraphs;
     private final Map<Integer, Integer> postParagraphBlanks;
     private final Map<Integer, Boolean> listParagraphs;
     private final Map<Integer, String> paragraphsNumbering;
 
-    WordParagraph(XWPFDocument wordDocument) {
+    public WordParagraph(XWPFDocument wordDocument) {
         this.paragraphs = ConverterInitializer.getNonEmptyParagraphs(wordDocument);
         this.postParagraphBlanks = ConverterInitializer.getPostParagraphBlanks(wordDocument);
         this.listParagraphs = ConverterInitializer.getListParagraphs(this.paragraphs);
@@ -27,15 +29,15 @@ class WordParagraph {
     }
 
 
-    XWPFParagraph getParagraph(int paragraphIndex) {
+    public XWPFParagraph getParagraph(int paragraphIndex) {
         return this.paragraphs.get(paragraphIndex);
     }
 
-    int numberOfParagraphs() {
+    public int numberOfParagraphs() {
         return this.paragraphs.size();
     }
 
-    boolean isSectionHeading(int paragraphIndex) {
+    public boolean isSectionHeading(int paragraphIndex) {
         XWPFParagraph paragraph = getParagraph(paragraphIndex);
         List<XWPFRun> paragraphRuns = paragraph.getRuns();
         XWPFRun firstRun = paragraphRuns.get(0);
@@ -70,7 +72,7 @@ class WordParagraph {
                 text.matches("^[a-zA-Z]");
     }
 
-    boolean startsSubjectMatterSection(int paragraphIndex) {
+    public boolean startsSubjectMatterSection(int paragraphIndex) {
         XWPFParagraph currentParagraph = getParagraph(paragraphIndex);
         boolean subjectMatterStart = false;
         for (String heading : Headings.SUBJECT_MATTER_HEADINGS) {
@@ -80,12 +82,12 @@ class WordParagraph {
         return subjectMatterStart;
     }
 
-    String getBlankLinesAfterParagraph(int paragraphIndex) {
+    public String getBlankLinesAfterParagraph(int paragraphIndex) {
         int blanks = this.postParagraphBlanks.get(paragraphIndex);
         return StringFormatting.duplicateLineSeparator(blanks);
     }
 
-    boolean isContentOnSameLine(int paragraphIndex) {
+    public boolean isContentOnSameLine(int paragraphIndex) {
         String paragraphText = getParagraph(paragraphIndex).getText();
         String[] textParts = paragraphText.split(Format.COLON);
         boolean onSameLine = false;
@@ -94,7 +96,7 @@ class WordParagraph {
         return onSameLine;
     }
 
-    String getCaseSensitiveRunText(int paragraphIndex) {
+    public String getCaseSensitiveRunText(int paragraphIndex) {
         String runText = "";
         List<XWPFRun> runs = getParagraph(paragraphIndex).getRuns();
         for (XWPFRun run : runs) {
@@ -104,12 +106,12 @@ class WordParagraph {
         return StringFormatting.removeStartingOrTrailingColons(runText).trim();
     }
 
-    String getParagraphFirstWord(int paragraphIndex) {
+    public String getParagraphFirstWord(int paragraphIndex) {
         String paragraphText = getParagraph(paragraphIndex).getText().trim();
         return paragraphText.split(" ")[0];
     }
 
-    boolean isContentOnNextLine(int paragraphIndex) {
+    public boolean isContentOnNextLine(int paragraphIndex) {
         return lineEndsWithColon(paragraphIndex) || lineHasHeadingOnly(paragraphIndex);
     }
 
@@ -121,7 +123,7 @@ class WordParagraph {
         return !(getParagraph(paragraphIndex).getText().contains(Format.COLON));
     }
 
-    String getHeadingFromParagraph(int paragraphIndex) {
+    public String getHeadingFromParagraph(int paragraphIndex) {
         String currentParagraph = getParagraph(paragraphIndex).getText();
         String sectionHeading = currentParagraph;
 
@@ -130,7 +132,7 @@ class WordParagraph {
         return removeStartingOrTrailingColons(sectionHeading);
     }
 
-    String getParagraphWithNumbering(int paragraphIndex) {
+    public String getParagraphWithNumbering(int paragraphIndex) {
         String text = getParagraph(paragraphIndex).getText().trim();
         if (this.listParagraphs.get(paragraphIndex))
             text = this.paragraphsNumbering.get(paragraphIndex) + text;

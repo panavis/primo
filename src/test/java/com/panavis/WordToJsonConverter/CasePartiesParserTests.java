@@ -15,6 +15,7 @@ public class CasePartiesParserTests {
     @BeforeClass
     public static void setUp() {
         TestsSetup.setUp();
+        CasePartiesParserTestsHelpers.setUpExpectedAndActualJsons();
     }
 
     @Test

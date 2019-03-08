@@ -1,15 +1,17 @@
-package com.panavis.WordToJsonConverter;
+package com.panavis.WordToJsonConverter.Parsers;
 
 import com.panavis.WordToJsonConverter.Constants.Format;
 import com.panavis.WordToJsonConverter.Constants.Headings;
 import com.panavis.WordToJsonConverter.Constants.Keywords;
 import com.panavis.WordToJsonConverter.ResultTypes.SectionResult;
+import com.panavis.WordToJsonConverter.Utils.StringFormatting;
+import com.panavis.WordToJsonConverter.Style.WordParagraph;
 import com.panavis.WordToJsonConverter.Wrappers.JsonArray;
 import com.panavis.WordToJsonConverter.Wrappers.JsonObject;
 
 import java.util.Arrays;
 
-class CaseSubjectMatterParser implements ICaseSubjectMatter {
+public class CaseSubjectMatterParser implements ICaseSubjectMatter {
 
     private WordParagraph wordParagraph;
     private int numberOfSubsections;
@@ -17,7 +19,7 @@ class CaseSubjectMatterParser implements ICaseSubjectMatter {
     private JsonObject sectionContent;
     private JsonArray sectionArray;
 
-    CaseSubjectMatterParser(WordParagraph wordParagraph) {
+    public CaseSubjectMatterParser(WordParagraph wordParagraph) {
         this.wordParagraph = wordParagraph;
         this.numberOfSubsections = 1;
         this.sectionContent = new JsonObject();

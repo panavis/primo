@@ -1,18 +1,18 @@
-package com.panavis.WordToJsonConverter;
+package com.panavis.WordToJsonConverter.Utils;
 
 import com.panavis.WordToJsonConverter.Constants.Format;
 
-class StringFormatting {
+public class StringFormatting {
 
-    static boolean isTextCapitalized(String text) {
+    public static boolean isTextCapitalized(String text) {
         return text.equals(text.toUpperCase());
     }
 
-    static boolean isCaseSensitive(String text) {
+    public static boolean isCaseSensitive(String text) {
         return !(text.toUpperCase().equals(text.toLowerCase()));
     }
 
-    static String removeStartingOrTrailingColons(String text) {
+    public static String removeStartingOrTrailingColons(String text) {
         text = text.trim();
         String modifiedText = text;
         if (text.endsWith(Format.COLON))
@@ -23,7 +23,7 @@ class StringFormatting {
         return modifiedText.trim();
     }
 
-    static String duplicateLineSeparator(int numberOfLines) {
+    public static String duplicateLineSeparator(int numberOfLines) {
         return new String(new char[numberOfLines]).replace("\0", Format.LINE_SEPARATOR);
     }
 }

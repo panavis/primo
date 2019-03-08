@@ -1,16 +1,18 @@
-package com.panavis.WordToJsonConverter;
+package com.panavis.WordToJsonConverter.Parsers;
 
 import com.panavis.WordToJsonConverter.Constants.Headings;
 import com.panavis.WordToJsonConverter.Constants.Keywords;
+import com.panavis.WordToJsonConverter.Utils.JsonCreator;
 import com.panavis.WordToJsonConverter.ResultTypes.SectionResult;
+import com.panavis.WordToJsonConverter.Style.WordParagraph;
 import com.panavis.WordToJsonConverter.Wrappers.JsonObject;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 
-class CaseTitleParser implements ICaseTitle {
+public class CaseTitleParser implements ICaseTitle {
 
     private WordParagraph wordParagraph;
 
-    CaseTitleParser(WordParagraph wordParagraph) {
+    public CaseTitleParser(WordParagraph wordParagraph) {
         this.wordParagraph = wordParagraph;
     }
 

@@ -1,6 +1,9 @@
 package com.panavis.WordToJsonConverter;
 
 import com.panavis.WordToJsonConverter.Constants.Keywords;
+import com.panavis.WordToJsonConverter.Parsers.ICaseParties;
+import com.panavis.WordToJsonConverter.Parsers.ICaseSubjectMatter;
+import com.panavis.WordToJsonConverter.Parsers.ICaseTitle;
 import com.panavis.WordToJsonConverter.ResultTypes.SectionResult;
 
 import java.util.*;

@@ -1,6 +1,7 @@
-package com.panavis.WordToJsonConverter;
+package com.panavis.WordToJsonConverter.Style;
 
 import com.panavis.WordToJsonConverter.Constants.Format;
+import com.panavis.WordToJsonConverter.Utils.StringFormatting;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 

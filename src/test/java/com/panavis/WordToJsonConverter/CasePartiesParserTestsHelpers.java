@@ -5,10 +5,40 @@ import com.panavis.WordToJsonConverter.ResultTypes.SectionResult;
 import com.panavis.WordToJsonConverter.Wrappers.JsonArray;
 import com.panavis.WordToJsonConverter.Wrappers.JsonObject;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 class CasePartiesParserTestsHelpers {
+
+    static List<JsonObject> allActualPartiesSections = new ArrayList<>();
+    static List<JsonObject> allExpectedPartiesSections = new ArrayList<>();
+
+    static void setUpExpectedAndActualJsons() {
+        setUpExpectedJsons();
+        setUpActualJsons();
+    }
+
+    private static void setUpActualJsons() {
+        for (XWPFDocument wordDocument : TestsSetup.wordDocxData) {
+            Converter converter = TestsSetup.getConverterObject(wordDocument, Keywords.PARTIES);
+            converter.parseCaseSections();
+            SectionResult partiesSectionResult = converter.getParsedCaseSection(Keywords.PARTIES);
+            allActualPartiesSections.add(partiesSectionResult.getSectionContent());
+        }
+    }
+
+    private static void setUpExpectedJsons() {
+        for (JsonObject jsonCase : TestsSetup.expectedJsonContent) {
+            JsonArray expectedCase = jsonCase.getArrayByKey(Keywords.CASE);
+            JsonObject expectedPartiesSection = expectedCase.getJsonObjectByIndex(1);
+            allExpectedPartiesSections.add(expectedPartiesSection);
+        }
+    }
 
     static void assertJsonContainsPartiesSection(int caseIndex, String heading) {
         JsonObject partiesSectionContent = getActualPartiesWholeSection(caseIndex);
@@ -22,11 +52,7 @@ class CasePartiesParserTestsHelpers {
     }
 
     private static JsonObject getActualPartiesWholeSection(int wordDocIndex) {
-        XWPFDocument wordDocument = TestsSetup.wordDocxData.get(wordDocIndex);
-        Converter converter = TestsSetup.getConverterObject(wordDocument, "parties");
-        converter.parseCaseSections();
-        SectionResult partiesSectionResult = converter.getParsedCaseSection(Keywords.PARTIES);
-        return partiesSectionResult.getSectionContent();
+        return allActualPartiesSections.get(wordDocIndex);
     }
 
     static ExpectedActualContent getExpectedAndActualContentForSubsection(int caseIndex, int subsectionIndex,
@@ -56,9 +82,7 @@ class CasePartiesParserTestsHelpers {
     }
 
     private static JsonObject getExpectedSubsection(int caseIndex, int subsectionIndex, String sectionName) {
-        JsonObject expectedCaseJsonObject = TestsSetup.expectedJsonContent.get(caseIndex);
-        JsonArray expectedCase = expectedCaseJsonObject.getArrayByKey(Keywords.CASE);
-        JsonObject expectedPartiesSection = expectedCase.getJsonObjectByIndex(1);
+        JsonObject expectedPartiesSection = allExpectedPartiesSections.get(caseIndex);
         JsonArray expectedPartiesSubSections = expectedPartiesSection.getArrayByKey(sectionName);
         return  expectedPartiesSubSections.getJsonObjectByIndex(subsectionIndex);
     }

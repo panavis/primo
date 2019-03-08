@@ -1,4 +1,4 @@
-package com.panavis.WordToJsonConverter;
+package com.panavis.WordToJsonConverter.Parsers;
 
 import com.panavis.WordToJsonConverter.Constants.Format;
 import com.panavis.WordToJsonConverter.Constants.Headings;
@@ -6,18 +6,19 @@ import com.panavis.WordToJsonConverter.Constants.Keywords;
 import com.panavis.WordToJsonConverter.ResultTypes.SectionResult;
 import com.panavis.WordToJsonConverter.ResultTypes.HeadingParagraphIndex;
 import com.panavis.WordToJsonConverter.ResultTypes.TextParagraphIndex;
+import com.panavis.WordToJsonConverter.Style.WordParagraph;
 import com.panavis.WordToJsonConverter.Wrappers.JsonArray;
 import com.panavis.WordToJsonConverter.Wrappers.JsonObject;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 
-import static com.panavis.WordToJsonConverter.JsonCreator.*;
+import static com.panavis.WordToJsonConverter.Utils.JsonCreator.*;
 
-class CasePartiesParser implements ICaseParties {
+public class CasePartiesParser implements ICaseParties {
 
     private WordParagraph wordParagraph;
     private JsonArray partiesSubsections;
 
-    CasePartiesParser(WordParagraph wordParagraph) {
+    public CasePartiesParser(WordParagraph wordParagraph) {
         this.wordParagraph = wordParagraph;
         this.partiesSubsections = new JsonArray();
     }
@@ -32,6 +33,7 @@ class CasePartiesParser implements ICaseParties {
     }
 
     private HeadingParagraphIndex findPartiesSectionHeading(int beginningParagraph) {
+        // TODO Refactor this function for everybody's sake
         String firstHeading = "";
         int paragraphIndex;
         paragraphIndex = beginningParagraph;
@@ -59,6 +61,7 @@ class CasePartiesParser implements ICaseParties {
     }
 
     private int getPartiesSubsections(int paragraphIndex) {
+        // TODO Convert to subsectionStart and numberOfSections
         for (paragraphIndex++;
              paragraphIndex < this.wordParagraph.numberOfParagraphs();
              paragraphIndex++) {

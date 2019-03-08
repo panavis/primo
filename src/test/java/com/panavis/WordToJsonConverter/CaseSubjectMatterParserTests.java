@@ -17,6 +17,7 @@ public class CaseSubjectMatterParserTests {
     @BeforeClass
     public static void setUp() {
         TestsSetup.setUp();
+        // TODO Call Converter objet only ONCE before all tests.
     }
 
     private JsonArray getSubjectMatterSectionJsonArray(int wordDocIndex) {

@@ -1,6 +1,8 @@
 package com.panavis.WordToJsonConverter;
 
+import com.panavis.WordToJsonConverter.Parsers.*;
 import com.panavis.WordToJsonConverter.ResultTypes.SectionResult;
+import com.panavis.WordToJsonConverter.Style.WordParagraph;
 import com.panavis.WordToJsonConverter.Wrappers.JsonObject;
 import com.panavis.WordToJsonConverter.Wrappers.JsonParser;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
