@@ -83,31 +83,24 @@ public class CasePartiesParser implements ICaseParties {
 
     private int parseAndAddNormalSubsection(int startParagraph) {
         String subsectionName = wordParagraph.getHeadingFromParagraph(startParagraph);
-        String inlineParagraph = wordParagraph.getInlineHeadingFirstParagraph(startParagraph);
-        StringBuilder body = new StringBuilder(inlineParagraph);
-        body.append(body.length() == 0 ? "" : wordParagraph.getBlankLinesAfterParagraph(startParagraph));
+        String inlineBody = wordParagraph.getInlineHeadingFirstParagraph(startParagraph);
+        inlineBody = inlineBody.length() == 0 ?
+                "" : inlineBody + wordParagraph.getBlankLinesAfterParagraph(startParagraph);
+
+        TextParagraphIndex remainingAndIndex = getRemainingSubsectionBody(startParagraph);
+        addSubsectionContent(subsectionName, inlineBody.concat(remainingAndIndex.getSubsectionParagraphs()).trim());
+        return remainingAndIndex.getParagraphIndex() - 1;
+    }
+
+    private TextParagraphIndex getRemainingSubsectionBody(int startParagraph) {
+        StringBuilder remainingBody = new StringBuilder();
         int paragraphIndex = startParagraph + 1;
         while(isInTheCurrentSubsection(paragraphIndex)) {
-            body.append(wordParagraph.getParagraphText(paragraphIndex))
+            remainingBody.append(wordParagraph.getParagraphText(paragraphIndex))
                     .append(wordParagraph.getBlankLinesAfterParagraph(paragraphIndex));
             paragraphIndex++;
         }
-        addSubsectionContent(subsectionName, body.toString().trim());
-        return paragraphIndex - 1;
-    }
-
-    private TextParagraphIndex getMoreParagraphsIfAny(String firstParagraph, int paragraphIndex) {
-        StringBuilder subsectionParagraphs= new StringBuilder();
-        subsectionParagraphs.append(firstParagraph);
-        paragraphIndex++;
-        while (isInTheCurrentSubsection(paragraphIndex)) {
-            String emptyLines = wordParagraph.getBlankLinesAfterParagraph(paragraphIndex-1);
-            String numbered = wordParagraph.getParagraphText(paragraphIndex);
-            String paragraphText = emptyLines + numbered;
-            subsectionParagraphs.append(paragraphText);
-            paragraphIndex++;
-        }
-        return new TextParagraphIndex(subsectionParagraphs.toString(), paragraphIndex);
+        return new TextParagraphIndex(remainingBody.toString(), paragraphIndex);
     }
 
     private boolean isInTheCurrentSubsection(int paragraphIndex) {
@@ -125,14 +118,14 @@ public class CasePartiesParser implements ICaseParties {
         }
     }
 
-    private int addCriminalCaseProsecutor(int paragraphIndex, String firstParagraph) {
-        TextParagraphIndex textParagraphIndex = getMoreParagraphsIfAny(
-                firstParagraph, paragraphIndex);
-        String sectionContent = textParagraphIndex.getSubsectionParagraphs();
-        JsonArray prosecutorContent = new JsonArray();
-        prosecutorContent.putValue(sectionContent);
-        this.partiesSubsections.putValue(getJsonObject(Keywords.UBUSHINJACYAHA, prosecutorContent));
-        return textParagraphIndex.getParagraphIndex() - 1;
+    private int addCriminalCaseProsecutor(int startParagraph, String firstParagraph) {
+        firstParagraph = firstParagraph.length() == 0 ?
+                "" : firstParagraph + wordParagraph.getBlankLinesAfterParagraph(startParagraph);
+
+        TextParagraphIndex remainingAndIndex = getRemainingSubsectionBody(startParagraph);
+        addSubsectionContent(Keywords.UBUSHINJACYAHA, firstParagraph.concat(remainingAndIndex.getSubsectionParagraphs()).trim());
+
+        return remainingAndIndex.getParagraphIndex() - 1;
     }
 
     private boolean startsProsecutorSubsection(int paragraphIndex) {
