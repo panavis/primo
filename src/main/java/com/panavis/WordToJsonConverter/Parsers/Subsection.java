@@ -2,6 +2,7 @@ package com.panavis.WordToJsonConverter.Parsers;
 
 import com.panavis.WordToJsonConverter.ResultTypes.TextParagraphIndex;
 import com.panavis.WordToJsonConverter.Style.WordParagraph;
+import com.panavis.WordToJsonConverter.Utils.StringFormatting;
 
 class Subsection {
 
@@ -41,11 +42,23 @@ class Subsection {
         StringBuilder remainingBody = new StringBuilder();
         int paragraphIndex = startParagraph + 1;
         while(section.isStillInOneSubsection(paragraphIndex)) {
-            remainingBody.append(wordParagraph.getParagraphText(paragraphIndex))
-                    .append(wordParagraph.getBlankLinesAfterParagraph(paragraphIndex));
+            addParagraphToSubsection(remainingBody, paragraphIndex);
             paragraphIndex++;
         }
         return new TextParagraphIndex(remainingBody.toString(), paragraphIndex);
     }
-}
 
+    private void addParagraphToSubsection(StringBuilder remainingBody, int paragraphIndex) {
+        String paragraphText = wordParagraph.getParagraphText(paragraphIndex);
+        if (StringFormatting.isCaseSensitive(paragraphText))
+            remainingBody.append(paragraphText)
+                        .append(wordParagraph.getBlankLinesAfterParagraph(paragraphIndex));
+    }
+
+    static Subsection getSubsection(ISection section, WordParagraph word, int startParagraph) {
+        String inlineParagraph = word.getInlineHeadingFirstParagraph(startParagraph);
+        Subsection subsection = new Subsection(section, word, startParagraph, inlineParagraph);
+        subsection.parse();
+        return subsection;
+    }
+}

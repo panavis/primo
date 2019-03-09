@@ -14,6 +14,7 @@ import java.util.Arrays;
 public class CaseSubjectMatterParser implements ICaseSubjectMatter {
 
     private WordParagraph wordParagraph;
+    private SectionSubjectMatter section;
     private int numberOfSubsections;
     private int subsectionStart;
     private JsonObject sectionContent;
@@ -21,6 +22,7 @@ public class CaseSubjectMatterParser implements ICaseSubjectMatter {
 
     public CaseSubjectMatterParser(WordParagraph wordParagraph) {
         this.wordParagraph = wordParagraph;
+        this.section = new SectionSubjectMatter(wordParagraph);
         this.numberOfSubsections = 1;
         this.sectionContent = new JsonObject();
         this.sectionArray = new JsonArray();
@@ -30,8 +32,12 @@ public class CaseSubjectMatterParser implements ICaseSubjectMatter {
         subsectionStart = startParagraph;
         while(numberOfSubsections > 0) {
             String heading = getSubjectMatterHeading(subsectionStart);
-            String body = getSubjectMatterBody(subsectionStart);
-            addSubsectionContent(heading, body);
+            Subsection subsection = Subsection.getSubsection(section, wordParagraph, subsectionStart);
+            addSubsectionContent(heading, subsection.getBody());
+            int nextParagraph = subsection.getLastParagraph();
+            if (section.hasAnotherSubjectMatterSubsection(nextParagraph)) {
+                updateSubsectionStartAndNumber(nextParagraph);
+            }
             numberOfSubsections--;
         }
         return new SectionResult(sectionContent, startParagraph);
@@ -41,45 +47,9 @@ public class CaseSubjectMatterParser implements ICaseSubjectMatter {
         return wordParagraph.getHeadingFromParagraph(startParagraph);
     }
 
-    private String getSubjectMatterBody(int startParagraph) {
-        String inlineParagraph = wordParagraph.getInlineHeadingFirstParagraph(startParagraph);
-        int paragraphIndex = startParagraph + 1;
-        StringBuilder bodyContent = new StringBuilder();
-        bodyContent.append(inlineParagraph).append(bodyContent.length() == 0 ?
-                "" : wordParagraph.getBlankLinesAfterParagraph(startParagraph));
-        while(isStillSubjectMatterSubsection(paragraphIndex)) {
-            addParagraphIfCaseSensitive(paragraphIndex, bodyContent);
-            paragraphIndex++;
-        }
-        if (hasAnotherSubjectMatterSubsection(paragraphIndex))
-            updateSubsectionStartAndNumber(paragraphIndex);
-        return bodyContent.toString().trim();
-    }
-
     private void updateSubsectionStartAndNumber(int paragraphIndex) {
         numberOfSubsections++;
         subsectionStart = paragraphIndex;
-    }
-
-    private void addParagraphIfCaseSensitive(int paragraphIndex, StringBuilder bodyContent) {
-        String paragraphText = wordParagraph.getParagraphText(paragraphIndex);
-        if (StringFormatting.isCaseSensitive(paragraphText))
-            bodyContent.append(paragraphText)
-                    .append(wordParagraph.getBlankLinesAfterParagraph(paragraphIndex));
-    }
-
-    private boolean isStillSubjectMatterSubsection(int paragraphIndex) {
-        String text = wordParagraph.getParagraphText(paragraphIndex).toLowerCase();
-        if (hasAnotherSubjectMatterSubsection(paragraphIndex)) return false;
-        return !(text.contains("imiterere") && text.contains("y"));
-    }
-
-    private boolean hasAnotherSubjectMatterSubsection(int paragraphIndex) {
-        String text = wordParagraph.getParagraphText(paragraphIndex).toLowerCase();
-        for (String heading: Headings.SUBJECT_MATTER_HEADINGS) {
-            if (text.startsWith(heading.toLowerCase())) return true;
-        }
-        return false;
     }
 
     private void addSubsectionContent(String heading, String body) {

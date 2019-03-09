@@ -36,7 +36,6 @@ public class CasePartiesParser implements ICaseParties {
     }
 
     private HeadingParagraphIndex findPartiesSectionHeading(int beginningParagraph) {
-        // TODO Refactor this function for everybody's sake
         String firstHeading = "";
         int paragraphIndex;
         paragraphIndex = beginningParagraph;
@@ -86,9 +85,7 @@ public class CasePartiesParser implements ICaseParties {
 
     private void parseAndAddNormalSubsection(int startParagraph) {
         String subsectionName = wordParagraph.getHeadingFromParagraph(startParagraph);
-        String inlineBody = wordParagraph.getInlineHeadingFirstParagraph(startParagraph);
-        Subsection subsection = new Subsection(section, wordParagraph, startParagraph, inlineBody);
-        subsection.parse();
+        Subsection subsection = Subsection.getSubsection(section, wordParagraph, startParagraph);
         addSubsectionContent(subsectionName, subsection.getBody());
         updateSubsectionStart(subsection.getLastParagraph());
     }
@@ -99,8 +96,8 @@ public class CasePartiesParser implements ICaseParties {
         this.partiesSubsections.putValue(getJsonObject(subsectionName, jsonArray));
     }
 
-    private void parseAndAddCriminalCaseProsecutorSubsection(int startParagraph, String firstParagraph) {
-        Subsection subsection = new Subsection(section, wordParagraph, startParagraph, firstParagraph);
+    private void parseAndAddCriminalCaseProsecutorSubsection(int startParagraph, String inlineFirstParagraph) {
+        Subsection subsection = new Subsection(section, wordParagraph, startParagraph, inlineFirstParagraph);
         subsection.parse();
         addSubsectionContent(Keywords.UBUSHINJACYAHA, subsection.getBody());
         updateSubsectionStart(subsection.getLastParagraph());
