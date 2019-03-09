@@ -8,6 +8,8 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFNumbering;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
+
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -33,6 +35,13 @@ public class WordParagraph {
         return this.paragraphs.get(paragraphIndex);
     }
 
+    public String getParagraphText(int paragraphIndex) {
+        String text = getParagraph(paragraphIndex).getText().trim();
+        if (this.listParagraphs.get(paragraphIndex))
+            text = this.paragraphsNumbering.get(paragraphIndex) + text;
+        return text;
+    }
+
     public int numberOfParagraphs() {
         return this.paragraphs.size();
     }
@@ -53,30 +62,29 @@ public class WordParagraph {
     }
 
     private boolean hasColonAndContentOnSameLine(int paragraphIndex) {
-        XWPFParagraph paragraph = getParagraph(paragraphIndex);
-        String paragraphText = paragraph.getText();
+        String paragraphText = getParagraphText(paragraphIndex);
         String[] textParts = paragraphText.split(Format.COLON);
         int numberOfParts = textParts.length;
         String firstPart = textParts[0];
 
         boolean colonAndContent = false;
         if (numberOfParts == 2 && firstPart.length() > 3 &&
-                (StringFormatting.isTextCapitalized(firstPart) || ParagraphRun.isFirstRunBold(paragraph)))
+                (StringFormatting.isTextCapitalized(firstPart) || ParagraphRun.isFirstRunBold(getParagraph(paragraphIndex))))
             colonAndContent = true;
         return colonAndContent;
     }
 
     private boolean isOneWordAndIsUpperCase(int paragraphIndex) {
-        String text = this.paragraphs.get(paragraphIndex).getText();
+        String text = getParagraphText(paragraphIndex);
         return text.equals(text.toUpperCase()) && text.split(" ").length == 1 &&
                 text.matches("^[a-zA-Z]");
     }
 
     public boolean startsSubjectMatterSection(int paragraphIndex) {
-        XWPFParagraph currentParagraph = getParagraph(paragraphIndex);
+        String paragraphText = getParagraphText(paragraphIndex);
         boolean subjectMatterStart = false;
         for (String heading : Headings.SUBJECT_MATTER_HEADINGS) {
-            if (currentParagraph.getText().toUpperCase().startsWith(heading))
+            if (paragraphText.toUpperCase().startsWith(heading))
                 subjectMatterStart = true;
         }
         return subjectMatterStart;
@@ -85,15 +93,6 @@ public class WordParagraph {
     public String getBlankLinesAfterParagraph(int paragraphIndex) {
         int blanks = this.postParagraphBlanks.get(paragraphIndex);
         return StringFormatting.duplicateLineSeparator(blanks);
-    }
-
-    public boolean isContentOnSameLine(int paragraphIndex) {
-        String paragraphText = getParagraph(paragraphIndex).getText();
-        String[] textParts = paragraphText.split(Format.COLON);
-        boolean onSameLine = false;
-        if (textParts.length == 2 && !textParts[1].isEmpty())
-            onSameLine = true;
-        return onSameLine;
     }
 
     public String getCaseSensitiveRunText(int paragraphIndex) {
@@ -107,35 +106,22 @@ public class WordParagraph {
     }
 
     public String getParagraphFirstWord(int paragraphIndex) {
-        String paragraphText = getParagraph(paragraphIndex).getText().trim();
+        String paragraphText = getParagraphText(paragraphIndex).trim();
         return paragraphText.split(" ")[0];
     }
 
-    public boolean isContentOnNextLine(int paragraphIndex) {
-        return lineEndsWithColon(paragraphIndex) || lineHasHeadingOnly(paragraphIndex);
-    }
-
-    private boolean lineEndsWithColon(int paragraphIndex) {
-        return getParagraph(paragraphIndex).getText().endsWith(Format.COLON);
-    }
-
-    private boolean lineHasHeadingOnly(int paragraphIndex) {
-        return !(getParagraph(paragraphIndex).getText().contains(Format.COLON));
+    public String getInlineHeadingFirstParagraph(int paragraphIndex) {
+        String[] bodyArray = getParagraphText(paragraphIndex).split(":");
+        String[] bodyNoHeading = Arrays.copyOfRange(bodyArray, 1, bodyArray.length);
+        return String.join(" ", bodyNoHeading).trim();
     }
 
     public String getHeadingFromParagraph(int paragraphIndex) {
-        String currentParagraph = getParagraph(paragraphIndex).getText();
+        String currentParagraph = getParagraphText(paragraphIndex);
         String sectionHeading = currentParagraph;
 
         if (hasColonAndContentOnSameLine(paragraphIndex))
             sectionHeading = currentParagraph.split(Format.COLON)[0];
         return removeStartingOrTrailingColons(sectionHeading);
-    }
-
-    public String getParagraphWithNumbering(int paragraphIndex) {
-        String text = getParagraph(paragraphIndex).getText().trim();
-        if (this.listParagraphs.get(paragraphIndex))
-            text = this.paragraphsNumbering.get(paragraphIndex) + text;
-        return text;
     }
 }

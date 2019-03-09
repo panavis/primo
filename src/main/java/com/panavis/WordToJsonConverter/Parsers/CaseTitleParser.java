@@ -6,7 +6,6 @@ import com.panavis.WordToJsonConverter.Utils.JsonCreator;
 import com.panavis.WordToJsonConverter.ResultTypes.SectionResult;
 import com.panavis.WordToJsonConverter.Style.WordParagraph;
 import com.panavis.WordToJsonConverter.Wrappers.JsonObject;
-import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 
 public class CaseTitleParser implements ICaseTitle {
 
@@ -23,8 +22,7 @@ public class CaseTitleParser implements ICaseTitle {
 
             String firstWord = this.wordParagraph.getParagraphFirstWord(paragraphIndex);
             if (firstWord.equals(Headings.URUKIKO)) {
-                XWPFParagraph currentParagraph = this.wordParagraph.getParagraph(paragraphIndex);
-                caseTitle = currentParagraph.getText();
+                caseTitle = this.wordParagraph.getParagraphText(paragraphIndex);
                 break;
             }
         }

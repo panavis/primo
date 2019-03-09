@@ -42,10 +42,10 @@ public class CaseSubjectMatterParser implements ICaseSubjectMatter {
     }
 
     private String getSubjectMatterBody(int startParagraph) {
-        String firstParagraph = getFirstParagraphOfBody(startParagraph);
+        String inlineParagraph = wordParagraph.getInlineHeadingFirstParagraph(startParagraph);
         int paragraphIndex = startParagraph + 1;
         StringBuilder bodyContent = new StringBuilder();
-        bodyContent.append(firstParagraph).append(bodyContent.length() == 0 ?
+        bodyContent.append(inlineParagraph).append(bodyContent.length() == 0 ?
                 "" : wordParagraph.getBlankLinesAfterParagraph(startParagraph));
         while(isStillSubjectMatterSubsection(paragraphIndex)) {
             addParagraphIfCaseSensitive(paragraphIndex, bodyContent);
@@ -62,26 +62,20 @@ public class CaseSubjectMatterParser implements ICaseSubjectMatter {
     }
 
     private void addParagraphIfCaseSensitive(int paragraphIndex, StringBuilder bodyContent) {
-        String paragraphText = wordParagraph.getParagraphWithNumbering(paragraphIndex);
+        String paragraphText = wordParagraph.getParagraphText(paragraphIndex);
         if (StringFormatting.isCaseSensitive(paragraphText))
             bodyContent.append(paragraphText)
                     .append(wordParagraph.getBlankLinesAfterParagraph(paragraphIndex));
     }
 
-    private String getFirstParagraphOfBody(int startParagraph) {
-        String[] bodyArray = wordParagraph.getParagraph(startParagraph).getText().split(":");
-        String[] bodyNoHeading = Arrays.copyOfRange(bodyArray, 1, bodyArray.length);
-        return String.join(" ", bodyNoHeading).trim();
-    }
-
     private boolean isStillSubjectMatterSubsection(int paragraphIndex) {
-        String text = wordParagraph.getParagraph(paragraphIndex).getText().toLowerCase();
+        String text = wordParagraph.getParagraphText(paragraphIndex).toLowerCase();
         if (hasAnotherSubjectMatterSubsection(paragraphIndex)) return false;
         return !(text.contains("imiterere") && text.contains("y"));
     }
 
     private boolean hasAnotherSubjectMatterSubsection(int paragraphIndex) {
-        String text = wordParagraph.getParagraph(paragraphIndex).getText().toLowerCase();
+        String text = wordParagraph.getParagraphText(paragraphIndex).toLowerCase();
         for (String heading: Headings.SUBJECT_MATTER_HEADINGS) {
             if (text.startsWith(heading.toLowerCase())) return true;
         }
