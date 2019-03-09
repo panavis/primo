@@ -11,6 +11,8 @@ import com.panavis.WordToJsonConverter.Wrappers.JsonArray;
 import com.panavis.WordToJsonConverter.Wrappers.JsonObject;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 
+import java.util.Arrays;
+
 import static com.panavis.WordToJsonConverter.Utils.JsonCreator.*;
 
 public class CasePartiesParser implements ICaseParties {
@@ -76,41 +78,40 @@ public class CasePartiesParser implements ICaseParties {
         String paragraphText = this.wordParagraph.getParagraph(paragraphIndex).getText();
          if (this.wordParagraph.isSectionHeading(paragraphIndex)) {
              paragraphIndex = parseAndAddNormalSubsection(paragraphIndex);
-         } else if (isProsecutor(paragraphText)) {
+         } else if (startsProsecutorSubsection(paragraphIndex)) {
             paragraphIndex = addCriminalCaseProsecutor(paragraphIndex, paragraphText);
         }
         return paragraphIndex;
     }
 
-    private int parseAndAddNormalSubsection(int paragraphIndex) {
-        if (this.wordParagraph.isContentOnNextLine(paragraphIndex))
-            paragraphIndex = AddSubsectionOnNextLine(paragraphIndex);
+//    private int parseAndAddNormalSubsection(int paragraphIndex) {
+//        if (this.wordParagraph.isContentOnNextLine(paragraphIndex))
+//            paragraphIndex = AddSubsectionOnNextLine(paragraphIndex);
+//
+//        else if (this.wordParagraph.isContentOnSameLine(paragraphIndex))
+//            paragraphIndex = addSubsectionOnSameLine(paragraphIndex);
+//        return paragraphIndex;
+//    }
 
-        else if (this.wordParagraph.isContentOnSameLine(paragraphIndex))
-            paragraphIndex = addPartiesSameLineSubsection(paragraphIndex);
-        return paragraphIndex;
+    private int parseAndAddNormalSubsection(int startParagraph) {
+        String partyHeading = wordParagraph.getHeadingFromParagraph(startParagraph);
+        String firstParagraph = getFirstParagraphOfBody(startParagraph);
+        StringBuilder body = new StringBuilder(firstParagraph);
+        body.append(body.length() == 0 ? "" : wordParagraph.getBlankLinesAfterParagraph(startParagraph));
+        int paragraphIndex = startParagraph + 1;
+        while(isInTheCurrentSubsection(paragraphIndex)) {
+            body.append(wordParagraph.getParagraphWithNumbering(paragraphIndex))
+                    .append(wordParagraph.getBlankLinesAfterParagraph(paragraphIndex));
+            paragraphIndex++;
+        }
+        addSubsectionContent(partyHeading, body.toString().trim());
+        return paragraphIndex - 1;
     }
 
-    private int AddSubsectionOnNextLine(int paragraphIndex) {
-        String subsectionName = wordParagraph.getHeadingFromParagraph(paragraphIndex);
-        paragraphIndex++;
-        String firstParagraph = wordParagraph.getParagraphWithNumbering(paragraphIndex);
-        TextParagraphIndex textParagraphIndex = getMoreParagraphsIfAny(
-                firstParagraph, paragraphIndex);
-        String subsectionParagraphs = textParagraphIndex.getSubsectionParagraphs();
-        addSubsectionContent(subsectionName, subsectionParagraphs);
-        return textParagraphIndex.getParagraphIndex() - 1;
-    }
-
-    private int addPartiesSameLineSubsection(int paragraphIndex) {
-        XWPFParagraph currentParagraph = wordParagraph.getParagraph(paragraphIndex);
-        String partyHeading = wordParagraph.getHeadingFromParagraph(paragraphIndex);
-        String firstParagraph = currentParagraph.getText().substring(partyHeading.length());
-        TextParagraphIndex textParagraphIndex = getMoreParagraphsIfAny(
-                                                firstParagraph, paragraphIndex);
-        String subsectionParagraphs = textParagraphIndex.getSubsectionParagraphs();
-        addSubsectionContent(partyHeading, subsectionParagraphs);
-        return textParagraphIndex.getParagraphIndex() - 1;
+    private String getFirstParagraphOfBody(int startParagraph) {
+        String[] bodyArray = wordParagraph.getParagraph(startParagraph).getText().split(":");
+        String[] bodyNoHeading = Arrays.copyOfRange(bodyArray, 1, bodyArray.length);
+        return String.join(" ", bodyNoHeading).trim();
     }
 
     private TextParagraphIndex getMoreParagraphsIfAny(String firstParagraph, int paragraphIndex) {
@@ -128,13 +129,12 @@ public class CasePartiesParser implements ICaseParties {
     }
 
     private boolean isInTheCurrentSubsection(int paragraphIndex) {
-        String text = wordParagraph.getParagraph(paragraphIndex).getText();
-        return !(wordParagraph.isSectionHeading(paragraphIndex)) && !CasePartiesParser.isProsecutor(text);
+        return !(wordParagraph.isSectionHeading(paragraphIndex)) &&
+                !startsProsecutorSubsection(paragraphIndex);
     }
 
     private void addSubsectionContent(String subsectionName, String subsectionContent) {
         String[] subsectionItems = subsectionContent.split(Format.DOUBLE_BLANK);
-
         if (subsectionItems.length == 1)
             this.partiesSubsections.putValue(getJsonObject(subsectionName, getJsonArrayWithString(subsectionContent)));
         else {
@@ -153,7 +153,16 @@ public class CasePartiesParser implements ICaseParties {
         return textParagraphIndex.getParagraphIndex() - 1;
     }
 
-    private static boolean isProsecutor(String text) {
-        return text.toLowerCase().contains(Keywords.UBUSHINJACYAHA);
+    private boolean startsProsecutorSubsection(int paragraphIndex) {
+        String text = wordParagraph.getParagraph(paragraphIndex).getText();
+        return text.toLowerCase().contains(Keywords.UBUSHINJACYAHA) &&
+                previousParagraphIsNotSubsectionHeading(paragraphIndex);
+    }
+
+    private boolean previousParagraphIsNotSubsectionHeading(int paragraphIndex) {
+        if (paragraphIndex - 1 < 0) return true;
+        String previousParagraph = wordParagraph.getHeadingFromParagraph(paragraphIndex - 1).toUpperCase();
+        return !wordParagraph.isSectionHeading(paragraphIndex - 1) ||
+                Headings.PARTIES_HEADINGS.contains(previousParagraph);
     }
 }

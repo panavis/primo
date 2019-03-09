@@ -42,10 +42,10 @@ public class CaseSubjectMatterParser implements ICaseSubjectMatter {
     }
 
     private String getSubjectMatterBody(int startParagraph) {
-        String body = getFirstParagraphOfBody(startParagraph);
+        String firstParagraph = getFirstParagraphOfBody(startParagraph);
         int paragraphIndex = startParagraph + 1;
         StringBuilder bodyContent = new StringBuilder();
-        bodyContent.append(body).append(bodyContent.length() == 0 ?
+        bodyContent.append(firstParagraph).append(bodyContent.length() == 0 ?
                 "" : wordParagraph.getBlankLinesAfterParagraph(startParagraph));
         while(isStillSubjectMatterSubsection(paragraphIndex)) {
             addParagraphIfCaseSensitive(paragraphIndex, bodyContent);

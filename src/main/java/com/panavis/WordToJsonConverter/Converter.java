@@ -11,6 +11,7 @@ import java.util.*;
 class Converter {
 
     private Map<String, SectionResult> parsedCase;
+    private int nextParagraph;
     private ICaseTitle titleParser;
     private ICaseParties partiesParser;
     private ICaseSubjectMatter subjectMatterParser;
@@ -24,15 +25,26 @@ class Converter {
     }
 
     void parseCaseSections() {
-        int nextParagraph;
-        SectionResult caseTitle = this.titleParser.parse();
-        this.parsedCase.put(Keywords.TITLE, caseTitle);
-        nextParagraph = this.parsedCase.get(Keywords.TITLE).getNextParagraph();
+        parseTitleAndUpdateNextParagraph();
+        parsePartiesAndUpdateNextParagraph();
+        parseSubjectMatterAndUpdateNextParagraph();
+    }
+
+    private void parseSubjectMatterAndUpdateNextParagraph() {
+        SectionResult caseSubjectMatter = this.subjectMatterParser.parse(nextParagraph);
+        this.parsedCase.put(Keywords.SUBJECT_MATTER, caseSubjectMatter);
+    }
+
+    private void parsePartiesAndUpdateNextParagraph() {
         SectionResult caseParties = this.partiesParser.parse(nextParagraph);
         this.parsedCase.put(Keywords.PARTIES, caseParties);
         nextParagraph = this.parsedCase.get(Keywords.PARTIES).getNextParagraph();
-        SectionResult caseSubjectMatter = this.subjectMatterParser.parse(nextParagraph);
-        this.parsedCase.put(Keywords.SUBJECT_MATTER, caseSubjectMatter);
+    }
+
+    private void parseTitleAndUpdateNextParagraph() {
+        SectionResult caseTitle = this.titleParser.parse();
+        this.parsedCase.put(Keywords.TITLE, caseTitle);
+        nextParagraph = this.parsedCase.get(Keywords.TITLE).getNextParagraph();
     }
 
     SectionResult getParsedCaseSection(String section) {
