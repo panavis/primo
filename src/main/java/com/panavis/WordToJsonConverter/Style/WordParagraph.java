@@ -2,6 +2,7 @@ package com.panavis.WordToJsonConverter.Style;
 
 import com.panavis.WordToJsonConverter.Constants.Format;
 import com.panavis.WordToJsonConverter.Constants.Headings;
+import com.panavis.WordToJsonConverter.Constants.Keywords;
 import com.panavis.WordToJsonConverter.ConverterInitializer;
 import com.panavis.WordToJsonConverter.Utils.StringFormatting;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
@@ -123,5 +124,18 @@ public class WordParagraph {
         if (hasColonAndContentOnSameLine(paragraphIndex))
             sectionHeading = currentParagraph.split(Format.COLON)[0];
         return removeStartingOrTrailingColons(sectionHeading);
+    }
+
+    public boolean startsProsecutorSubsection(int paragraphIndex) {
+        String text = getParagraphText(paragraphIndex);
+        return text.toLowerCase().contains(Keywords.UBUSHINJACYAHA) &&
+                previousParagraphIsNotSubsectionHeading(paragraphIndex);
+    }
+
+    private boolean previousParagraphIsNotSubsectionHeading(int paragraphIndex) {
+        if (paragraphIndex - 1 < 0) return true;
+        String pP = getHeadingFromParagraph(paragraphIndex - 1).toUpperCase();
+        return !isSectionHeading(paragraphIndex - 1) ||
+                Headings.PARTIES_HEADINGS.contains(pP);
     }
 }
