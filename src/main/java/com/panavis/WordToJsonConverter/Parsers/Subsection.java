@@ -6,14 +6,16 @@ import com.panavis.WordToJsonConverter.Style.WordParagraph;
 class Subsection {
 
     private WordParagraph wordParagraph;
+    private ISection section;
     private int startParagraph;
     private String inlineFirstParagraph;
     private int lastParagraph;
     private String subsectionBody;
 
-    Subsection(WordParagraph wordParagraph, int startPargraph, String inlineFirstParagraph) {
+    Subsection(ISection section, WordParagraph wordParagraph, int startParagraph, String inlineFirstParagraph) {
+        this.section = section;
         this.wordParagraph = wordParagraph;
-        this.startParagraph = startPargraph;
+        this.startParagraph = startParagraph;
         this.inlineFirstParagraph = inlineFirstParagraph;
         this.subsectionBody = "";
     }
@@ -38,17 +40,12 @@ class Subsection {
     private TextParagraphIndex getRemainingSubsectionBody(int startParagraph) {
         StringBuilder remainingBody = new StringBuilder();
         int paragraphIndex = startParagraph + 1;
-        while(isInTheCurrentSubsection(paragraphIndex)) {
+        while(section.isStillInOneSubsection(paragraphIndex)) {
             remainingBody.append(wordParagraph.getParagraphText(paragraphIndex))
                     .append(wordParagraph.getBlankLinesAfterParagraph(paragraphIndex));
             paragraphIndex++;
         }
         return new TextParagraphIndex(remainingBody.toString(), paragraphIndex);
-    }
-
-    private boolean isInTheCurrentSubsection(int paragraphIndex) {
-        return !(wordParagraph.isSectionHeading(paragraphIndex)) &&
-                !wordParagraph.startsProsecutorSubsection(paragraphIndex);
     }
 }
 

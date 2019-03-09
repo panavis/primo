@@ -14,12 +14,14 @@ import static com.panavis.WordToJsonConverter.Utils.JsonCreator.*;
 public class CasePartiesParser implements ICaseParties {
 
     private WordParagraph wordParagraph;
+    private ISection section;
     private JsonArray partiesSubsections;
     private boolean reachedSubjectMatterSection;
     private int subsectionStart;
 
     public CasePartiesParser(WordParagraph wordParagraph) {
         this.wordParagraph = wordParagraph;
+        this.section = new SectionParties(wordParagraph);
         this.partiesSubsections = new JsonArray();
         this.reachedSubjectMatterSection = false;
     }
@@ -85,7 +87,7 @@ public class CasePartiesParser implements ICaseParties {
     private void parseAndAddNormalSubsection(int startParagraph) {
         String subsectionName = wordParagraph.getHeadingFromParagraph(startParagraph);
         String inlineBody = wordParagraph.getInlineHeadingFirstParagraph(startParagraph);
-        Subsection subsection = new Subsection(wordParagraph, startParagraph, inlineBody);
+        Subsection subsection = new Subsection(section, wordParagraph, startParagraph, inlineBody);
         subsection.parse();
         addSubsectionContent(subsectionName, subsection.getBody());
         updateSubsectionStart(subsection.getLastParagraph());
@@ -98,7 +100,7 @@ public class CasePartiesParser implements ICaseParties {
     }
 
     private void parseAndAddCriminalCaseProsecutorSubsection(int startParagraph, String firstParagraph) {
-        Subsection subsection = new Subsection(wordParagraph, startParagraph, firstParagraph);
+        Subsection subsection = new Subsection(section, wordParagraph, startParagraph, firstParagraph);
         subsection.parse();
         addSubsectionContent(Keywords.UBUSHINJACYAHA, subsection.getBody());
         updateSubsectionStart(subsection.getLastParagraph());
