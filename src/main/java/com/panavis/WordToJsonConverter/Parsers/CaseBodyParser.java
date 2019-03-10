@@ -1,7 +1,9 @@
 package com.panavis.WordToJsonConverter.Parsers;
 
+import com.panavis.WordToJsonConverter.Constants.Format;
 import com.panavis.WordToJsonConverter.ResultTypes.SectionResult;
 import com.panavis.WordToJsonConverter.Style.WordParagraph;
+import com.panavis.WordToJsonConverter.Utils.JsonCreator;
 import com.panavis.WordToJsonConverter.Wrappers.JsonArray;
 import com.panavis.WordToJsonConverter.Wrappers.JsonObject;
 
@@ -22,8 +24,8 @@ public class CaseBodyParser implements ICaseBodyParser {
             String heading = wordParagraph.getParagraphText(startParagraph);
             Subsection subsection = new Subsection(section, wordParagraph, startParagraph)
                                         .parse();
-            JsonArray subsectionBody = new JsonArray();
-            subsectionBody.putValue(subsection.getBody());
+            String[] contentArray = subsection.getBody().split(Format.DOUBLE_BLANK);
+            JsonArray subsectionBody = JsonCreator.getJsonArrayFromStringArray(contentArray);
             sectionContent.addNameValuePair(heading, subsectionBody);
         }
         return new SectionResult(sectionContent, 0);

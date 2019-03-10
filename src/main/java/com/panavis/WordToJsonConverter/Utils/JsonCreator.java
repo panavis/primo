@@ -16,12 +16,6 @@ public class JsonCreator {
         return jsonObject;
     }
 
-    public static JsonArray getJsonArrayWithString(String value) {
-        JsonArray jsonArray = new JsonArray();
-        jsonArray.putValue(StringFormatting.removeStartingOrTrailingColons(value).trim());
-        return jsonArray;
-    }
-
     public static JsonArray getJsonArrayFromStringArray(String[] content) {
         JsonArray jsonArray = new JsonArray();
         for (String subContent : content)
