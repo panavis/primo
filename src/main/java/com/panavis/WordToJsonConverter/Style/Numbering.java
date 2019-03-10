@@ -54,7 +54,7 @@ public class Numbering {
                     docNumbering.uniqueNumIds.add(uniqueId);
                     docNumbering.saveNumIdProperties(paragraph, numId, uniqueId);
                 }
-                docNumbering.addParagraphNumberingPrefix(i, uniqueId);
+                docNumbering.addParagraphNumberingPrefix(i, uniqueId, paragraphStyle);
             }
             if (!docNumbering.unitNumberings.containsKey(i))
                 docNumbering.addDefaultNumberingPrefix(i);
@@ -77,27 +77,26 @@ public class Numbering {
         return ctAbstractNum.getLvlArray(abstractNumLvlIndex);
     }
 
-    private void addParagraphNumberingPrefix(int paragraphIndex, String uniqueId) {
-        UnitNumbering unitNumbering = this.getNumberingPrefix(uniqueId);
-        String current = unitNumbering.current + "\t";
-        String next = unitNumbering.next;
-        this.unitNumberings.put(paragraphIndex, new UnitNumbering(current, next));
+    private void addParagraphNumberingPrefix(int paragraphIndex, String uniqueId, String style) {
+        UnitNumbering unitNumbering = this.getNumberingPrefix(uniqueId, style);
+        unitNumbering.current  = unitNumbering.current + "\t";
+        this.unitNumberings.put(paragraphIndex, unitNumbering);
     }
 
-    private UnitNumbering getNumberingPrefix(String uniqueId) {
+    private UnitNumbering getNumberingPrefix(String uniqueId, String style) {
         String formatName = this.numberingFormatNames.get(uniqueId);
         String formatDisplay = this.numberingFormatDisplays.get(uniqueId);
         int currentNumber = this.numberingTracker.get(uniqueId) +
                 this.numberingCountStart.get(uniqueId) - 1;
 
-        UnitNumbering unitNumbering = new UnitNumbering("", "");
+        UnitNumbering unitNumbering = new UnitNumbering("", "", style);
         String digit = String.valueOf(currentNumber);
         String nextDigit = String.valueOf(currentNumber + 1);
         switch (formatName) {
             case "decimal": {
                 String current = formatDisplay.replaceAll("%\\d+", digit);
                 String next = formatDisplay.replaceAll("%\\d+", nextDigit);
-                unitNumbering = new UnitNumbering(current, next);
+                unitNumbering = new UnitNumbering(current, next, style);
                 break;
             }
             case "lowerLetter": {
@@ -105,7 +104,7 @@ public class Numbering {
                 String nextLetter = getLowerLetter(currentNumber + 1);
                 String currentString = getFormattedString(formatDisplay, currentLetter);
                 String nextString = getFormattedString(formatDisplay, nextLetter);
-                unitNumbering = new UnitNumbering(currentString, nextString);
+                unitNumbering = new UnitNumbering(currentString, nextString, style);
                 break;
             }
             case "upperLetter": {
@@ -113,7 +112,7 @@ public class Numbering {
                 String nextLetter = getUpperLetter(currentNumber + 1);
                 String currentString = getFormattedString(formatDisplay, currentLetter);
                 String nextString = getFormattedString(formatDisplay, nextLetter);
-                unitNumbering = new UnitNumbering(currentString, nextString);
+                unitNumbering = new UnitNumbering(currentString, nextString, style);
                 break;
             }
             case "upperRoman": {
@@ -121,7 +120,7 @@ public class Numbering {
                 String nextLetter = RomanNumber.toRoman(currentNumber + 1);
                 String currentString = getFormattedString(formatDisplay, currentLetter);
                 String nextString = getFormattedString(formatDisplay, nextLetter);
-                unitNumbering = new UnitNumbering(currentString, nextString);
+                unitNumbering = new UnitNumbering(currentString, nextString, style);
                 break;
             }
             case "lowerRoman": {
@@ -129,11 +128,11 @@ public class Numbering {
                 String nextLetter = RomanNumber.toRoman(currentNumber + 1).toLowerCase();
                 String currentString = getFormattedString(formatDisplay, currentLetter);
                 String nextString = getFormattedString(formatDisplay, nextLetter);
-                unitNumbering = new UnitNumbering(currentString, nextString);
+                unitNumbering = new UnitNumbering(currentString, nextString, style);
                 break;
             }
             case "bullet": {
-                unitNumbering = new UnitNumbering("-", "-");
+                unitNumbering = new UnitNumbering("-", "-", style);
                 break;
             }
         }
@@ -154,7 +153,7 @@ public class Numbering {
 
     private void addDefaultNumberingPrefix(int paragraphIndex) {
         this.unitNumberings.put(paragraphIndex, new UnitNumbering(Format.EMPTY_STRING,
-                Format.EMPTY_STRING));
+                Format.EMPTY_STRING, "Text"));
     }
 
     private void saveNumFormatDisplay(String uniqueid, CTLvl abstractNumLvl) {

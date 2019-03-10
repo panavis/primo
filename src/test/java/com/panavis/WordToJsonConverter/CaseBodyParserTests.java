@@ -6,6 +6,7 @@ import com.panavis.WordToJsonConverter.Wrappers.JsonArray;
 import com.panavis.WordToJsonConverter.Wrappers.JsonObject;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static junit.framework.TestCase.assertEquals;
@@ -32,6 +33,12 @@ public class CaseBodyParserTests {
     }
 
     @Test
+    public void comm_high_court_nyarugenge_2014_hasCaseBackgroundSection() {
+        JsonObject caseBody = getCaseBody(4);
+        assertTrue(caseBody.hasKey("I.\tIMITERERE Y\u2019URUBANZA"));
+    }
+
+    @Test
     public void high_court_chamber_nyanza_2014_hasCaseBackgroundSection() {
         JsonObject caseBody = getCaseBody(7);
         assertTrue(caseBody.hasKey("I.\tIMITERERE Y\u2019URUBANZA"));
@@ -41,6 +48,12 @@ public class CaseBodyParserTests {
     public void primary_court_0020_hasCaseBackgroundSection() {
         JsonObject caseBody = getCaseBody(16);
         assertTrue(caseBody.hasKey("I.\tIMITERERE Y\u2019URUBANZA"));
+    }
+
+    @Test
+    public void comm_court_nyarugenge_2014_BackgroundSectionHasLengthThreeArray() {
+        JsonArray caseBackground = getCaseBackgroundSection(4, "I.\tIMITERERE Y\u2019URUBANZA");
+        assertEquals(3, caseBackground.getSize());
     }
 
     @Test
@@ -60,6 +73,17 @@ public class CaseBodyParserTests {
         JsonArray caseArray = caseObject.getArrayByKey(Keywords.CASE);
         JsonObject expectedBackground = caseArray.getJsonByIndex(3);
         return expectedBackground.getArrayByKey(heading);
+    }
+
+    @Test
+    public void comm_court_nyarugenge_2014_CaseBackgroundMatchesExpectedContent() {
+        JsonArray caseBackground = getCaseBackgroundSection(4, "I.\tIMITERERE Y\u2019URUBANZA");
+        String actualContent = caseBackground.toString();
+
+        JsonArray expectedArray = getExpectedCaseBackground(4, "I.\tIMITERERE Y\u2019URUBANZA");
+        String expectedContent = expectedArray.toString();
+
+        assertEquals(expectedContent, actualContent);
     }
 
     @Test

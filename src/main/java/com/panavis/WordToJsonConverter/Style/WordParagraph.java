@@ -61,6 +61,7 @@ public class WordParagraph {
                 ParagraphRun.isFirstRunCapitalizedAndEndsWithColon(paragraph, firstRun) ||
                 ParagraphRun.isFirstRunHighlyIndentedAndCapitalized(paragraph, firstRun) ||
                 ParagraphRun.isFirstRunBoldAndEndsWithColon(paragraph) ||
+                isUpperCaseAndHasNumberedHeading(paragraphIndex, firstRun) ||
                 hasColonAndContentOnSameLine(paragraphIndex) ||
                 isOneWordAndIsUpperCase(paragraphIndex)
         );
@@ -83,6 +84,13 @@ public class WordParagraph {
         String text = getParagraphText(paragraphIndex);
         return text.equals(text.toUpperCase()) && text.split(" ").length == 1 &&
                 text.matches("^[a-zA-Z]");
+    }
+
+    private boolean isUpperCaseAndHasNumberedHeading(int paragraphIndex, XWPFRun firstRun) {
+        UnitNumbering unitNumbering = unitNumberings.get(paragraphIndex);
+        return StringFormatting.isTextCapitalized(firstRun.text()) &&
+                (numberedParagraphs.get(paragraphIndex) &&
+                                    unitNumbering.style.startsWith(Keywords.HEADING));
     }
 
     public boolean startsSubjectMatterSection(int paragraphIndex) {
