@@ -1,5 +1,6 @@
 package com.panavis.WordToJsonConverter;
 
+import com.panavis.WordToJsonConverter.Constants.Keywords;
 import com.panavis.WordToJsonConverter.Parsers.*;
 import com.panavis.WordToJsonConverter.ResultTypes.SectionResult;
 import com.panavis.WordToJsonConverter.Style.WordParagraph;
@@ -26,7 +27,7 @@ public class TestsSetup {
         ArrayList<String> expectedJsonPaths = getSortedFilePaths(allFilesInExpectedJsonFolder);
 
         for (String jsonPath : expectedJsonPaths) {
-            if (isJsonDocument(jsonPath))  {
+            if (isJsonDocument(jsonPath)) {
                 JsonObject caseObject = readCaseJsonFile(jsonPath);
                 expectedJsonContent.add(caseObject);
             }
@@ -76,11 +77,32 @@ public class TestsSetup {
     static Converter getConverterObject(XWPFDocument wordDocument, String section) {
         WordParagraph wordParagraph = new WordParagraph(wordDocument);
         CaseTitleParser titleParser = new CaseTitleParser(wordParagraph);
-        ICaseParties partiesParser = (section.equals("parties") || section.equals("subject_matter")) ?
-                                new CasePartiesParser(wordParagraph) : new MockPartiesParser();
-        ICaseSubjectMatter subjectMatterParser = section.equals("subject_matter") ?
-                                new CaseSubjectMatterParser(wordParagraph) : new MockSubjectMatterParser();
-        return new Converter(titleParser, partiesParser, subjectMatterParser);
+        ICaseParties partiesParser = isSectionBeyondTitle(section) ?
+                new CasePartiesParser(wordParagraph) :
+                new MockPartiesParser();
+        ICaseSubjectMatter subjectMatterParser = isSectionBeyondParties(section) ?
+                new CaseSubjectMatterParser(wordParagraph) :
+                new MockSubjectMatterParser();
+        ICaseBodyParser caseBodyParser = isSectionBeyondSubjectMatter(section) ?
+                new CaseBodyParser(wordParagraph) :
+                new MockCaseBodyParser();
+        return new Converter(titleParser, partiesParser, subjectMatterParser,
+                            caseBodyParser);
+    }
+
+    private static boolean isSectionBeyondTitle(String section) {
+        return section.equals(Keywords.PARTIES) ||
+                section.equals(Keywords.SUBJECT_MATTER) ||
+                section.equals(Keywords.CASE_BODY);
+    }
+
+    private static boolean isSectionBeyondParties(String section) {
+        return section.equals(Keywords.SUBJECT_MATTER) ||
+                section.equals(Keywords.CASE_BODY);
+    }
+
+    private static boolean isSectionBeyondSubjectMatter(String section) {
+        return section.equals(Keywords.CASE_BODY);
     }
 }
 
@@ -92,6 +114,13 @@ class MockPartiesParser implements ICaseParties {
 }
 
 class MockSubjectMatterParser implements ICaseSubjectMatter {
+
+    public SectionResult parse(int startParagraph) {
+        return new SectionResult(new JsonObject(), 0);
+    }
+}
+
+class MockCaseBodyParser implements ICaseBodyParser {
 
     public SectionResult parse(int startParagraph) {
         return new SectionResult(new JsonObject(), 0);
