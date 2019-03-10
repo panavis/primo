@@ -27,12 +27,16 @@ class Subsection {
     }
 
     Subsection parse() {
-        inlineFirstParagraph = inlineFirstParagraph.length() == 0 ?
-                "" : inlineFirstParagraph + wordParagraph.getBlankLinesAfterParagraph(startParagraph);
+        setInlineParagraph();
         TextParagraphIndex remainingAndIndex = getRemainingSubsectionBody(startParagraph);
         subsectionBody = inlineFirstParagraph.concat(remainingAndIndex.getSubsectionParagraphs()).trim();
         lastParagraph = remainingAndIndex.getParagraphIndex();
         return this;
+    }
+
+    private void setInlineParagraph() {
+        inlineFirstParagraph = inlineFirstParagraph.length() == 0 ?
+                "" : inlineFirstParagraph + wordParagraph.getBlankLinesAfterParagraph(startParagraph);
     }
 
     String getBody() {

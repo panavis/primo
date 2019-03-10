@@ -2,6 +2,7 @@ package com.panavis.WordToJsonConverter;
 
 import com.panavis.WordToJsonConverter.Constants.Keywords;
 import com.panavis.WordToJsonConverter.Style.Numbering;
+import com.panavis.WordToJsonConverter.Style.UnitNumbering;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFNumbering;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
@@ -58,7 +59,7 @@ public class ConverterInitializer {
         return numberedParagraphs;
     }
 
-    public static Map<Integer, String> getParagraphsNumbering(XWPFNumbering numbering, List<XWPFParagraph> paragraphs) {
+    public static Map<Integer, UnitNumbering> getParagraphsNumbering(XWPFNumbering numbering, List<XWPFParagraph> paragraphs) {
         return Numbering.getParagraphsNumbering(numbering, paragraphs);
     }
 }

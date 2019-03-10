@@ -22,7 +22,11 @@ public class JsonArray {
         return this.jsonArray.length();
     }
 
-    public JsonObject getJsonObjectByIndex(int index) {
+    public String getStringByIndex(int index) {
+        return (String) this.jsonArray.get(index);
+    }
+
+    public JsonObject getJsonByIndex(int index) {
         return (JsonObject) this.jsonArray.get(index);
     }
 

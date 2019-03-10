@@ -20,27 +20,31 @@ public class WordParagraph {
 
     private final List<XWPFParagraph> paragraphs;
     private final Map<Integer, Integer> postParagraphBlanks;
-    private final Map<Integer, Boolean> listParagraphs;
-    private final Map<Integer, String> paragraphsNumbering;
+    private final Map<Integer, Boolean> numberedParagraphs;
+    private final Map<Integer, UnitNumbering> unitNumberings;
 
     public WordParagraph(XWPFDocument wordDocument) {
         this.paragraphs = ConverterInitializer.getNonEmptyParagraphs(wordDocument);
         this.postParagraphBlanks = ConverterInitializer.getPostParagraphBlanks(wordDocument);
-        this.listParagraphs = ConverterInitializer.getNumberedParagraphs(this.paragraphs);
+        this.numberedParagraphs = ConverterInitializer.getNumberedParagraphs(this.paragraphs);
         XWPFNumbering numbering = wordDocument.getNumbering();
-        this.paragraphsNumbering = ConverterInitializer.getParagraphsNumbering(numbering, this.paragraphs);
+        this.unitNumberings = ConverterInitializer.getParagraphsNumbering(numbering, this.paragraphs);
     }
 
 
-    public XWPFParagraph getParagraph(int paragraphIndex) {
+    private XWPFParagraph getParagraph(int paragraphIndex) {
         return this.paragraphs.get(paragraphIndex);
     }
 
     public String getParagraphText(int paragraphIndex) {
         String text = getParagraph(paragraphIndex).getText().trim();
-        if (this.listParagraphs.get(paragraphIndex))
-            text = this.paragraphsNumbering.get(paragraphIndex) + text;
+        if (this.numberedParagraphs.get(paragraphIndex))
+            text = this.unitNumberings.get(paragraphIndex).current + text;
         return text;
+    }
+
+    public UnitNumbering getUnitNumbering(int paragraphIndex) {
+        return this.unitNumberings.get(paragraphIndex);
     }
 
     public int numberOfParagraphs() {

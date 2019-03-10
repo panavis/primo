@@ -22,7 +22,7 @@ class CaseSubjectMatterTestsHelpers {
     private static void setUpExpectedJsons() {
         for (JsonObject caseJson : TestsSetup.expectedJsonContent) {
             JsonArray expectedCase = caseJson.getArrayByKey(Keywords.CASE);
-            JsonObject expectedSection = expectedCase.getJsonObjectByIndex(2);
+            JsonObject expectedSection = expectedCase.getJsonByIndex(2);
             JsonArray expectedSubjectMatterArray = expectedSection.getArrayByKey(Keywords.SUBJECT_MATTER);
             allExpectedSubjectMatterJsons.add(expectedSubjectMatterArray);
         }
@@ -44,7 +44,7 @@ class CaseSubjectMatterTestsHelpers {
     }
 
     static JsonObject getActualSubjectMatterSubsection(int wordDocIndex, int subsectionIndex) {
-        return getActualSubjectMatterSectionArray(wordDocIndex).getJsonObjectByIndex(subsectionIndex);
+        return getActualSubjectMatterSectionArray(wordDocIndex).getJsonByIndex(subsectionIndex);
     }
 
     static String getActualSubsectionContent(int docIndex, String heading, int subsectionIndex) {
@@ -54,7 +54,7 @@ class CaseSubjectMatterTestsHelpers {
 
     static String getExpectedSubsectionContent(int docIndex, String heading, int subsectionIndex) {
         JsonArray expectedSubjectMatterArray = allExpectedSubjectMatterJsons.get(docIndex);
-        JsonObject subsection = expectedSubjectMatterArray.getJsonObjectByIndex(subsectionIndex);
+        JsonObject subsection = expectedSubjectMatterArray.getJsonByIndex(subsectionIndex);
         return subsection.getArrayByKey(heading).toString();
     }
 }

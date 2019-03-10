@@ -35,7 +35,7 @@ class CaseTitleTestsHelpers {
     private static void setUpExpectedCaseTitles() {
         for (JsonObject caseFile : TestsSetup.expectedJsonContent) {
             JsonArray caseContent =  caseFile.getArrayByKey(Keywords.CASE);
-            JsonObject titleObject = caseContent.getJsonObjectByIndex(0);
+            JsonObject titleObject = caseContent.getJsonByIndex(0);
             allExpectedCaseTitles.add(titleObject.getStringByKey(Keywords.TITLE));
         }
     }

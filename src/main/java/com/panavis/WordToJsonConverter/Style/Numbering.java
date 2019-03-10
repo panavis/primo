@@ -19,7 +19,7 @@ public class Numbering {
     private Map<String, String> numberingFormatNames;
     private Map<String, String> numberingFormatDisplays;
     private Map<String, Integer> numberingCountStart;
-    private Map<Integer, String> paragraphsNumbering;
+    private Map<Integer, UnitNumbering> unitNumberings;
     private List<XWPFParagraph> paragraphs;
 
     private Numbering(XWPFNumbering numbering, List<XWPFParagraph> paragraphs) {
@@ -30,10 +30,10 @@ public class Numbering {
         this.numberingFormatNames = new HashMap<>();
         this.numberingFormatDisplays = new HashMap<>();
         this.numberingCountStart = new HashMap<>();
-        this.paragraphsNumbering = new HashMap<>();
+        this.unitNumberings = new HashMap<>();
     }
 
-    public static Map<Integer, String> getParagraphsNumbering(XWPFNumbering numbering, List<XWPFParagraph> paragraphs) {
+    public static Map<Integer, UnitNumbering> getParagraphsNumbering(XWPFNumbering numbering, List<XWPFParagraph> paragraphs) {
         Numbering docNumbering = new Numbering(numbering, paragraphs);
 
         for (int i = 0; i < paragraphs.size(); i++) {
@@ -56,10 +56,10 @@ public class Numbering {
                 }
                 docNumbering.addParagraphNumberingPrefix(i, uniqueId);
             }
-            if (!docNumbering.paragraphsNumbering.containsKey(i))
+            if (!docNumbering.unitNumberings.containsKey(i))
                 docNumbering.addDefaultNumberingPrefix(i);
         }
-        return docNumbering.paragraphsNumbering;
+        return docNumbering.unitNumberings;
     }
 
     private void saveNumIdProperties(XWPFParagraph paragraph, BigInteger numId, String uniqueId) {
@@ -78,57 +78,83 @@ public class Numbering {
     }
 
     private void addParagraphNumberingPrefix(int paragraphIndex, String uniqueId) {
-        String numberingPrefix = this.getNumberingPrefix(uniqueId);
-        this.paragraphsNumbering.put(paragraphIndex, numberingPrefix + "\t");
+        UnitNumbering unitNumbering = this.getNumberingPrefix(uniqueId);
+        String current = unitNumbering.current + "\t";
+        String next = unitNumbering.next;
+        this.unitNumberings.put(paragraphIndex, new UnitNumbering(current, next));
     }
 
-    private String getNumberingPrefix(String uniqueId) {
+    private UnitNumbering getNumberingPrefix(String uniqueId) {
         String formatName = this.numberingFormatNames.get(uniqueId);
         String formatDisplay = this.numberingFormatDisplays.get(uniqueId);
         int currentNumber = this.numberingTracker.get(uniqueId) +
                 this.numberingCountStart.get(uniqueId) - 1;
 
-        String numberingString;
+        UnitNumbering unitNumbering = new UnitNumbering("", "");
+        String digit = String.valueOf(currentNumber);
+        String nextDigit = String.valueOf(currentNumber + 1);
         switch (formatName) {
             case "decimal": {
-                String numberingDigit = String.valueOf(currentNumber);
-                numberingString = formatDisplay.replaceAll("%\\d+", numberingDigit);
+                String current = formatDisplay.replaceAll("%\\d+", digit);
+                String next = formatDisplay.replaceAll("%\\d+", nextDigit);
+                unitNumbering = new UnitNumbering(current, next);
                 break;
             }
             case "lowerLetter": {
-                String numberingLetter = Character.toString((char) (96 + currentNumber));
-                numberingString = formatDisplay.replaceAll("%\\d", numberingLetter);
-
+                String currentLetter = getLowerLetter(currentNumber);
+                String nextLetter = getLowerLetter(currentNumber + 1);
+                String currentString = getFormattedString(formatDisplay, currentLetter);
+                String nextString = getFormattedString(formatDisplay, nextLetter);
+                unitNumbering = new UnitNumbering(currentString, nextString);
                 break;
             }
             case "upperLetter": {
-                String numberingLetter = Character.toString((char) (64 + currentNumber));
-                numberingString = formatDisplay.replaceAll("%\\d", numberingLetter);
+                String currentLetter = getUpperLetter(currentNumber);
+                String nextLetter = getUpperLetter(currentNumber + 1);
+                String currentString = getFormattedString(formatDisplay, currentLetter);
+                String nextString = getFormattedString(formatDisplay, nextLetter);
+                unitNumbering = new UnitNumbering(currentString, nextString);
                 break;
             }
             case "upperRoman": {
-                String numberingLetter = RomanNumber.toRoman(currentNumber);
-                numberingString = formatDisplay.replaceAll("%\\d", numberingLetter);
-
+                String currentLetter = RomanNumber.toRoman(currentNumber);
+                String nextLetter = RomanNumber.toRoman(currentNumber + 1);
+                String currentString = getFormattedString(formatDisplay, currentLetter);
+                String nextString = getFormattedString(formatDisplay, nextLetter);
+                unitNumbering = new UnitNumbering(currentString, nextString);
                 break;
             }
             case "lowerRoman": {
-                String numberingLetter = RomanNumber.toRoman(currentNumber).toLowerCase();
-                numberingString = formatDisplay.replaceAll("%\\d", numberingLetter);
+                String currentLetter = RomanNumber.toRoman(currentNumber).toLowerCase();
+                String nextLetter = RomanNumber.toRoman(currentNumber + 1).toLowerCase();
+                String currentString = getFormattedString(formatDisplay, currentLetter);
+                String nextString = getFormattedString(formatDisplay, nextLetter);
+                unitNumbering = new UnitNumbering(currentString, nextString);
                 break;
             }
             case "bullet": {
-                numberingString = "-";
+                unitNumbering = new UnitNumbering("-", "-");
                 break;
             }
-            default:
-                numberingString = "";
         }
-        return numberingString;
+        return unitNumbering;
+    }
+
+    private String getLowerLetter(int code) {
+        return Character.toString((char) (96 + code));
+    }
+
+    private String getUpperLetter(int code) {
+        return Character.toString((char) (64 + code));
+    }
+
+    private String getFormattedString(String template, String letter) {
+        return template.replaceAll("%\\d", letter);
     }
 
     private void addDefaultNumberingPrefix(int paragraphIndex) {
-        this.paragraphsNumbering.put(paragraphIndex, Format.EMPTY_STRING);
+        this.unitNumberings.put(paragraphIndex, new UnitNumbering(Format.EMPTY_STRING,
+                Format.EMPTY_STRING));
     }
 
     private void saveNumFormatDisplay(String uniqueid, CTLvl abstractNumLvl) {
