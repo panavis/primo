@@ -14,7 +14,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import static com.panavis.WordToJsonConverter.Utils.StringFormatting.removeStartingOrTrailingColons;
+import static com.panavis.WordToJsonConverter.Utils.StringFormatting.trimColons;
 
 public class WordParagraph {
 
@@ -107,7 +107,7 @@ public class WordParagraph {
             if (StringFormatting.isCaseSensitive(run.text()))
                 runText = run.text();
         }
-        return StringFormatting.removeStartingOrTrailingColons(runText).trim();
+        return StringFormatting.trimColons(runText).trim();
     }
 
     public String getParagraphFirstWord(int paragraphIndex) {
@@ -127,7 +127,7 @@ public class WordParagraph {
 
         if (hasColonAndContentOnSameLine(paragraphIndex))
             sectionHeading = currentParagraph.split(Format.COLON)[0];
-        return removeStartingOrTrailingColons(sectionHeading);
+        return trimColons(sectionHeading);
     }
 
     public boolean startsProsecutorSubsection(int paragraphIndex) {

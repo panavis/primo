@@ -12,7 +12,7 @@ public class StringFormatting {
         return !(text.toUpperCase().equals(text.toLowerCase()));
     }
 
-    public static String removeStartingOrTrailingColons(String text) {
+    public static String trimColons(String text) {
         text = text.trim();
         String modifiedText = text;
         if (text.endsWith(Format.COLON))

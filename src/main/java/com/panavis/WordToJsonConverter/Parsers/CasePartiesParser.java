@@ -1,15 +1,13 @@
 package com.panavis.WordToJsonConverter.Parsers;
 
-import com.panavis.WordToJsonConverter.Constants.Format;
 import com.panavis.WordToJsonConverter.Constants.Headings;
 import com.panavis.WordToJsonConverter.Constants.Keywords;
 import com.panavis.WordToJsonConverter.ResultTypes.SectionResult;
 import com.panavis.WordToJsonConverter.ResultTypes.HeadingParagraphIndex;
 import com.panavis.WordToJsonConverter.Style.WordParagraph;
+import com.panavis.WordToJsonConverter.Utils.JsonCreator;
 import com.panavis.WordToJsonConverter.Wrappers.JsonArray;
 import com.panavis.WordToJsonConverter.Wrappers.JsonObject;
-
-import static com.panavis.WordToJsonConverter.Utils.JsonCreator.*;
 
 public class CasePartiesParser implements ICaseParties {
 
@@ -103,10 +101,8 @@ public class CasePartiesParser implements ICaseParties {
         updateSubsectionStart(subsection.getLastParagraph());
     }
 
-    private void addSubsectionContent(String subsectionName, String subsectionContent) {
-        String[] subsectionItems = subsectionContent.split(Format.DOUBLE_BLANK);
-        JsonArray jsonArray = getJsonArrayFromStringArray(subsectionItems);
-        this.partiesSubsections.putValue(getJsonObject(subsectionName, jsonArray));
+    private void addSubsectionContent(String subsectionName, JsonArray subsectionBody) {
+        this.partiesSubsections.putValue(JsonCreator.getJsonObject(subsectionName, subsectionBody));
     }
 
     private void parseAndAddCriminalCaseProsecutorSubsection(int startParagraph, String inlineFirstParagraph) {

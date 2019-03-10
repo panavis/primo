@@ -1,8 +1,11 @@
 package com.panavis.WordToJsonConverter.Parsers;
 
+import com.panavis.WordToJsonConverter.Constants.Format;
 import com.panavis.WordToJsonConverter.ResultTypes.TextParagraphIndex;
 import com.panavis.WordToJsonConverter.Style.WordParagraph;
+import com.panavis.WordToJsonConverter.Utils.JsonCreator;
 import com.panavis.WordToJsonConverter.Utils.StringFormatting;
+import com.panavis.WordToJsonConverter.Wrappers.JsonArray;
 
 class Subsection {
 
@@ -39,8 +42,9 @@ class Subsection {
                 "" : inlineFirstParagraph + wordParagraph.getBlankLinesAfterParagraph(startParagraph);
     }
 
-    String getBody() {
-        return subsectionBody;
+    JsonArray getBody() {
+        String[] contentArray = subsectionBody.split(Format.DOUBLE_BLANK);
+        return JsonCreator.getJsonArrayFromStringArray(contentArray);
     }
 
     int getLastParagraph() {

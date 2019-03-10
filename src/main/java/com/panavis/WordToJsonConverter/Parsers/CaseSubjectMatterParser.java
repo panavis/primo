@@ -1,15 +1,11 @@
 package com.panavis.WordToJsonConverter.Parsers;
 
-import com.panavis.WordToJsonConverter.Constants.Format;
-import com.panavis.WordToJsonConverter.Constants.Headings;
 import com.panavis.WordToJsonConverter.Constants.Keywords;
 import com.panavis.WordToJsonConverter.ResultTypes.SectionResult;
-import com.panavis.WordToJsonConverter.Utils.StringFormatting;
 import com.panavis.WordToJsonConverter.Style.WordParagraph;
+import com.panavis.WordToJsonConverter.Utils.JsonCreator;
 import com.panavis.WordToJsonConverter.Wrappers.JsonArray;
 import com.panavis.WordToJsonConverter.Wrappers.JsonObject;
-
-import java.util.Arrays;
 
 public class CaseSubjectMatterParser implements ICaseSubjectMatter {
 
@@ -56,14 +52,8 @@ public class CaseSubjectMatterParser implements ICaseSubjectMatter {
         }
     }
 
-    private void addSubsectionContent(String heading, String body) {
-        JsonObject nestedJson = new JsonObject();
-        JsonArray sectionNestedArray = new JsonArray();
-        for (String paragraph : body.split(Format.DOUBLE_BLANK)) {
-            sectionNestedArray.putValue(paragraph);
-        }
-        nestedJson.addNameValuePair(heading, sectionNestedArray);
-        sectionArray.putValue(nestedJson);
+    private void addSubsectionContent(String heading, JsonArray subsectionBody) {
+        sectionArray.putValue(JsonCreator.getJsonObject(heading, subsectionBody));
         sectionContent.addNameValuePair(Keywords.SUBJECT_MATTER, sectionArray);
     }
 }

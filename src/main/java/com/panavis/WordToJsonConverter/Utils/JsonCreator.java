@@ -6,7 +6,7 @@ import com.panavis.WordToJsonConverter.Wrappers.JsonObject;
 public class JsonCreator {
     public static JsonObject getJsonObject(String name, String value){
         JsonObject jsonObject = new JsonObject();
-        jsonObject.addNameValuePair(name, StringFormatting.removeStartingOrTrailingColons(value));
+        jsonObject.addNameValuePair(name, value.trim());
         return jsonObject;
     }
 
@@ -19,7 +19,7 @@ public class JsonCreator {
     public static JsonArray getJsonArrayFromStringArray(String[] content) {
         JsonArray jsonArray = new JsonArray();
         for (String subContent : content)
-            jsonArray.putValue(StringFormatting.removeStartingOrTrailingColons(subContent).trim());
+            jsonArray.putValue(subContent.trim());
         return jsonArray;
     }
 }
