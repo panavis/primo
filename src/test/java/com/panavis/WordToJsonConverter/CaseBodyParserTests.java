@@ -45,6 +45,12 @@ public class CaseBodyParserTests {
     }
 
     @Test
+    public void interm_court_huye_2016_hasCaseBackgroundSection() {
+        JsonObject caseBody = getCaseBody(12);
+        assertTrue(caseBody.hasKey("I.\tIMITERERE Y\u2019URUBANZA"));
+    }
+
+    @Test
     public void primary_court_0020_hasCaseBackgroundSection() {
         JsonObject caseBody = getCaseBody(16);
         assertTrue(caseBody.hasKey("I.\tIMITERERE Y\u2019URUBANZA"));
@@ -63,6 +69,12 @@ public class CaseBodyParserTests {
     }
 
     @Test
+    public void interm_court_huye_2016_BackgroundSectionHasLengthOneArray() {
+        JsonArray caseBackground = getCaseBackgroundSection(12, "I.\tIMITERERE Y\u2019URUBANZA");
+        assertEquals(2, caseBackground.getSize());
+    }
+
+    @Test
     public void primary_court_0020_BackgroundSectionHasLengthOneArray() {
         JsonArray caseBackground = getCaseBackgroundSection(16, "I.\tIMITERERE Y\u2019URUBANZA");
         assertEquals(1, caseBackground.getSize());
@@ -71,7 +83,7 @@ public class CaseBodyParserTests {
     private JsonArray getExpectedCaseBackground(int caseIndex, String heading) {
         JsonObject caseObject = TestsSetup.expectedJsonContent.get(caseIndex);
         JsonArray caseArray = caseObject.getArrayByKey(Keywords.CASE);
-        JsonObject expectedBackground = caseArray.getJsonByIndex(3);
+        JsonObject expectedBackground = caseArray.getJsonByIndex(4);
         return expectedBackground.getArrayByKey(heading);
     }
 
@@ -92,6 +104,17 @@ public class CaseBodyParserTests {
         String actualContent = caseBackground.toString();
 
         JsonArray expectedArray = getExpectedCaseBackground(7, "I.\tIMITERERE Y\u2019URUBANZA");
+        String expectedContent = expectedArray.toString();
+
+        assertEquals(expectedContent, actualContent);
+    }
+
+    @Test
+    public void interm_court_huye_2016_CaseBackgroundMatchesExpectedContent() {
+        JsonArray caseBackground = getCaseBackgroundSection(12, "I.\tIMITERERE Y\u2019URUBANZA");
+        String actualContent = caseBackground.toString();
+
+        JsonArray expectedArray = getExpectedCaseBackground(12, "I.\tIMITERERE Y\u2019URUBANZA");
         String expectedContent = expectedArray.toString();
 
         assertEquals(expectedContent, actualContent);

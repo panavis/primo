@@ -2,6 +2,7 @@ package com.panavis.WordToJsonConverter.Parsers;
 
 import com.panavis.WordToJsonConverter.ResultTypes.SectionResult;
 import com.panavis.WordToJsonConverter.Style.WordParagraph;
+import com.panavis.WordToJsonConverter.Utils.StringFormatting;
 import com.panavis.WordToJsonConverter.Wrappers.JsonObject;
 
 public class CaseBodyParser implements ICaseBodyParser {
@@ -19,6 +20,7 @@ public class CaseBodyParser implements ICaseBodyParser {
         if (wordParagraph.isSectionHeading(startParagraph)) {
             section.setCurrentNumbering(wordParagraph.getUnitNumbering(startParagraph));
             String heading = wordParagraph.getParagraphText(startParagraph);
+            heading = StringFormatting.trimColons(heading);
             Subsection subsection = new Subsection(section, wordParagraph, startParagraph)
                                         .parse();
             sectionContent.addNameValuePair(heading, subsection.getBody());
