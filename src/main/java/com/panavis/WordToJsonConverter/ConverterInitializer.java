@@ -1,5 +1,6 @@
 package com.panavis.WordToJsonConverter;
 
+import com.panavis.WordToJsonConverter.Constants.Keywords;
 import com.panavis.WordToJsonConverter.Style.Numbering;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFNumbering;
@@ -40,13 +41,17 @@ public class ConverterInitializer {
         blanksAfterParagraph.put(lastParagraphIndex, currentBlanks + 1);
     }
 
-    public static Map<Integer, Boolean> getListParagraphs(List<XWPFParagraph> paragraphs) {
+    public static Map<Integer, Boolean> getNumberedParagraphs(List<XWPFParagraph> paragraphs) {
         Map<Integer, Boolean> numberedParagraphs = new HashMap<>();
 
         for (int index = 0; index < paragraphs.size(); index++) {
             String paragraphStyle = paragraphs.get(index).getStyle();
-            if (paragraphStyle != null && paragraphStyle.equals("ListParagraph"))
+            if (paragraphStyle != null &&
+                    (paragraphStyle.equals("ListParagraph") ||
+                    paragraphStyle.startsWith(Keywords.HEADING)))
+            {
                 numberedParagraphs.put(index, true);
+            }
             else
                 numberedParagraphs.put(index, false);
         }

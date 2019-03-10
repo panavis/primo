@@ -26,7 +26,7 @@ public class WordParagraph {
     public WordParagraph(XWPFDocument wordDocument) {
         this.paragraphs = ConverterInitializer.getNonEmptyParagraphs(wordDocument);
         this.postParagraphBlanks = ConverterInitializer.getPostParagraphBlanks(wordDocument);
-        this.listParagraphs = ConverterInitializer.getListParagraphs(this.paragraphs);
+        this.listParagraphs = ConverterInitializer.getNumberedParagraphs(this.paragraphs);
         XWPFNumbering numbering = wordDocument.getNumbering();
         this.paragraphsNumbering = ConverterInitializer.getParagraphsNumbering(numbering, this.paragraphs);
     }

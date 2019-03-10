@@ -13,6 +13,11 @@ public class CaseBodyParser implements ICaseBodyParser {
     }
 
     public SectionResult parse(int startParagraph) {
-        return new SectionResult(new JsonObject(), 0);
+        JsonObject sectionContent = new JsonObject();
+        if (wordParagraph.isSectionHeading(startParagraph)) {
+            String heading = wordParagraph.getParagraphText(startParagraph);
+            sectionContent.addNameValuePair(heading, "");
+        }
+        return new SectionResult(sectionContent, 0);
     }
 }

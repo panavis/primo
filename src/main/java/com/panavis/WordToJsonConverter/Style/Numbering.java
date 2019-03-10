@@ -1,6 +1,7 @@
 package com.panavis.WordToJsonConverter.Style;
 
 import com.panavis.WordToJsonConverter.Constants.Format;
+import com.panavis.WordToJsonConverter.Constants.Keywords;
 import org.apache.poi.xwpf.usermodel.XWPFAbstractNum;
 import org.apache.poi.xwpf.usermodel.XWPFNumbering;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
@@ -8,10 +9,7 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTAbstractNum;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTLvl;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Numbering {
 
@@ -42,10 +40,12 @@ public class Numbering {
             XWPFParagraph paragraph = paragraphs.get(i);
             String paragraphStyle = paragraph.getStyle();
 
-            if (paragraphStyle != null && paragraphStyle.equals("ListParagraph")) {
+            if (paragraphStyle != null &&
+                    (   paragraphStyle.equals("ListParagraph") ||
+                            (paragraphStyle.startsWith(Keywords.HEADING) &&
+                                    paragraph.getNumIlvl() != null)))
+            {
                 BigInteger numId = paragraph.getNumID();
-
-                int numIdValue = numId.intValue();
                 int levelValue = paragraph.getNumIlvl().intValue();
                 String uniqueId = numId.toString() + "_" + levelValue;
                 docNumbering.saveNumberingItem(uniqueId);
@@ -106,6 +106,17 @@ public class Numbering {
                 numberingString = formatDisplay.replaceAll("%\\d", numberingLetter);
                 break;
             }
+            case "upperRoman": {
+                String numberingLetter = RomanNumber.toRoman(currentNumber);
+                numberingString = formatDisplay.replaceAll("%\\d", numberingLetter);
+
+                break;
+            }
+            case "lowerRoman": {
+                String numberingLetter = RomanNumber.toRoman(currentNumber).toLowerCase();
+                numberingString = formatDisplay.replaceAll("%\\d", numberingLetter);
+                break;
+            }
             case "bullet": {
                 numberingString = "-";
                 break;
@@ -149,6 +160,37 @@ public class Numbering {
         else {
             this.numberingTracker.put(uniqueId, 1);
         }
+    }
+}
+
+class RomanNumber {
+
+    private final static TreeMap<Integer, String> map = new TreeMap<Integer, String>();
+
+    static {
+
+        map.put(1000, "M");
+        map.put(900, "CM");
+        map.put(500, "D");
+        map.put(400, "CD");
+        map.put(100, "C");
+        map.put(90, "XC");
+        map.put(50, "L");
+        map.put(40, "XL");
+        map.put(10, "X");
+        map.put(9, "IX");
+        map.put(5, "V");
+        map.put(4, "IV");
+        map.put(1, "I");
+
+    }
+
+    static String toRoman(int number) {
+        int l =  map.floorKey(number);
+        if ( number == l ) {
+            return map.get(number);
+        }
+        return map.get(l) + toRoman(number-l);
     }
 
 }

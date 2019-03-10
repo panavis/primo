@@ -30,6 +30,7 @@ public class CaseSubjectMatterParser implements ICaseSubjectMatter {
 
     public SectionResult parse(int startParagraph) {
         subsectionStart = startParagraph;
+        int nextParagraph = startParagraph;
         while(numberOfSubsections > 0) {
             String heading = getSubjectMatterHeading(subsectionStart);
             String inlineParagraph = wordParagraph.getInlineHeadingFirstParagraph(subsectionStart);
@@ -37,13 +38,11 @@ public class CaseSubjectMatterParser implements ICaseSubjectMatter {
                                         .setInlineParagraph(inlineParagraph)
                                         .parse();
             addSubsectionContent(heading, subsection.getBody());
-            int nextParagraph = subsection.getLastParagraph();
-            if (section.hasAnotherSubjectMatterSubsection(nextParagraph)) {
-                updateSubsectionStartAndNumber(nextParagraph);
-            }
+            nextParagraph = subsection.getLastParagraph();
+            updateSubsectionStartAndNumber(nextParagraph);
             numberOfSubsections--;
         }
-        return new SectionResult(sectionContent, startParagraph);
+        return new SectionResult(sectionContent, nextParagraph);
     }
 
     private String getSubjectMatterHeading(int startParagraph) {
@@ -51,8 +50,10 @@ public class CaseSubjectMatterParser implements ICaseSubjectMatter {
     }
 
     private void updateSubsectionStartAndNumber(int paragraphIndex) {
-        numberOfSubsections++;
-        subsectionStart = paragraphIndex;
+        if (section.hasAnotherSubjectMatterSubsection(paragraphIndex)) {
+            numberOfSubsections++;
+            subsectionStart = paragraphIndex;
+        }
     }
 
     private void addSubsectionContent(String heading, String body) {

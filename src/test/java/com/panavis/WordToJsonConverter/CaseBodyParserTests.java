@@ -5,7 +5,6 @@ import com.panavis.WordToJsonConverter.ResultTypes.SectionResult;
 import com.panavis.WordToJsonConverter.Wrappers.JsonObject;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import static junit.framework.TestCase.assertTrue;
@@ -17,7 +16,6 @@ public class CaseBodyParserTests {
         TestsSetup.setUp();
     }
 
-    @Ignore
     @Test
     public void primary_court_0020_hasImiterereYurubanzaSection() {
         XWPFDocument wordDocument = TestsSetup.wordDocxData.get(16);
@@ -25,7 +23,7 @@ public class CaseBodyParserTests {
         converter.parseCaseSections();
         SectionResult caseBodyResult = converter.getParsedCaseSection(Keywords.CASE_BODY);
         JsonObject caseBody = caseBodyResult.getSectionContent();
-        assertTrue(caseBody.hasKey("I.\tIMITERERE Y'URUBANZA"));
+        assertTrue(caseBody.hasKey("I.\tIMITERERE Y\u2019URUBANZA"));
     }
 
 }

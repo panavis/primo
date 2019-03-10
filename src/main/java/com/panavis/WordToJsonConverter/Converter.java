@@ -38,18 +38,19 @@ class Converter {
     private void parseTitleAndUpdateNextParagraph() {
         SectionResult caseTitle = this.titleParser.parse();
         this.parsedCase.put(Keywords.TITLE, caseTitle);
-        nextParagraph = this.parsedCase.get(Keywords.TITLE).getNextParagraph();
+        nextParagraph = caseTitle.getNextParagraph();
     }
 
     private void parsePartiesAndUpdateNextParagraph() {
         SectionResult caseParties = this.partiesParser.parse(nextParagraph);
         this.parsedCase.put(Keywords.PARTIES, caseParties);
-        nextParagraph = this.parsedCase.get(Keywords.PARTIES).getNextParagraph();
+        nextParagraph = caseParties.getNextParagraph();
     }
 
     private void parseSubjectMatterAndUpdateNextParagraph() {
         SectionResult caseSubjectMatter = this.subjectMatterParser.parse(nextParagraph);
         this.parsedCase.put(Keywords.SUBJECT_MATTER, caseSubjectMatter);
+        nextParagraph = caseSubjectMatter.getNextParagraph();
     }
 
     SectionResult getParsedCaseSection(String section) {
