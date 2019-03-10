@@ -32,7 +32,10 @@ public class CaseSubjectMatterParser implements ICaseSubjectMatter {
         subsectionStart = startParagraph;
         while(numberOfSubsections > 0) {
             String heading = getSubjectMatterHeading(subsectionStart);
-            Subsection subsection = Subsection.getSubsection(section, wordParagraph, subsectionStart);
+            String inlineParagraph = wordParagraph.getInlineHeadingFirstParagraph(subsectionStart);
+            Subsection subsection = new Subsection(section, wordParagraph, subsectionStart)
+                                        .setInlineParagraph(inlineParagraph)
+                                        .parse();
             addSubsectionContent(heading, subsection.getBody());
             int nextParagraph = subsection.getLastParagraph();
             if (section.hasAnotherSubjectMatterSubsection(nextParagraph)) {

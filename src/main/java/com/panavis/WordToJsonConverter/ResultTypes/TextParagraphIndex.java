@@ -1,7 +1,5 @@
 package com.panavis.WordToJsonConverter.ResultTypes;
 
-import java.util.List;
-
 public class TextParagraphIndex {
 
     private String subsectionParagraphs;

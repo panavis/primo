@@ -13,21 +13,26 @@ class Subsection {
     private int lastParagraph;
     private String subsectionBody;
 
-    Subsection(ISection section, WordParagraph wordParagraph, int startParagraph, String inlineFirstParagraph) {
+    Subsection(ISection section, WordParagraph wordParagraph, int startParagraph) {
         this.section = section;
         this.wordParagraph = wordParagraph;
         this.startParagraph = startParagraph;
-        this.inlineFirstParagraph = inlineFirstParagraph;
+        this.inlineFirstParagraph = "";
         this.subsectionBody = "";
     }
 
+    Subsection setInlineParagraph(String inlineParagraph) {
+        inlineFirstParagraph = inlineParagraph;
+        return this;
+    }
 
-    void parse() {
+    Subsection parse() {
         inlineFirstParagraph = inlineFirstParagraph.length() == 0 ?
                 "" : inlineFirstParagraph + wordParagraph.getBlankLinesAfterParagraph(startParagraph);
         TextParagraphIndex remainingAndIndex = getRemainingSubsectionBody(startParagraph);
         subsectionBody = inlineFirstParagraph.concat(remainingAndIndex.getSubsectionParagraphs()).trim();
         lastParagraph = remainingAndIndex.getParagraphIndex();
+        return this;
     }
 
     String getBody() {
@@ -53,12 +58,5 @@ class Subsection {
         if (StringFormatting.isCaseSensitive(paragraphText))
             remainingBody.append(paragraphText)
                         .append(wordParagraph.getBlankLinesAfterParagraph(paragraphIndex));
-    }
-
-    static Subsection getSubsection(ISection section, WordParagraph word, int startParagraph) {
-        String inlineParagraph = word.getInlineHeadingFirstParagraph(startParagraph);
-        Subsection subsection = new Subsection(section, word, startParagraph, inlineParagraph);
-        subsection.parse();
-        return subsection;
     }
 }

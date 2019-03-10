@@ -26,8 +26,8 @@ public class CasePartiesParser implements ICaseParties {
         this.reachedSubjectMatterSection = false;
     }
 
-    public SectionResult parse(int beginningParagraph) {
-        HeadingParagraphIndex partiesSectionHeading = findPartiesSectionHeading(beginningParagraph);
+    public SectionResult parse(int startParagraph) {
+        HeadingParagraphIndex partiesSectionHeading = findPartiesSectionHeading(startParagraph);
         int paragraphIndex = partiesSectionHeading.getParagraphIndex();
         paragraphIndex = getPartiesSubsections(paragraphIndex + 1);
         JsonObject parties = new JsonObject();
@@ -35,22 +35,28 @@ public class CasePartiesParser implements ICaseParties {
         return new SectionResult(parties, paragraphIndex);
     }
 
-    private HeadingParagraphIndex findPartiesSectionHeading(int beginningParagraph) {
+    private HeadingParagraphIndex findPartiesSectionHeading(int startParagraph) {
+        HeadingParagraphIndex headingAndIndex = findFirstHeading(startParagraph);
+        String partiesHeading = headingAndIndex.getHeadingName();
+        int paragraphIndex = headingAndIndex.getParagraphIndex();
+        if (firstHeadingIsSubsection(partiesHeading)) {
+            partiesHeading = Headings.HABURANA;
+            paragraphIndex--;
+        }
+        return new HeadingParagraphIndex(partiesHeading, paragraphIndex);
+    }
+
+    private HeadingParagraphIndex findFirstHeading(int startParagraph) {
         String firstHeading = "";
         int paragraphIndex;
-        paragraphIndex = beginningParagraph;
+        paragraphIndex = startParagraph;
         while (paragraphIndex < this.wordParagraph.numberOfParagraphs()) {
             firstHeading = getFirstHeading(firstHeading, paragraphIndex);
             if (!firstHeading.isEmpty())
                 break;
             paragraphIndex++;
         }
-        String partiesHeading = firstHeading;
-        if (!Headings.PARTIES_HEADINGS.contains(firstHeading)) {
-            partiesHeading = Headings.HABURANA;
-            paragraphIndex--;
-        }
-        return new HeadingParagraphIndex(partiesHeading, paragraphIndex);
+        return new HeadingParagraphIndex(firstHeading, paragraphIndex);
     }
 
     private String getFirstHeading(String firstHeading, int paragraphIndex) {
@@ -60,6 +66,10 @@ public class CasePartiesParser implements ICaseParties {
         firstHeading = Headings.PARTIES_HEADINGS.contains(firstHeading) ?
                 firstHeading : this.wordParagraph.getCaseSensitiveRunText(paragraphIndex);
         return firstHeading;
+    }
+
+    private boolean firstHeadingIsSubsection(String partiesHeading) {
+        return !Headings.PARTIES_HEADINGS.contains(partiesHeading);
     }
 
     private int getPartiesSubsections(int startParagraph) {
@@ -85,7 +95,10 @@ public class CasePartiesParser implements ICaseParties {
 
     private void parseAndAddNormalSubsection(int startParagraph) {
         String subsectionName = wordParagraph.getHeadingFromParagraph(startParagraph);
-        Subsection subsection = Subsection.getSubsection(section, wordParagraph, startParagraph);
+        String inlineParagraph = wordParagraph.getInlineHeadingFirstParagraph(startParagraph);
+        Subsection subsection = new Subsection(section, wordParagraph, startParagraph)
+                                    .setInlineParagraph(inlineParagraph)
+                                    .parse();
         addSubsectionContent(subsectionName, subsection.getBody());
         updateSubsectionStart(subsection.getLastParagraph());
     }
@@ -97,8 +110,9 @@ public class CasePartiesParser implements ICaseParties {
     }
 
     private void parseAndAddCriminalCaseProsecutorSubsection(int startParagraph, String inlineFirstParagraph) {
-        Subsection subsection = new Subsection(section, wordParagraph, startParagraph, inlineFirstParagraph);
-        subsection.parse();
+        Subsection subsection = new Subsection(section, wordParagraph, startParagraph)
+                                    .setInlineParagraph(inlineFirstParagraph)
+                                    .parse();
         addSubsectionContent(Keywords.UBUSHINJACYAHA, subsection.getBody());
         updateSubsectionStart(subsection.getLastParagraph());
     }
