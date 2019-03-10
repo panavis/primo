@@ -247,7 +247,7 @@ public class CaseSubjectMatterParserTests {
     public void comm_court_nyarugenge_2016_subsectionHasANestedArrayWithLengthOne() {
         JsonObject subsection = CaseSubjectMatterTestsHelpers.getActualSubjectMatterSubsection(5, 0);
         JsonArray actualSubsectionArray = subsection.getArrayByKey(Headings.IKIREGERWA);
-        assertEquals(1, actualSubsectionArray.getSize());
+        assertEquals(0, actualSubsectionArray.getSize());
     }
 
     @Test

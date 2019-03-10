@@ -7,6 +7,8 @@ import com.panavis.WordToJsonConverter.Utils.JsonCreator;
 import com.panavis.WordToJsonConverter.Utils.StringFormatting;
 import com.panavis.WordToJsonConverter.Wrappers.JsonArray;
 
+import java.util.Arrays;
+
 class Subsection {
 
     private WordParagraph wordParagraph;
