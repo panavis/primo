@@ -10,7 +10,6 @@ import com.panavis.WordToJsonConverter.Wrappers.JsonObject;
 public class CaseSubjectMatterParser implements ICaseSubjectMatter {
 
     private WordParagraph wordParagraph;
-    private SectionSubjectMatter section;
     private int numberOfSubsections;
     private int subsectionStart;
     private JsonObject sectionContent;
@@ -18,7 +17,6 @@ public class CaseSubjectMatterParser implements ICaseSubjectMatter {
 
     public CaseSubjectMatterParser(WordParagraph wordParagraph) {
         this.wordParagraph = wordParagraph;
-        this.section = new SectionSubjectMatter(wordParagraph);
         this.numberOfSubsections = 1;
         this.sectionContent = new JsonObject();
         this.sectionArray = new JsonArray();
@@ -30,12 +28,12 @@ public class CaseSubjectMatterParser implements ICaseSubjectMatter {
         while(numberOfSubsections > 0) {
             String heading = getSubjectMatterHeading(subsectionStart);
             String inlineParagraph = wordParagraph.getInlineHeadingFirstParagraph(subsectionStart);
-            Subsection subsection = new Subsection(section, wordParagraph, subsectionStart)
+            SectionSubjectMatter subsection = (SectionSubjectMatter) new SectionSubjectMatter(wordParagraph, subsectionStart)
                                         .setInlineParagraph(inlineParagraph)
                                         .parse();
             addSubsectionContent(heading, subsection.getBody());
             nextParagraph = subsection.getLastParagraph();
-            updateSubsectionStartAndNumber(nextParagraph);
+            updateSubsectionStartAndNumber(subsection, nextParagraph);
             numberOfSubsections--;
         }
         return new SectionResult(sectionContent, nextParagraph);
@@ -45,8 +43,8 @@ public class CaseSubjectMatterParser implements ICaseSubjectMatter {
         return wordParagraph.getHeadingFromParagraph(startParagraph);
     }
 
-    private void updateSubsectionStartAndNumber(int paragraphIndex) {
-        if (section.hasAnotherSubjectMatterSubsection(paragraphIndex)) {
+    private void updateSubsectionStartAndNumber(SectionSubjectMatter subsection, int paragraphIndex) {
+        if (subsection.hasAnotherSubjectMatterSubsection(paragraphIndex)) {
             numberOfSubsections++;
             subsectionStart = paragraphIndex;
         }

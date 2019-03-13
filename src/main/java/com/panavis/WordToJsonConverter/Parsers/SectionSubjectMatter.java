@@ -3,14 +3,13 @@ package com.panavis.WordToJsonConverter.Parsers;
 import com.panavis.WordToJsonConverter.Constants.Headings;
 import com.panavis.WordToJsonConverter.Style.WordParagraph;
 
-public class SectionSubjectMatter implements ISection {
+public class SectionSubjectMatter extends Subsection {
 
-    private WordParagraph wordParagraph;
-
-    SectionSubjectMatter(WordParagraph wordParagraph) {
-        this.wordParagraph = wordParagraph;
+    SectionSubjectMatter(WordParagraph wordParagraph, int startParagraph) {
+        super(wordParagraph, startParagraph);
     }
 
+    @Override
     public boolean isStillInOneSubsection(int paragraphIndex) {
         String text = wordParagraph.getParagraphText(paragraphIndex).toLowerCase();
         if (hasAnotherSubjectMatterSubsection(paragraphIndex)) return false;

@@ -2,14 +2,13 @@ package com.panavis.WordToJsonConverter.Parsers;
 
 import com.panavis.WordToJsonConverter.Style.WordParagraph;
 
-public class SectionParties implements ISection {
+public class SectionParties extends Subsection {
 
-    private WordParagraph wordParagraph;
-
-    SectionParties(WordParagraph wordParagraph) {
-        this.wordParagraph = wordParagraph;
+    SectionParties(WordParagraph wordParagraph, int startParagraph) {
+        super(wordParagraph, startParagraph);
     }
 
+    @Override
     public boolean isStillInOneSubsection(int paragraphIndex) {
         return !(wordParagraph.isSectionHeading(paragraphIndex)) &&
                 !wordParagraph.startsProsecutorSubsection(paragraphIndex);

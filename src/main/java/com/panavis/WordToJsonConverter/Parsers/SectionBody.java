@@ -3,22 +3,23 @@ package com.panavis.WordToJsonConverter.Parsers;
 import com.panavis.WordToJsonConverter.Style.UnitNumbering;
 import com.panavis.WordToJsonConverter.Style.WordParagraph;
 
-public class SectionBody implements ISection {
+class SectionBody extends Subsection {
 
-    private WordParagraph wordParagraph;
-    UnitNumbering currentNumbering;
+    private UnitNumbering currentNumbering;
 
-    SectionBody(WordParagraph wordParagraph) {
-        this.wordParagraph = wordParagraph;
+    SectionBody(WordParagraph wordParagraph, int startParagraph) {
+        super(wordParagraph, startParagraph);
     }
 
-    void setCurrentNumbering(UnitNumbering unitNumbering) {
-        this.currentNumbering = unitNumbering;
-    }
-
-    public boolean isStillInOneSubsection(int paragraphIndex) {
+    @Override
+    boolean isStillInOneSubsection(int paragraphIndex) {
         String text = wordParagraph.getParagraphText(paragraphIndex);
         String nextNumbering = currentNumbering.next;
         return !(text.startsWith(nextNumbering));
+    }
+
+    Subsection setCurrentNumbering(UnitNumbering unitNumbering) {
+        this.currentNumbering = unitNumbering;
+        return this;
     }
 }
