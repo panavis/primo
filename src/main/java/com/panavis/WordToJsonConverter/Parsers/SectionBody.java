@@ -2,6 +2,7 @@ package com.panavis.WordToJsonConverter.Parsers;
 
 import com.panavis.WordToJsonConverter.Style.UnitNumbering;
 import com.panavis.WordToJsonConverter.Style.WordParagraph;
+import com.panavis.WordToJsonConverter.Utils.StringFormatting;
 
 class SectionBody extends Subsection {
 
@@ -18,7 +19,7 @@ class SectionBody extends Subsection {
         if (nextNumberingIsAvailable(nextNumbering))
             return !paragraphHasNextNumbering(text, nextNumbering);
         String currentStyle = wordParagraph.getUnitNumbering(paragraphIndex).style;
-        return !(currentStyle.equals(currentNumbering.style));
+        return !isTextCapitalizedAndHasSameStyle(text, currentStyle);
 
     }
 
@@ -28,6 +29,11 @@ class SectionBody extends Subsection {
 
     private boolean paragraphHasNextNumbering(String text, String nextNumbering) {
         return text.startsWith(nextNumbering);
+    }
+
+    private boolean isTextCapitalizedAndHasSameStyle(String text, String currentStyle) {
+        return StringFormatting.isTextCapitalized(text) &&
+                currentStyle.equals(currentNumbering.style);
     }
 
     Subsection setCurrentNumbering(UnitNumbering unitNumbering) {

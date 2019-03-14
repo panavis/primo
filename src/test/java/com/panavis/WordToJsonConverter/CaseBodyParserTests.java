@@ -6,6 +6,7 @@ import com.panavis.WordToJsonConverter.Wrappers.JsonArray;
 import com.panavis.WordToJsonConverter.Wrappers.JsonObject;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static junit.framework.TestCase.assertEquals;
@@ -44,8 +45,20 @@ public class CaseBodyParserTests {
     }
 
     @Test
+    public void comm_high_court_2016_hasCaseBackgroundSection() {
+        JsonObject caseBody = getCaseBody(6);
+        assertTrue(caseBody.hasKey("IMITERERE Y\u2019URUBANZA"));
+    }
+
+    @Test
     public void high_court_chamber_nyanza_2014_hasCaseBackgroundSection() {
         JsonObject caseBody = getCaseBody(7);
+        assertTrue(caseBody.hasKey("I.\tIMITERERE Y\u2019URUBANZA"));
+    }
+
+    @Test
+    public void high_court_criminal_2011_hasCaseBackgroundSection() {
+        JsonObject caseBody = getCaseBody(9);
         assertTrue(caseBody.hasKey("I.\tIMITERERE Y\u2019URUBANZA"));
     }
 
@@ -86,13 +99,26 @@ public class CaseBodyParserTests {
     }
 
     @Test
+    public void comm_high_court_2016_BackgroundSectionHasLengthFourArray() {
+        JsonArray caseBackground = getCaseBackgroundSection(6, "IMITERERE Y\u2019URUBANZA");
+        assertEquals(4, caseBackground.getSize());
+    }
+
+    @Test
     public void high_court_chamber_nyanza_2014_BackgroundSectionHasLengthFourArray() {
         JsonArray caseBackground = getCaseBackgroundSection(7, "I.\tIMITERERE Y\u2019URUBANZA");
         assertEquals(4, caseBackground.getSize());
     }
 
+    @Ignore("Ignore: repeated numbering")
     @Test
-    public void interm_court_huye_2016_BackgroundSectionHasLengthOneArray() {
+    public void high_court_criminal_2011_BackgroundSectionHasLengthOneArray() {
+        JsonArray caseBackground = getCaseBackgroundSection(9, "I.\tIMITERERE Y\u2019URUBANZA");
+        assertEquals(1, caseBackground.getSize());
+    }
+
+    @Test
+    public void interm_court_huye_2016_BackgroundSectionHasLengthTwoArray() {
         JsonArray caseBackground = getCaseBackgroundSection(12, "I.\tIMITERERE Y\u2019URUBANZA");
         assertEquals(2, caseBackground.getSize());
     }
@@ -139,6 +165,17 @@ public class CaseBodyParserTests {
         String actualContent = caseBackground.toString();
 
         JsonArray expectedArray = getExpectedCaseBackground(4, 3, "I.\tIMITERERE Y\u2019URUBANZA");
+        String expectedContent = expectedArray.toString();
+
+        assertEquals(expectedContent, actualContent);
+    }
+
+    @Test
+    public void comm_high_court_2016_CaseBackgroundMatchesExpectedContent() {
+        JsonArray caseBackground = getCaseBackgroundSection(6, "IMITERERE Y\u2019URUBANZA");
+        String actualContent = caseBackground.toString();
+
+        JsonArray expectedArray = getExpectedCaseBackground(6, 3, "IMITERERE Y\u2019URUBANZA");
         String expectedContent = expectedArray.toString();
 
         assertEquals(expectedContent, actualContent);
