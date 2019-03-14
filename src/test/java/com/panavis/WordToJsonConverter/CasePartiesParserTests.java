@@ -655,6 +655,11 @@ public class CasePartiesParserTests {
     }
 
     @Test
+    public void interm_court_huye_headingOfNextSectionIs_Urukiko() {
+
+    }
+
+    @Test
     public void interm_court_huye_2016_Parties_UREGWA_subsectionMatchesExpectedContent() {
         ExpectedActualContent content = CasePartiesTestsHelpers.getExpectedAndActualContentForSubsection(12, 1, Headings.HABURANA, Headings.UREGWA);
         CasePartiesTestsHelpers.assertExactContentEquals(content.expectedContent, content.actualContent);
