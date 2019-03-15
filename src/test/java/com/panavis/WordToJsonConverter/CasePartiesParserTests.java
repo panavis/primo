@@ -2,9 +2,11 @@ package com.panavis.WordToJsonConverter;
 
 import com.panavis.WordToJsonConverter.Constants.Headings;
 import com.panavis.WordToJsonConverter.Constants.Keywords;
+import com.panavis.WordToJsonConverter.ResultTypes.SectionResult;
 import com.panavis.WordToJsonConverter.Wrappers.JsonArray;
 import com.panavis.WordToJsonConverter.Wrappers.JsonObject;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -16,6 +18,12 @@ public class CasePartiesParserTests {
     public static void setUp() {
         TestsSetup.setUp();
         CasePartiesTestsHelpers.setUpExpectedAndActualJsons();
+    }
+
+    @Ignore("Ignore: Parties section troubleshooter.")
+    @Test
+    public void troubleshootOneCaseSeparately() {
+        SectionResult result = CasePartiesTestsHelpers.parseOneCaseAndReturnPartiesSection(3);
     }
 
     @Test
@@ -652,11 +660,6 @@ public class CasePartiesParserTests {
     public void interm_court_huye_2008_Parties_UREGWA_subsectionMatchesExpectedContent() {
         ExpectedActualContent content = CasePartiesTestsHelpers.getExpectedAndActualContentForSubsection(10, 1, Headings.ABABURANYI, Headings.UREGWA);
         CasePartiesTestsHelpers.assertContentLengthEquals(content.expectedContent, content.actualContent);
-    }
-
-    @Test
-    public void interm_court_huye_headingOfNextSectionIs_Urukiko() {
-
     }
 
     @Test

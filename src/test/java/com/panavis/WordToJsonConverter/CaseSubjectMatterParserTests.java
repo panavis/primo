@@ -1,9 +1,12 @@
 package com.panavis.WordToJsonConverter;
 
 import com.panavis.WordToJsonConverter.Constants.Headings;
+import com.panavis.WordToJsonConverter.Constants.Keywords;
+import com.panavis.WordToJsonConverter.ResultTypes.SectionResult;
 import com.panavis.WordToJsonConverter.Wrappers.JsonArray;
 import com.panavis.WordToJsonConverter.Wrappers.JsonObject;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static junit.framework.TestCase.assertEquals;
@@ -15,6 +18,13 @@ public class CaseSubjectMatterParserTests {
     public static void setUp() {
         TestsSetup.setUp();
         CaseSubjectMatterTestsHelpers.setUpAllActualSubjectMatterJsons();
+    }
+
+    @Ignore("Ignore: SubjectMatter section troubleshooter.")
+    @Test
+    public void troubleshootOneCaseSeparately() {
+        SectionResult subjectMatter = CaseSubjectMatterTestsHelpers.parseOneCaseAndReturnSubjectMatterSection(6);
+        JsonArray sectionArray = subjectMatter.getSectionContent().getArrayByKey(Keywords.SUBJECT_MATTER);
     }
 
     @Test

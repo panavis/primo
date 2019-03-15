@@ -6,13 +6,13 @@ import com.panavis.WordToJsonConverter.Wrappers.JsonArray;
 import com.panavis.WordToJsonConverter.Wrappers.JsonObject;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 class CaseSubjectMatterTestsHelpers {
 
-    private static List<JsonArray> allActualSubjectMatterJsons = new ArrayList<>();
-    private static List<JsonArray> allExpectedSubjectMatterJsons = new ArrayList<>();
+    private static Map<Integer, JsonArray> allActualSubjectMatterJsons = new HashMap<>();
+    private static Map<Integer, JsonArray> allExpectedSubjectMatterJsons = new HashMap<>();
 
     static void setUpAllActualSubjectMatterJsons() {
         setUpActualJsons();
@@ -20,23 +20,29 @@ class CaseSubjectMatterTestsHelpers {
     }
 
     private static void setUpExpectedJsons() {
-        for (JsonObject caseJson : TestsSetup.expectedJsonContent) {
+        for (int i = 0; i < TestsSetup.expectedJsonContent.size(); i++) {
+            JsonObject caseJson = TestsSetup.expectedJsonContent.get(i);
             JsonArray expectedCase = caseJson.getArrayByKey(Keywords.CASE);
             JsonObject expectedSection = expectedCase.getJsonByIndex(2);
             JsonArray expectedSubjectMatterArray = expectedSection.getArrayByKey(Keywords.SUBJECT_MATTER);
-            allExpectedSubjectMatterJsons.add(expectedSubjectMatterArray);
+            allExpectedSubjectMatterJsons.put(i, expectedSubjectMatterArray);
         }
     }
 
     private static void setUpActualJsons() {
-        for (XWPFDocument wordDocument : TestsSetup.wordDocxData) {
-            Converter converter = TestsSetup.getConverterObject(wordDocument, Keywords.SUBJECT_MATTER);
-            converter.parseCaseSections();
-            SectionResult subjectMatterResult = converter.getParsedCaseSection(Keywords.SUBJECT_MATTER);
+        for (int i = 0; i < TestsSetup.wordDocxData.size(); i++) {
+            SectionResult subjectMatterResult = parseOneCaseAndReturnSubjectMatterSection(i);
             JsonObject subjectMatterContent = subjectMatterResult.getSectionContent();
             JsonArray subjectMatterArray = subjectMatterContent.getArrayByKey(Keywords.SUBJECT_MATTER);
-            allActualSubjectMatterJsons.add(subjectMatterArray);
+            allActualSubjectMatterJsons.put(i, subjectMatterArray);
         }
+    }
+
+    static SectionResult parseOneCaseAndReturnSubjectMatterSection(int i) {
+        XWPFDocument wordDocument = TestsSetup.wordDocxData.get(i);
+        Converter converter = TestsSetup.getConverterObject(wordDocument, Keywords.SUBJECT_MATTER);
+        converter.parseCaseSections();
+        return converter.getParsedCaseSection(Keywords.SUBJECT_MATTER);
     }
 
     static JsonArray getActualSubjectMatterSectionArray(int wordDocIndex) {

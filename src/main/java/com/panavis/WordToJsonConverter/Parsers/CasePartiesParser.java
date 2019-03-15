@@ -70,7 +70,7 @@ public class CasePartiesParser implements ICaseParties {
 
     private int getPartiesSubsections(int startParagraph) {
         subsectionStart = startParagraph;
-        while (!reachedSubjectMatterSection) {
+        while (!reachedSubjectMatterSection && startParagraph < wordParagraph.numberOfParagraphs()) {
             if (this.wordParagraph.startsSubjectMatterSection(subsectionStart)) {
                 reachedSubjectMatterSection = true;
                 break;
@@ -86,7 +86,9 @@ public class CasePartiesParser implements ICaseParties {
              parseAndAddNormalSubsection(paragraphIndex);
          } else if (startsProsecutorSubsection(paragraphIndex)) {
             parseAndAddCriminalCaseProsecutorSubsection(paragraphIndex, paragraphText);
-        }
+        } else {
+             updateSubsectionStart(paragraphIndex + 1);
+         }
     }
 
     private void parseAndAddNormalSubsection(int startParagraph) {

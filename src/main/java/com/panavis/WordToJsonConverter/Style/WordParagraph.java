@@ -53,6 +53,8 @@ public class WordParagraph {
 
     public boolean isSectionHeading(int paragraphIndex) {
         XWPFParagraph paragraph = getParagraph(paragraphIndex);
+        String text = getParagraphText(paragraphIndex);
+        if (!StringFormatting.isCaseSensitive(text)) return false;
         List<XWPFRun> paragraphRuns = paragraph.getRuns();
         XWPFRun firstRun = paragraphRuns.get(0);
 
@@ -62,22 +64,27 @@ public class WordParagraph {
                 ParagraphRun.isFirstRunHighlyIndentedAndCapitalized(paragraph, firstRun) ||
                 ParagraphRun.isFirstRunBoldAndEndsWithColon(paragraph) ||
                 isUpperCaseAndHasNumberedHeading(paragraphIndex, firstRun) ||
-                hasColonAndContentOnSameLine(paragraphIndex) ||
+                hasColonAndPreColonPartHasStyle(paragraphIndex) ||
                 isOneWordAndIsUpperCase(paragraphIndex)
         );
     }
 
-    private boolean hasColonAndContentOnSameLine(int paragraphIndex) {
+    private boolean hasColonAndPreColonPartHasStyle(int paragraphIndex) {
         String paragraphText = getParagraphText(paragraphIndex);
         String[] textParts = paragraphText.split(Format.COLON);
         int numberOfParts = textParts.length;
         String firstPart = textParts[0];
 
-        boolean colonAndContent = false;
-        if (numberOfParts == 2 && firstPart.length() > 3 &&
-                (StringFormatting.isTextCapitalized(firstPart) || ParagraphRun.isFirstRunBold(getParagraph(paragraphIndex))))
-            colonAndContent = true;
-        return colonAndContent;
+        boolean colonAndCapitalized = false;
+        if (preColonPartHasStyle(paragraphIndex, numberOfParts, firstPart))
+            colonAndCapitalized = true;
+        return colonAndCapitalized ;
+    }
+
+    private boolean preColonPartHasStyle(int paragraphIndex, int numberOfParts, String firstPart) {
+        return numberOfParts == 2 && firstPart.length() > 3 &&
+                (StringFormatting.isTextCapitalized(firstPart) ||
+                        ParagraphRun.isFirstRunBold(getParagraph(paragraphIndex)));
     }
 
     private boolean isOneWordAndIsUpperCase(int paragraphIndex) {
@@ -101,6 +108,12 @@ public class WordParagraph {
                 subjectMatterStart = true;
         }
         return subjectMatterStart;
+    }
+
+    public boolean startsCaseBackgroundSection(int paragraphIndex) {
+        String text = getParagraphText(paragraphIndex).toLowerCase();
+        return text.contains("imiterere") && text.contains("y") &&
+                text.contains("urubanza");
     }
 
     public String getBlankLinesAfterParagraph(int paragraphIndex) {
@@ -133,7 +146,7 @@ public class WordParagraph {
         String currentParagraph = getParagraphText(paragraphIndex);
         String sectionHeading = currentParagraph;
 
-        if (hasColonAndContentOnSameLine(paragraphIndex))
+        if (hasColonAndPreColonPartHasStyle(paragraphIndex))
             sectionHeading = currentParagraph.split(Format.COLON)[0];
         return trimColons(sectionHeading);
     }

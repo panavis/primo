@@ -11,9 +11,9 @@ public class SectionSubjectMatter extends Subsection {
 
     @Override
     public boolean isStillInOneSubsection(int paragraphIndex) {
-        String text = wordParagraph.getParagraphText(paragraphIndex).toLowerCase();
         if (hasAnotherSubjectMatterSubsection(paragraphIndex)) return false;
-        return !(text.contains("imiterere") && text.contains("y"));
+        if (wordParagraph.isSectionHeading(paragraphIndex)) return false;
+        return !wordParagraph.startsCaseBackgroundSection(paragraphIndex);
     }
 
     boolean hasAnotherSubjectMatterSubsection(int paragraphIndex) {

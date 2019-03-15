@@ -10,7 +10,16 @@ public class SectionParties extends Subsection {
 
     @Override
     public boolean isStillInOneSubsection(int paragraphIndex) {
-        return !(wordParagraph.isSectionHeading(paragraphIndex)) &&
-                !wordParagraph.startsProsecutorSubsection(paragraphIndex);
+        return isNotSectionHeading(paragraphIndex) &&
+                doesNotStartProsecutorSubsection(paragraphIndex);
     }
+
+    private boolean isNotSectionHeading(int paragraphIndex) {
+        return !(wordParagraph.isSectionHeading(paragraphIndex));
+    }
+
+    private boolean doesNotStartProsecutorSubsection(int paragraphIndex) {
+        return !wordParagraph.startsProsecutorSubsection(paragraphIndex);
+    }
+
 }

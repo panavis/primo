@@ -16,13 +16,15 @@ public class CaseBodyParser implements ICaseBodyParser {
 
     public SectionResult parse(int startParagraph) {
         JsonObject sectionContent = new JsonObject();
-        UnitNumbering currentUnitNumbering = wordParagraph.getUnitNumbering(startParagraph);
-        String heading = wordParagraph.getParagraphText(startParagraph);
-        heading = StringFormatting.trimColons(heading);
-        Subsection subsection = new SectionBody(wordParagraph, startParagraph)
-                                    .setCurrentNumbering(currentUnitNumbering)
-                                    .parse();
-        sectionContent.addNameValuePair(heading, subsection.getBody());
+        if (wordParagraph.startsCaseBackgroundSection(startParagraph)) {
+            UnitNumbering currentUnitNumbering = wordParagraph.getUnitNumbering(startParagraph);
+            String heading = wordParagraph.getParagraphText(startParagraph);
+            heading = StringFormatting.trimColons(heading);
+            Subsection subsection = new SectionBody(wordParagraph, startParagraph)
+                    .setCurrentNumbering(currentUnitNumbering)
+                    .parse();
+            sectionContent.addNameValuePair(heading, subsection.getBody());
+        }
         return new SectionResult(sectionContent, 0);
     }
 }

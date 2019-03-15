@@ -90,13 +90,13 @@ public class CaseBodyParserTests {
     @Test
     public void interm_court_huye_2008_doesNotHaveCaseBackgroundInUsualPlace() {
         JsonObject caseBody = getCaseBody(10);
-        assertFalse(caseBody.hasKey("URUKIKO"));
+        assertFalse(caseBody.hasKey("I.\tIMITERERE Y\u2019URUBANZA"));
     }
 
     @Test
-    public void interm_court_huye_2016_hasCaseBackgroundSection() {
+    public void interm_court_huye_2016_doesNotHaveCaseBackgroundInUsualPlace() {
         JsonObject caseBody = getCaseBody(12);
-        assertTrue(caseBody.hasKey("I.\tIMITERERE Y\u2019URUBANZA"));
+        assertFalse(caseBody.hasKey("I.\tIMITERERE Y\u2019URUBANZA"));
     }
 
     @Test
@@ -171,12 +171,6 @@ public class CaseBodyParserTests {
     public void high_court_criminal_2011_BackgroundSectionHasLengthOneArray() {
         JsonArray caseBackground = getCaseBackgroundSection(9, "I.\tIMITERERE Y\u2019URUBANZA");
         assertEquals(1, caseBackground.getSize());
-    }
-
-    @Test
-    public void interm_court_huye_2016_BackgroundSectionHasLengthTwoArray() {
-        JsonArray caseBackground = getCaseBackgroundSection(12, "I.\tIMITERERE Y\u2019URUBANZA");
-        assertEquals(2, caseBackground.getSize());
     }
 
     @Test
@@ -287,17 +281,6 @@ public class CaseBodyParserTests {
         String actualContent = caseBackground.toString();
 
         JsonArray expectedArray = getExpectedCaseBackground(8, 3, "I.\tIMITERERE Y\u2019URUBANZA");
-        String expectedContent = expectedArray.toString();
-
-        assertEquals(expectedContent, actualContent);
-    }
-
-    @Test
-    public void interm_court_huye_2016_CaseBackgroundMatchesExpectedContent() {
-        JsonArray caseBackground = getCaseBackgroundSection(12, "I.\tIMITERERE Y\u2019URUBANZA");
-        String actualContent = caseBackground.toString();
-
-        JsonArray expectedArray = getExpectedCaseBackground(12, 4, "I.\tIMITERERE Y\u2019URUBANZA");
         String expectedContent = expectedArray.toString();
 
         assertEquals(expectedContent, actualContent);
