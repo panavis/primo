@@ -27,7 +27,7 @@ abstract class Subsection {
     Subsection parse() {
         if (inlineParagraphHasText())
             inlineParagraph = inlineParagraph + wordParagraph.getBlankLinesAfterParagraph(startParagraph);
-        TextParagraphIndex remainingAndIndex = getRemainingSubsectionCopyBody(startParagraph);
+        TextParagraphIndex remainingAndIndex = getRemainingSubsectionBody(startParagraph);
         subsectionBody = inlineParagraph.concat(remainingAndIndex.getSubsectionParagraphs()).trim();
         lastParagraph = remainingAndIndex.getParagraphIndex();
         return this;
@@ -37,17 +37,17 @@ abstract class Subsection {
         return inlineParagraph.length() != 0;
     }
 
-    private TextParagraphIndex getRemainingSubsectionCopyBody(int startParagraph) {
+    private TextParagraphIndex getRemainingSubsectionBody(int startParagraph) {
         StringBuilder remainingBody = new StringBuilder();
         int paragraphIndex = startParagraph + 1;
         while(isStillInOneSubsection(paragraphIndex)) {
-            addParagraphToSubsectionCopy(remainingBody, paragraphIndex);
+            addParagraphToSubsection(remainingBody, paragraphIndex);
             paragraphIndex++;
         }
         return new TextParagraphIndex(remainingBody.toString(), paragraphIndex);
     }
 
-    private void addParagraphToSubsectionCopy(StringBuilder remainingBody, int paragraphIndex) {
+    private void addParagraphToSubsection(StringBuilder remainingBody, int paragraphIndex) {
         String paragraphText = wordParagraph.getParagraphText(paragraphIndex);
         if (StringFormatting.isCaseSensitive(paragraphText))
             remainingBody.append(paragraphText)
