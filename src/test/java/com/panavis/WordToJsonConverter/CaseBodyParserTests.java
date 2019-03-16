@@ -11,7 +11,6 @@ import org.junit.Test;
 
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
-import static org.junit.Assert.assertFalse;
 
 public class CaseBodyParserTests {
 
@@ -20,118 +19,112 @@ public class CaseBodyParserTests {
         TestsSetup.setUp();
     }
 
-    private JsonObject getCaseBody(int caseIndex) {
+    private JsonObject getCaseBackground(int caseIndex) {
+        SectionResult caseBodyResult = getCaseBodyResult(caseIndex);
+        JsonObject caseBody = caseBodyResult.getSectionContent();
+        JsonArray caseBodyArray = caseBody.getArrayByKey(Keywords.CASE_BODY);
+        return caseBodyArray.getJsonByIndex(0);
+    }
+
+    private SectionResult getCaseBodyResult(int caseIndex) {
         XWPFDocument wordDocument = TestsSetup.wordDocxData.get(caseIndex);
         Converter converter = TestsSetup.getConverterObject(wordDocument, Keywords.CASE_BODY);
         converter.parseCaseSections();
-        SectionResult caseBodyResult = converter.getParsedCaseSection(Keywords.CASE_BODY);
-        return caseBodyResult.getSectionContent();
+        return converter.getParsedCaseSection(Keywords.CASE_BODY);
     }
 
     private JsonArray getCaseBackgroundSection(int caseIndex, String heading) {
-        JsonObject caseBody = getCaseBody(caseIndex);
+        JsonObject caseBody = getCaseBackground(caseIndex);
         return caseBody.getArrayByKey(heading);
     }
 
     @Test
     public void comm_court_huye_2011_hasCaseBackgroundSection() {
-        JsonObject caseBody = getCaseBody(0);
+        JsonObject caseBody = getCaseBackground(0);
         assertTrue(caseBody.hasKey("I . IMITERERE Y\u2019URUBANZA"));
     }
 
     @Test
     public void comm_court_huye_2016_hasCaseBackgroundSection() {
-        JsonObject caseBody = getCaseBody(1);
+        JsonObject caseBody = getCaseBackground(1);
         assertTrue(caseBody.hasKey("I.\tIMITERERE Y\u2019URUBANZA"));
     }
 
     @Test
     public void comm_court_huye_2018_hasCaseBackgroundSection() {
-        JsonObject caseBody = getCaseBody(2);
+        JsonObject caseBody = getCaseBackground(2);
         assertTrue(caseBody.hasKey("I . IMITERERE Y\u2019URUBANZA"));
     }
 
     @Test
     public void comm_high_court_nyarugenge_2014_hasCaseBackgroundSection() {
-        JsonObject caseBody = getCaseBody(4);
+        JsonObject caseBody = getCaseBackground(4);
         assertTrue(caseBody.hasKey("I.\tIMITERERE Y\u2019URUBANZA"));
     }
 
     @Test
     public void comm_high_court_nyarugenge_2016_hasCaseBackgroundSection() {
-        JsonObject caseBody = getCaseBody(5);
+        JsonObject caseBody = getCaseBackground(5);
         assertTrue(caseBody.hasKey("I.\tIMITERERE Y\u2019URUBANZA"));
     }
 
     @Test
     public void comm_high_court_2016_hasCaseBackgroundSection() {
-        JsonObject caseBody = getCaseBody(6);
+        JsonObject caseBody = getCaseBackground(6);
         assertTrue(caseBody.hasKey("IMITERERE Y\u2019URUBANZA"));
     }
 
     @Test
     public void high_court_chamber_nyanza_2014_hasCaseBackgroundSection() {
-        JsonObject caseBody = getCaseBody(7);
+        JsonObject caseBody = getCaseBackground(7);
         assertTrue(caseBody.hasKey("I.\tIMITERERE Y\u2019URUBANZA"));
     }
 
     @Test
     public void high_court_chamber_nyanza_2018_hasCaseBackgroundSection() {
-        JsonObject caseBody = getCaseBody(8);
+        JsonObject caseBody = getCaseBackground(8);
         assertTrue(caseBody.hasKey("I.\tIMITERERE Y\u2019URUBANZA"));
     }
 
     @Test
     public void high_court_criminal_2011_hasCaseBackgroundSection() {
-        JsonObject caseBody = getCaseBody(9);
+        JsonObject caseBody = getCaseBackground(9);
         assertTrue(caseBody.hasKey("I.\tIMITERERE Y\u2019URUBANZA"));
     }
 
     @Test
-    public void interm_court_huye_2008_doesNotHaveCaseBackgroundInUsualPlace() {
-        JsonObject caseBody = getCaseBody(10);
-        assertFalse(caseBody.hasKey("I.\tIMITERERE Y\u2019URUBANZA"));
-    }
-
-    @Test
     public void interm_court_huye_2015_hasCaseBackgroundSection() {
-        JsonObject caseBody = getCaseBody(11);
+        JsonObject caseBody = getCaseBackground(11);
         assertTrue(caseBody.hasKey("I.\t IMITERERE Y\u2019URUBANZA"));
     }
 
     @Test
-    public void interm_court_huye_2016_doesNotHaveCaseBackgroundInUsualPlace() {
-        JsonObject caseBody = getCaseBody(12);
-        assertFalse(caseBody.hasKey("I.\tIMITERERE Y\u2019URUBANZA"));
-    }
-
-    @Test
     public void interm_court_huye_2018_226_hasCaseBackgroundSection() {
-        JsonObject caseBody = getCaseBody(13);
+        JsonObject caseBody = getCaseBackground(13);
         assertTrue(caseBody.hasKey("I.\tIMITERERE Y\u2019 URUBANZA"));
     }
 
     @Test
     public void primary_court_0003_hasCaseBackgroundSection() {
-        JsonObject caseBody = getCaseBody(15);
+        JsonObject caseBody = getCaseBackground(15);
         assertTrue(caseBody.hasKey("I.\tIMITERERE Y\u2019URUBANZA"));
     }
 
     @Test
     public void primary_court_0020_hasCaseBackgroundSection() {
-        JsonObject caseBody = getCaseBody(16);
+        JsonObject caseBody = getCaseBackground(16);
         assertTrue(caseBody.hasKey("I.\tIMITERERE Y\u2019URUBANZA"));
     }
 
     @Test
     public void supreme_court_comm_2009_hasCaseBackgroundSection() {
-        JsonObject caseBody = getCaseBody(17);
+        JsonObject caseBody = getCaseBackground(17);
         assertTrue(caseBody.hasKey("1.\tImiterere y\u2019urubanza"));
     }
 
     @Test
     public void supreme_court_comm_2017_hasCaseBackgroundSection() {
-        JsonObject caseBody = getCaseBody(18);
+        JsonObject caseBody = getCaseBackground(18);
         assertTrue(caseBody.hasKey("I.\tIMITERERE Y\u2019URUBANZA"));
     }
 
@@ -227,12 +220,16 @@ public class CaseBodyParserTests {
     }
 
     private JsonArray getExpectedCaseBackground(int caseIndex, int sectionIndex, String heading) {
+        JsonArray caseBodyArray = getExpectedCaseBodyArray(caseIndex, sectionIndex);
+        JsonObject caseBackground = caseBodyArray.getJsonByIndex(0);
+        return caseBackground.getArrayByKey(heading);
+    }
+
+    private JsonArray getExpectedCaseBodyArray(int caseIndex, int sectionIndex) {
         JsonObject caseObject = TestsSetup.expectedJsonContent.get(caseIndex);
         JsonArray caseArray = caseObject.getArrayByKey(Keywords.CASE);
         JsonObject caseBody = caseArray.getJsonByIndex(sectionIndex);
-        JsonArray caseBodyArray = caseBody.getArrayByKey(Keywords.CASE_BODY);
-        JsonObject caseBackground = caseBodyArray.getJsonByIndex(0);
-        return caseBackground.getArrayByKey(heading);
+        return caseBody.getArrayByKey(Keywords.CASE_BODY);
     }
 
     @Test
