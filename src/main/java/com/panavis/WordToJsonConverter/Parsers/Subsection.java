@@ -54,11 +54,6 @@ abstract class Subsection {
                     .append(wordParagraph.getBlankLinesAfterParagraph(paragraphIndex));
     }
 
-    Subsection setStartParagraph(int paragraphIndex) {
-        startParagraph = paragraphIndex;
-        return this;
-    }
-
     Subsection setInlineParagraph(String inlineParagraph) {
         this.inlineParagraph = inlineParagraph;
         return this;
