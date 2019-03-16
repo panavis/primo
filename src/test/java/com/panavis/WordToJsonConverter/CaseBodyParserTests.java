@@ -124,9 +124,15 @@ public class CaseBodyParserTests {
     }
 
     @Test
-    public void supreme_court_comm_20089_hasCaseBackgroundSection() {
+    public void supreme_court_comm_2009_hasCaseBackgroundSection() {
         JsonObject caseBody = getCaseBody(17);
         assertTrue(caseBody.hasKey("1.\tImiterere y\u2019urubanza"));
+    }
+
+    @Test
+    public void supreme_court_comm_2017_hasCaseBackgroundSection() {
+        JsonObject caseBody = getCaseBody(18);
+        assertTrue(caseBody.hasKey("I.\tIMITERERE Y\u2019URUBANZA"));
     }
 
     @Test
@@ -213,6 +219,12 @@ public class CaseBodyParserTests {
     public void supreme_court_comm_2009_BackgroundSectionHasLengthNineArray() {
         JsonArray caseBackground = getCaseBackgroundSection(17, "1.\tImiterere y\u2019urubanza");
         assertEquals(9, caseBackground.getSize());
+    }
+
+    @Test
+    public void supreme_court_comm_2017_BackgroundSectionHasLengthNineArray() {
+        JsonArray caseBackground = getCaseBackgroundSection(18, "I.\tIMITERERE Y\u2019URUBANZA");
+        assertEquals(7, caseBackground.getSize());
     }
 
     private JsonArray getExpectedCaseBackground(int caseIndex, int sectionIndex, String heading) {
@@ -362,6 +374,17 @@ public class CaseBodyParserTests {
         String actualContent = caseBackground.getStringByIndex(0);
 
         JsonArray expectedArray = getExpectedCaseBackground(17, 3, "1.\tImiterere y\u2019urubanza");
+        String expectedContent = expectedArray.getStringByIndex(0);
+
+        assertEquals(expectedContent, actualContent);
+    }
+
+    @Test
+    public void supreme_court_comm_2017_CaseBackgroundMatchesExpectedContent() {
+        JsonArray caseBackground = getCaseBackgroundSection(18, "I.\tIMITERERE Y\u2019URUBANZA");
+        String actualContent = caseBackground.getStringByIndex(0);
+
+        JsonArray expectedArray = getExpectedCaseBackground(18, 3, "I.\tIMITERERE Y\u2019URUBANZA");
         String expectedContent = expectedArray.getStringByIndex(0);
 
         assertEquals(expectedContent, actualContent);
