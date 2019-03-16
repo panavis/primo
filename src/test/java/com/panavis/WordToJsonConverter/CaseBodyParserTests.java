@@ -20,10 +20,15 @@ public class CaseBodyParserTests {
     }
 
     private JsonObject getCaseBackground(int caseIndex) {
+        JsonObject caseBackground = getCaseBodySubsection(caseIndex, 0);
+        return caseBackground;
+    }
+
+    private JsonObject getCaseBodySubsection(int caseIndex, int subsectionIndex) {
         SectionResult caseBodyResult = getCaseBodyResult(caseIndex);
         JsonObject caseBody = caseBodyResult.getSectionContent();
         JsonArray caseBodyArray = caseBody.getArrayByKey(Keywords.CASE_BODY);
-        return caseBodyArray.getJsonByIndex(0);
+        return caseBodyArray.getJsonByIndex(subsectionIndex);
     }
 
     private SectionResult getCaseBodyResult(int caseIndex) {
@@ -40,20 +45,26 @@ public class CaseBodyParserTests {
 
     @Test
     public void comm_court_huye_2011_hasCaseBackgroundSection() {
-        JsonObject caseBody = getCaseBackground(0);
-        assertTrue(caseBody.hasKey("I . IMITERERE Y\u2019URUBANZA"));
+        JsonObject caseBackground = getCaseBackground(0);
+        assertTrue(caseBackground.hasKey("I . IMITERERE Y\u2019URUBANZA"));
     }
 
     @Test
     public void comm_court_huye_2016_hasCaseBackgroundSection() {
-        JsonObject caseBody = getCaseBackground(1);
-        assertTrue(caseBody.hasKey("I.\tIMITERERE Y\u2019URUBANZA"));
+        JsonObject caseBackground = getCaseBackground(1);
+        assertTrue(caseBackground.hasKey("I.\tIMITERERE Y\u2019URUBANZA"));
     }
 
     @Test
     public void comm_court_huye_2018_hasCaseBackgroundSection() {
-        JsonObject caseBody = getCaseBackground(2);
-        assertTrue(caseBody.hasKey("I . IMITERERE Y\u2019URUBANZA"));
+        JsonObject caseBackground = getCaseBackground(2);
+        assertTrue(caseBackground.hasKey("I . IMITERERE Y\u2019URUBANZA"));
+    }
+
+    @Test
+    public void comm_court_huye_2018_secondSubsectionOfBodyHasExpectedHeading() {
+        JsonObject secondSubsection = getCaseBodySubsection(2, 1);
+        assertTrue(secondSubsection.hasKey("II. ISESENGURA RY\u2019INZITIZI YATANZWE"));
     }
 
     @Test
@@ -190,7 +201,7 @@ public class CaseBodyParserTests {
     }
 
     @Test
-    public void interm_court_huye_2018_226_BackgroundSectionHasLengthThirteenArray() {
+    public void interm_coworurt_huye_2018_226_BackgroundSectionHasLengthThirteenArray() {
         JsonArray caseBackground = getCaseBackgroundSection(13, "I.\tIMITERERE Y\u2019 URUBANZA");
         assertEquals(13, caseBackground.getSize());
     }

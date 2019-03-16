@@ -4,6 +4,8 @@ import com.panavis.WordToJsonConverter.Style.UnitNumbering;
 import com.panavis.WordToJsonConverter.Style.WordParagraph;
 import com.panavis.WordToJsonConverter.Utils.StringFormatting;
 
+import java.util.regex.Pattern;
+
 class SectionBody extends Subsection {
 
     private UnitNumbering currentNumbering;
@@ -14,20 +16,44 @@ class SectionBody extends Subsection {
 
     @Override
     boolean isStillInOneSubsection(int paragraphIndex) {
+        if (isCaseClosing(paragraphIndex)) return false;
         String text = wordParagraph.getParagraphText(paragraphIndex);
         String nextNumbering = currentNumbering.next;
         if (nextNumberingIsAvailable(nextNumbering))
-            return !paragraphHasNextNumbering(text, nextNumbering);
-        String currentStyle = wordParagraph.getUnitNumbering(paragraphIndex).style;
-        return !isTextCapitalizedAndHasSameStyle(text, currentStyle);
+            return !MatchesNextNumbering(text, nextNumbering);
 
+        String currentStyle = wordParagraph.getUnitNumbering(paragraphIndex).style;
+        boolean v = isTextCapitalizedAndHasSameStyle(text, currentStyle);
+        return !v;
+    }
+
+    private boolean isCaseClosing(int nextParagraph) {
+        String paragraphText = wordParagraph.getParagraphText(nextParagraph).toLowerCase();
+
+        return isClosingSentence(nextParagraph, paragraphText) ||
+                isClosingHeading(nextParagraph, paragraphText);
+    }
+
+    private boolean isClosingHeading(int nextParagraph, String paragraphText) {
+        return wordParagraph.isIndentedAndCapitalized(nextParagraph) && paragraphText.contains("inteko");
+    }
+
+    private boolean isClosingSentence(int paragraphIndex, String text) {
+        String firstWord = text.split(" ")[0];
+        String style = wordParagraph.getUnitNumbering(paragraphIndex).style;
+        Pattern dateAllDigits = Pattern.compile("\\b\\d{1,2}\\/\\d{1,2}\\/\\d{4}");
+        Pattern dateMonthSpelled = Pattern.compile("\\b\\d{1,2}\\b.+\\b\\d{4}");
+        return (dateAllDigits.matcher(text).find() ||
+                    dateMonthSpelled.matcher(text).find()) &&
+                StringFormatting.isCaseSensitive(firstWord) &&
+                !(style.equals("ListParagraph"));
     }
 
     private boolean nextNumberingIsAvailable(String nextNumbering) {
         return !nextNumbering.trim().isEmpty();
     }
 
-    private boolean paragraphHasNextNumbering(String text, String nextNumbering) {
+    private boolean MatchesNextNumbering(String text, String nextNumbering) {
         return text.startsWith(nextNumbering);
     }
 

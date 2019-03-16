@@ -55,18 +55,35 @@ public class WordParagraph {
         XWPFParagraph paragraph = getParagraph(paragraphIndex);
         String text = getParagraphText(paragraphIndex);
         if (!StringFormatting.isCaseSensitive(text)) return false;
-        List<XWPFRun> paragraphRuns = paragraph.getRuns();
-        XWPFRun firstRun = paragraphRuns.get(0);
 
-        return (ParagraphRun.isFirstRunUnderlined(firstRun) ||
-                ParagraphRun.isFirstRunBoldAndSecondRunsStartsWithColon(paragraphRuns) ||
-                ParagraphRun.isFirstRunCapitalizedAndEndsWithColon(paragraph, firstRun) ||
-                ParagraphRun.isFirstRunHighlyIndentedAndCapitalized(paragraph, firstRun) ||
+        return (ParagraphRun.isFirstRunUnderlined(paragraph) ||
+                ParagraphRun.isFirstRunBoldAndSecondRunStartsWithColon(paragraph) ||
+                ParagraphRun.isFirstRunCapitalizedAndEndsWithColon(paragraph) ||
                 ParagraphRun.isFirstRunBoldAndEndsWithColon(paragraph) ||
-                isUpperCaseAndHasNumberedHeading(paragraphIndex, firstRun) ||
+                isIndentedAndCapitalized(paragraphIndex) ||
+                isUpperCaseAndHasNumberedHeading(paragraphIndex) ||
                 hasColonAndPreColonPartHasStyle(paragraphIndex) ||
                 isOneWordAndIsUpperCase(paragraphIndex)
         );
+    }
+//    TODO
+//    private boolean paragraphExists(int index) {
+//        return index >= 0 && index < numberOfParagraphs();
+//    }
+
+    public boolean isIndentedAndCapitalized(int paragraphIndex) {
+        String firstWord = getParagraphText(paragraphIndex).split(" ")[0];
+        return firstWord.length() > 3 &&
+                ParagraphRun.isFirstRunHighlyIndentedAndCapitalized(getParagraph(paragraphIndex));
+    }
+
+    private boolean isUpperCaseAndHasNumberedHeading(int paragraphIndex) {
+        XWPFParagraph paragraph = getParagraph(paragraphIndex);
+        XWPFRun firstRun = ParagraphRun.getFirstRun(paragraph);
+        UnitNumbering unitNumbering = unitNumberings.get(paragraphIndex);
+        return StringFormatting.isTextCapitalized(firstRun.text()) &&
+                (numberedParagraphs.get(paragraphIndex) &&
+                        unitNumbering.style.startsWith(Keywords.HEADING));
     }
 
     private boolean hasColonAndPreColonPartHasStyle(int paragraphIndex) {
@@ -91,13 +108,6 @@ public class WordParagraph {
         String text = getParagraphText(paragraphIndex);
         return text.equals(text.toUpperCase()) && text.split(" ").length == 1 &&
                 text.matches("^[a-zA-Z]");
-    }
-
-    private boolean isUpperCaseAndHasNumberedHeading(int paragraphIndex, XWPFRun firstRun) {
-        UnitNumbering unitNumbering = unitNumberings.get(paragraphIndex);
-        return StringFormatting.isTextCapitalized(firstRun.text()) &&
-                (numberedParagraphs.get(paragraphIndex) &&
-                                    unitNumbering.style.startsWith(Keywords.HEADING));
     }
 
     public boolean startsSubjectMatterSection(int paragraphIndex) {

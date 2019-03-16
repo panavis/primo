@@ -44,7 +44,7 @@ public class CaseSubjectMatterParser implements ICaseSubjectMatter {
     }
 
     private void updateSubsectionStartAndNumber(SectionSubjectMatter subsection, int paragraphIndex) {
-        if (subsection.hasAnotherSubjectMatterSubsection(paragraphIndex)) {
+        if (subsection.hasAnotherSubsection(paragraphIndex)) {
             numberOfSubsections++;
             subsectionStart = paragraphIndex;
         }

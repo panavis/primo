@@ -23,7 +23,8 @@ public class CasePartiesParserTests {
     @Ignore("Ignore: Parties section troubleshooter.")
     @Test
     public void troubleshootOneCaseSeparately() {
-        SectionResult result = CasePartiesTestsHelpers.parseOneCaseAndReturnPartiesSection(3);
+        SectionResult result = CasePartiesTestsHelpers.parseOneCaseAndReturnPartiesSection(1);
+        System.out.println(result.getSectionContent());
     }
 
     @Test
@@ -126,7 +127,7 @@ public class CasePartiesParserTests {
     }
 
     @Test
-    public void comm_court_huye_2016_PartiesSectionHasTwoSubsections() {
+    public void comm_court_huye_2016_PartiesSectionHasThreeSubsections() {
         CasePartiesTestsHelpers.assertCorrectNumberOfSubsections(1, Headings.ABABURANA, 3);
     }
 
