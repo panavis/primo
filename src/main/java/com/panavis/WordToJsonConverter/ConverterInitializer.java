@@ -1,15 +1,10 @@
 package com.panavis.WordToJsonConverter;
 
 import com.panavis.WordToJsonConverter.Constants.Keywords;
-import com.panavis.WordToJsonConverter.Style.Numbering;
-import com.panavis.WordToJsonConverter.Style.UnitNumbering;
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
-import org.apache.poi.xwpf.usermodel.XWPFNumbering;
-import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+import com.panavis.WordToJsonConverter.Style.*;
+import org.apache.poi.xwpf.usermodel.*;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class ConverterInitializer {

@@ -1,16 +1,11 @@
 package com.panavis.WordToJsonConverter;
 
-import com.panavis.WordToJsonConverter.Constants.Keywords;
+import static com.panavis.WordToJsonConverter.Constants.Keywords.*;
+import static junit.framework.TestCase.*;
 import com.panavis.WordToJsonConverter.ResultTypes.SectionResult;
-import com.panavis.WordToJsonConverter.Wrappers.JsonArray;
-import com.panavis.WordToJsonConverter.Wrappers.JsonObject;
+import com.panavis.WordToJsonConverter.Wrappers.*;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
-
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertTrue;
+import org.junit.*;
 
 public class CaseBodyParserTests {
 
@@ -27,15 +22,15 @@ public class CaseBodyParserTests {
     private JsonObject getCaseBodySubsection(int caseIndex, int subsectionIndex) {
         SectionResult caseBodyResult = getCaseBodyResult(caseIndex);
         JsonObject caseBody = caseBodyResult.getSectionContent();
-        JsonArray caseBodyArray = caseBody.getArrayByKey(Keywords.CASE_BODY);
+        JsonArray caseBodyArray = caseBody.getArrayByKey(CASE_BODY);
         return caseBodyArray.getJsonByIndex(subsectionIndex);
     }
 
     private SectionResult getCaseBodyResult(int caseIndex) {
         XWPFDocument wordDocument = TestsSetup.wordDocxData.get(caseIndex);
-        Converter converter = TestsSetup.getConverterObject(wordDocument, Keywords.CASE_BODY);
+        Converter converter = TestsSetup.getConverterObject(wordDocument, CASE_BODY);
         converter.parseCaseSections();
-        return converter.getParsedCaseSection(Keywords.CASE_BODY);
+        return converter.getParsedCaseSection(CASE_BODY);
     }
 
     private JsonArray getCaseBackgroundSection(int caseIndex, String heading) {
@@ -238,9 +233,9 @@ public class CaseBodyParserTests {
 
     private JsonArray getExpectedCaseBodyArray(int caseIndex, int sectionIndex) {
         JsonObject caseObject = TestsSetup.expectedJsonContent.get(caseIndex);
-        JsonArray caseArray = caseObject.getArrayByKey(Keywords.CASE);
+        JsonArray caseArray = caseObject.getArrayByKey(CASE);
         JsonObject caseBody = caseArray.getJsonByIndex(sectionIndex);
-        return caseBody.getArrayByKey(Keywords.CASE_BODY);
+        return caseBody.getArrayByKey(CASE_BODY);
     }
 
     @Test

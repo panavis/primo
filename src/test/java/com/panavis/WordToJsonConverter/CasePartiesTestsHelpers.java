@@ -1,19 +1,11 @@
 package com.panavis.WordToJsonConverter;
 
-import com.panavis.WordToJsonConverter.Constants.Keywords;
+import static com.panavis.WordToJsonConverter.Constants.Keywords.*;
+import static org.junit.Assert.*;
 import com.panavis.WordToJsonConverter.ResultTypes.SectionResult;
-import com.panavis.WordToJsonConverter.Wrappers.JsonArray;
-import com.panavis.WordToJsonConverter.Wrappers.JsonObject;
+import com.panavis.WordToJsonConverter.Wrappers.*;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
-import org.apache.poi.xwpf.usermodel.XWPFParagraph;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import java.util.*;
 
 class CasePartiesTestsHelpers {
 
@@ -34,15 +26,15 @@ class CasePartiesTestsHelpers {
 
     static SectionResult parseOneCaseAndReturnPartiesSection(int i) {
         XWPFDocument wordDocument = TestsSetup.wordDocxData.get(i);
-        Converter converter = TestsSetup.getConverterObject(wordDocument, Keywords.PARTIES);
+        Converter converter = TestsSetup.getConverterObject(wordDocument, PARTIES);
         converter.parseCaseSections();
-        return converter.getParsedCaseSection(Keywords.PARTIES);
+        return converter.getParsedCaseSection(PARTIES);
     }
 
     private static void setUpExpectedJsons() {
         for (int i = 0; i < TestsSetup.expectedJsonContent.size(); i++) {
             JsonObject jsonCase = TestsSetup.expectedJsonContent.get(i);
-            JsonArray expectedCase = jsonCase.getArrayByKey(Keywords.CASE);
+            JsonArray expectedCase = jsonCase.getArrayByKey(CASE);
             JsonObject expectedPartiesSection = expectedCase.getJsonByIndex(1);
             allExpectedPartiesSections.put(i, expectedPartiesSection);
         }

@@ -1,6 +1,6 @@
 package com.panavis.WordToJsonConverter.Parsers;
 
-import com.panavis.WordToJsonConverter.Constants.Headings;
+import static com.panavis.WordToJsonConverter.Constants.Headings.*;
 import com.panavis.WordToJsonConverter.Style.WordParagraph;
 
 public class SectionSubjectMatter extends Section {
@@ -18,7 +18,7 @@ public class SectionSubjectMatter extends Section {
 
     boolean hasAnotherSubsection(int paragraphIndex) {
         String text = wordParagraph.getParagraphText(paragraphIndex).toLowerCase();
-        for (String heading: Headings.SUBJECT_MATTER_HEADINGS) {
+        for (String heading: SUBJECT_MATTER_HEADINGS) {
             if (text.startsWith(heading.toLowerCase())) return true;
         }
         return false;

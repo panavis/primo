@@ -3,8 +3,7 @@ package com.panavis.WordToJsonConverter.Parsers;
 import com.panavis.WordToJsonConverter.Constants.Format;
 import com.panavis.WordToJsonConverter.ResultTypes.TextParagraphIndex;
 import com.panavis.WordToJsonConverter.Style.WordParagraph;
-import com.panavis.WordToJsonConverter.Utils.JsonCreator;
-import com.panavis.WordToJsonConverter.Utils.StringFormatting;
+import com.panavis.WordToJsonConverter.Utils.*;
 import com.panavis.WordToJsonConverter.Wrappers.JsonArray;
 
 abstract class Section {

@@ -1,11 +1,10 @@
 package com.panavis.WordToJsonConverter.Parsers;
 
-import com.panavis.WordToJsonConverter.Constants.Headings;
-import com.panavis.WordToJsonConverter.Constants.Keywords;
-import com.panavis.WordToJsonConverter.Utils.JsonCreator;
+import static com.panavis.WordToJsonConverter.Constants.Headings.*;
+import static com.panavis.WordToJsonConverter.Constants.Keywords.*;
+import com.panavis.WordToJsonConverter.Utils.*;
 import com.panavis.WordToJsonConverter.ResultTypes.SectionResult;
 import com.panavis.WordToJsonConverter.Style.WordParagraph;
-import com.panavis.WordToJsonConverter.Utils.StringFormatting;
 import com.panavis.WordToJsonConverter.Wrappers.JsonObject;
 
 public class CaseTitleParser implements ICaseTitle {
@@ -24,13 +23,13 @@ public class CaseTitleParser implements ICaseTitle {
              paragraphIndex++) {
 
             String firstWord = this.wordParagraph.getParagraphFirstWord(paragraphIndex);
-            if (firstWord.equals(Headings.URUKIKO)) {
+            if (firstWord.equals(URUKIKO)) {
                 caseTitle = this.wordParagraph.getParagraphText(paragraphIndex);
                 break;
             }
         }
         caseTitle = StringFormatting.trimColons(caseTitle);
-        JsonObject titleObject = JsonCreator.getJsonObject(Keywords.TITLE, caseTitle);
+        JsonObject titleObject = JsonCreator.getJsonObject(TITLE, caseTitle);
         return new SectionResult(titleObject, paragraphIndex + 1);
     }
 }

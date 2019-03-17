@@ -2,7 +2,7 @@ package com.panavis.WordToJsonConverter.Style;
 
 public class UnitNumbering {
 
-    public String current;
+    String current;
     public String next;
     public String style;
 

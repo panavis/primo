@@ -1,19 +1,15 @@
 package com.panavis.WordToJsonConverter;
 
-import com.panavis.WordToJsonConverter.Constants.Keywords;
+import static com.panavis.WordToJsonConverter.Constants.Keywords.*;
 import com.panavis.WordToJsonConverter.Parsers.*;
 import com.panavis.WordToJsonConverter.ResultTypes.SectionResult;
 import com.panavis.WordToJsonConverter.Style.WordParagraph;
-import com.panavis.WordToJsonConverter.Wrappers.JsonObject;
-import com.panavis.WordToJsonConverter.Wrappers.JsonParser;
+import com.panavis.WordToJsonConverter.Wrappers.*;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.openxml4j.opc.OPCPackage;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
+import java.io.*;
+import java.util.*;
 
 public class TestsSetup {
 
@@ -91,18 +87,18 @@ public class TestsSetup {
     }
 
     private static boolean isSectionBeyondTitle(String section) {
-        return section.equals(Keywords.PARTIES) ||
-                section.equals(Keywords.SUBJECT_MATTER) ||
-                section.equals(Keywords.CASE_BODY);
+        return section.equals(PARTIES) ||
+                section.equals(SUBJECT_MATTER) ||
+                section.equals(CASE_BODY);
     }
 
     private static boolean isSectionBeyondParties(String section) {
-        return section.equals(Keywords.SUBJECT_MATTER) ||
-                section.equals(Keywords.CASE_BODY);
+        return section.equals(SUBJECT_MATTER) ||
+                section.equals(CASE_BODY);
     }
 
     private static boolean isSectionBeyondSubjectMatter(String section) {
-        return section.equals(Keywords.CASE_BODY);
+        return section.equals(CASE_BODY);
     }
 }
 

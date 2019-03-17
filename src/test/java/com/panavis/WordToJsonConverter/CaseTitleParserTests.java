@@ -1,7 +1,6 @@
 package com.panavis.WordToJsonConverter;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
 
 public class CaseTitleParserTests {
 

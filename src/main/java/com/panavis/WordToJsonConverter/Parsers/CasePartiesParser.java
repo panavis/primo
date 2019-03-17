@@ -1,13 +1,11 @@
 package com.panavis.WordToJsonConverter.Parsers;
 
-import com.panavis.WordToJsonConverter.Constants.Headings;
-import com.panavis.WordToJsonConverter.Constants.Keywords;
-import com.panavis.WordToJsonConverter.ResultTypes.SectionResult;
-import com.panavis.WordToJsonConverter.ResultTypes.HeadingParagraphIndex;
+import static com.panavis.WordToJsonConverter.Constants.Headings.*;
+import static com.panavis.WordToJsonConverter.Constants.Keywords.*;
+import com.panavis.WordToJsonConverter.ResultTypes.*;
 import com.panavis.WordToJsonConverter.Style.WordParagraph;
 import com.panavis.WordToJsonConverter.Utils.JsonCreator;
-import com.panavis.WordToJsonConverter.Wrappers.JsonArray;
-import com.panavis.WordToJsonConverter.Wrappers.JsonObject;
+import com.panavis.WordToJsonConverter.Wrappers.*;
 
 public class CasePartiesParser implements ICaseParties {
 
@@ -38,7 +36,7 @@ public class CasePartiesParser implements ICaseParties {
         String partiesHeading = headingAndIndex.getHeadingName();
         int paragraphIndex = headingAndIndex.getParagraphIndex();
         if (firstHeadingIsSubsection(partiesHeading)) {
-            partiesHeading = Headings.HABURANA;
+            partiesHeading = HABURANA;
             paragraphIndex--;
         }
         return new HeadingParagraphIndex(partiesHeading, paragraphIndex);
@@ -61,13 +59,13 @@ public class CasePartiesParser implements ICaseParties {
         if (this.wordParagraph.isSectionHeading(paragraphIndex))
             firstHeading = this.wordParagraph.getHeadingFromParagraph(paragraphIndex);
 
-        firstHeading = Headings.PARTIES_HEADINGS.contains(firstHeading) ?
+        firstHeading = PARTIES_HEADINGS.contains(firstHeading) ?
                 firstHeading : this.wordParagraph.getCaseSensitiveRunText(paragraphIndex);
         return firstHeading;
     }
 
     private boolean firstHeadingIsSubsection(String partiesHeading) {
-        return !Headings.PARTIES_HEADINGS.contains(partiesHeading);
+        return !PARTIES_HEADINGS.contains(partiesHeading);
     }
 
     private int getPartiesSubsections(int startParagraph) {
@@ -111,7 +109,7 @@ public class CasePartiesParser implements ICaseParties {
         section.setStartingParagraph(startParagraph)
                 .setInlineParagraph(inlineParagraph)
                 .parse();
-        addSubsectionContent(Keywords.UBUSHINJACYAHA, section.getBody());
+        addSubsectionContent(UBUSHINJACYAHA, section.getBody());
         updateSubsectionStart(section.getLastParagraph());
     }
 
@@ -121,7 +119,7 @@ public class CasePartiesParser implements ICaseParties {
 
     private boolean startsProsecutorSubsection(int paragraphIndex) {
         String text = wordParagraph.getParagraphText(paragraphIndex);
-        return text.toLowerCase().contains(Keywords.UBUSHINJACYAHA) &&
+        return text.toLowerCase().contains(UBUSHINJACYAHA) &&
                 previousParagraphIsNotSubsectionHeading(paragraphIndex);
     }
 
@@ -129,6 +127,6 @@ public class CasePartiesParser implements ICaseParties {
         if (paragraphIndex - 1 < 0) return true;
         String pP = wordParagraph.getHeadingFromParagraph(paragraphIndex - 1).toUpperCase();
         return !wordParagraph.isSectionHeading(paragraphIndex - 1) ||
-                Headings.PARTIES_HEADINGS.contains(pP);
+                PARTIES_HEADINGS.contains(pP);
     }
 }

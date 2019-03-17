@@ -1,7 +1,6 @@
 package com.panavis.WordToJsonConverter.Parsers;
 
-import com.panavis.WordToJsonConverter.Style.UnitNumbering;
-import com.panavis.WordToJsonConverter.Style.WordParagraph;
+import com.panavis.WordToJsonConverter.Style.*;
 import com.panavis.WordToJsonConverter.Utils.StringFormatting;
 
 import java.util.regex.Pattern;

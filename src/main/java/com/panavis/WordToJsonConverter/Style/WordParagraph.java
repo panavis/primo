@@ -5,14 +5,8 @@ import com.panavis.WordToJsonConverter.Constants.Headings;
 import com.panavis.WordToJsonConverter.Constants.Keywords;
 import com.panavis.WordToJsonConverter.ConverterInitializer;
 import com.panavis.WordToJsonConverter.Utils.StringFormatting;
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
-import org.apache.poi.xwpf.usermodel.XWPFNumbering;
-import org.apache.poi.xwpf.usermodel.XWPFParagraph;
-import org.apache.poi.xwpf.usermodel.XWPFRun;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import org.apache.poi.xwpf.usermodel.*;
+import java.util.*;
 
 import static com.panavis.WordToJsonConverter.Utils.StringFormatting.trimColons;
 

@@ -1,12 +1,10 @@
 package com.panavis.WordToJsonConverter.Parsers;
 
-import com.panavis.WordToJsonConverter.Constants.Keywords;
+import static com.panavis.WordToJsonConverter.Constants.Keywords.*;
 import com.panavis.WordToJsonConverter.ResultTypes.SectionResult;
-import com.panavis.WordToJsonConverter.Style.UnitNumbering;
-import com.panavis.WordToJsonConverter.Style.WordParagraph;
 import com.panavis.WordToJsonConverter.Utils.StringFormatting;
-import com.panavis.WordToJsonConverter.Wrappers.JsonArray;
-import com.panavis.WordToJsonConverter.Wrappers.JsonObject;
+import com.panavis.WordToJsonConverter.Style.*;
+import com.panavis.WordToJsonConverter.Wrappers.*;
 
 public class CaseBodyParser implements ICaseBodyParser {
 
@@ -46,7 +44,7 @@ public class CaseBodyParser implements ICaseBodyParser {
 
     private JsonObject getCaseBody() {
         JsonObject caseBody = new JsonObject();
-        caseBody.addNameValuePair(Keywords.CASE_BODY, bodySubsections);
+        caseBody.addNameValuePair(CASE_BODY, bodySubsections);
         return caseBody;
     }
 }
