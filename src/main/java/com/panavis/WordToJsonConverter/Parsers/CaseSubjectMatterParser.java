@@ -10,6 +10,7 @@ import com.panavis.WordToJsonConverter.Wrappers.JsonObject;
 public class CaseSubjectMatterParser implements ICaseSubjectMatter {
 
     private WordParagraph wordParagraph;
+    private SectionSubjectMatter section;
     private int numberOfSubsections;
     private int subsectionStart;
     private JsonObject sectionContent;
@@ -17,6 +18,7 @@ public class CaseSubjectMatterParser implements ICaseSubjectMatter {
 
     public CaseSubjectMatterParser(WordParagraph wordParagraph) {
         this.wordParagraph = wordParagraph;
+        this.section = new SectionSubjectMatter(wordParagraph);
         this.numberOfSubsections = 1;
         this.sectionContent = new JsonObject();
         this.sectionArray = new JsonArray();
@@ -26,14 +28,13 @@ public class CaseSubjectMatterParser implements ICaseSubjectMatter {
         subsectionStart = startParagraph;
         int nextParagraph = startParagraph;
         while(numberOfSubsections > 0) {
-            String heading = getSubjectMatterHeading(subsectionStart);
             String inlineParagraph = wordParagraph.getInlineHeadingFirstParagraph(subsectionStart);
-            SectionSubjectMatter subsection = (SectionSubjectMatter) new SectionSubjectMatter(wordParagraph, subsectionStart)
-                                        .setInlineParagraph(inlineParagraph)
-                                        .parse();
-            addSubsectionContent(heading, subsection.getBody());
-            nextParagraph = subsection.getLastParagraph();
-            updateSubsectionStartAndNumber(subsection, nextParagraph);
+            section.setStartingParagraph(subsectionStart)
+                    .setInlineParagraph(inlineParagraph)
+                    .parse();
+            addSubsectionContent(section.getBody());
+            nextParagraph = section.getLastParagraph();
+            updateSubsectionStartAndNumber(section, nextParagraph);
             numberOfSubsections--;
         }
         return new SectionResult(sectionContent, nextParagraph);
@@ -50,7 +51,8 @@ public class CaseSubjectMatterParser implements ICaseSubjectMatter {
         }
     }
 
-    private void addSubsectionContent(String heading, JsonArray subsectionBody) {
+    private void addSubsectionContent(JsonArray subsectionBody) {
+        String heading = getSubjectMatterHeading(subsectionStart);
         sectionArray.putValue(JsonCreator.getJsonObject(heading, subsectionBody));
         sectionContent.addNameValuePair(Keywords.SUBJECT_MATTER, sectionArray);
     }
