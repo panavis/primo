@@ -39,12 +39,6 @@ public class JsonParser {
         return wrappedJsonObject.jsonObject;
     }
 
-    private void addNameStringPairToJsonObject(String jsonKey,
-                                              JSONObject unwrappedJsonObject) {
-        String value = unwrappedJsonObject.get(jsonKey).toString();
-        this.jsonObject.addNameValuePair(jsonKey, value);
-    }
-
     private void parseNestedUnwrappedJsonArray(String jsonKey,
                                                JSONObject unwrappedJsonObject) {
         JsonArray wrappedJsonArray = new JsonArray();
@@ -63,5 +57,11 @@ public class JsonParser {
         catch (ClassCastException e) {
             wrappedJsonArray.putValue(value.toString());
         }
+    }
+
+    private void addNameStringPairToJsonObject(String jsonKey,
+                                               JSONObject unwrappedJsonObject) {
+        String value = unwrappedJsonObject.get(jsonKey).toString();
+        this.jsonObject.addNameValuePair(jsonKey, value);
     }
 }

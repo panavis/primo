@@ -53,4 +53,8 @@ class Converter {
     SectionResult getParsedCaseSection(String section) {
         return this.parsedCase.get(section);
     }
+
+    Map<String, SectionResult> getParsedCase() {
+        return this.parsedCase;
+    }
 }

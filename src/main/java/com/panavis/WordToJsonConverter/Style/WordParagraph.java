@@ -1,7 +1,6 @@
 package com.panavis.WordToJsonConverter.Style;
 
 import com.panavis.WordToJsonConverter.Constants.Format;
-import com.panavis.WordToJsonConverter.Constants.Headings;
 import com.panavis.WordToJsonConverter.Constants.Keywords;
 import com.panavis.WordToJsonConverter.ConverterInitializer;
 import com.panavis.WordToJsonConverter.Utils.StringFormatting;

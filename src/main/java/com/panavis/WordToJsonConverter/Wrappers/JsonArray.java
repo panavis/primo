@@ -2,6 +2,8 @@ package com.panavis.WordToJsonConverter.Wrappers;
 
 import org.json.JSONArray;
 
+import java.util.List;
+
 public class JsonArray {
 
     private JSONArray jsonArray;
@@ -28,6 +30,10 @@ public class JsonArray {
 
     public JsonObject getJsonByIndex(int index) {
         return (JsonObject) this.jsonArray.get(index);
+    }
+
+    public List<Object> toList() {
+        return this.jsonArray.toList();
     }
 
     @Override
