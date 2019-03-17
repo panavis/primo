@@ -6,12 +6,12 @@ import com.panavis.WordToJsonConverter.Utils.StringFormatting;
 
 import java.util.regex.Pattern;
 
-class SectionBody extends Subsection {
+class SectionBody extends Section {
 
     private UnitNumbering currentNumbering;
 
-    SectionBody(WordParagraph wordParagraph, int startParagraph) {
-        super(wordParagraph, startParagraph);
+    SectionBody(WordParagraph wordParagraph) {
+        super(wordParagraph);
     }
 
     @Override
@@ -27,7 +27,7 @@ class SectionBody extends Subsection {
         return !v;
     }
 
-    private boolean isCaseClosing(int nextParagraph) {
+    boolean isCaseClosing(int nextParagraph) {
         String paragraphText = wordParagraph.getParagraphText(nextParagraph).toLowerCase();
 
         return isClosingSentence(nextParagraph, paragraphText) ||
@@ -41,12 +41,16 @@ class SectionBody extends Subsection {
     private boolean isClosingSentence(int paragraphIndex, String text) {
         String firstWord = text.split(" ")[0];
         String style = wordParagraph.getUnitNumbering(paragraphIndex).style;
-        Pattern dateAllDigits = Pattern.compile("\\b\\d{1,2}\\/\\d{1,2}\\/\\d{4}");
-        Pattern dateMonthSpelled = Pattern.compile("\\b\\d{1,2}\\b.+\\b\\d{4}");
-        return (dateAllDigits.matcher(text).find() ||
-                    dateMonthSpelled.matcher(text).find()) &&
+        return sentenceHasDate(text) &&
                 StringFormatting.isCaseSensitive(firstWord) &&
                 !(style.equals("ListParagraph"));
+    }
+
+    private boolean sentenceHasDate(String text) {
+        Pattern dateAllDigits = Pattern.compile("\\b\\d{1,2}\\/\\d{1,2}\\/\\d{4}");
+        Pattern dateMonthSpelled = Pattern.compile("\\b\\d{1,2}\\b.+\\b\\d{4}");
+        return dateAllDigits.matcher(text).find() ||
+                dateMonthSpelled.matcher(text).find();
     }
 
     private boolean nextNumberingIsAvailable(String nextNumbering) {
@@ -62,7 +66,7 @@ class SectionBody extends Subsection {
                 currentStyle.equals(currentNumbering.style);
     }
 
-    Subsection setCurrentNumbering(UnitNumbering unitNumbering) {
+    Section setCurrentNumbering(UnitNumbering unitNumbering) {
         this.currentNumbering = unitNumbering;
         return this;
     }

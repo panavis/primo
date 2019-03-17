@@ -24,7 +24,6 @@ public class CasePartiesParserTests {
     @Test
     public void troubleshootOneCaseSeparately() {
         SectionResult result = CasePartiesTestsHelpers.parseOneCaseAndReturnPartiesSection(1);
-        System.out.println(result.getSectionContent());
     }
 
     @Test

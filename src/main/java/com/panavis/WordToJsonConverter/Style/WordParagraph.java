@@ -73,7 +73,8 @@ public class WordParagraph {
 
     public boolean isIndentedAndCapitalized(int paragraphIndex) {
         String firstWord = getParagraphText(paragraphIndex).split(" ")[0];
-        return firstWord.length() > 3 &&
+        int MIN_HEADING_LENGTH = 3;
+        return firstWord.length() > MIN_HEADING_LENGTH &&
                 ParagraphRun.isFirstRunHighlyIndentedAndCapitalized(getParagraph(paragraphIndex));
     }
 

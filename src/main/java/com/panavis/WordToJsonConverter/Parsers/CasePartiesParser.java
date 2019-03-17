@@ -12,12 +12,14 @@ import com.panavis.WordToJsonConverter.Wrappers.JsonObject;
 public class CasePartiesParser implements ICaseParties {
 
     private WordParagraph wordParagraph;
+    private Section section;
     private JsonArray partiesSubsections;
     private boolean reachedSubjectMatterSection;
     private int subsectionStart;
 
     public CasePartiesParser(WordParagraph wordParagraph) {
         this.wordParagraph = wordParagraph;
+        this.section = new SectionParties(wordParagraph);
         this.partiesSubsections = new JsonArray();
         this.reachedSubjectMatterSection = false;
     }
@@ -94,23 +96,23 @@ public class CasePartiesParser implements ICaseParties {
     private void parseAndAddNormalSubsection(int startParagraph) {
         String subsectionName = wordParagraph.getHeadingFromParagraph(startParagraph);
         String inlineParagraph = wordParagraph.getInlineHeadingFirstParagraph(startParagraph);
-        Subsection subsection = new SectionParties(wordParagraph, startParagraph)
-                                    .setInlineParagraph(inlineParagraph)
-                                    .parse();
-        addSubsectionContent(subsectionName, subsection.getBody());
-        updateSubsectionStart(subsection.getLastParagraph());
+        section.setStartingParagraph(startParagraph)
+                .setInlineParagraph(inlineParagraph)
+                .parse();
+        addSubsectionContent(subsectionName, section.getBody());
+        updateSubsectionStart(section.getLastParagraph());
     }
 
     private void addSubsectionContent(String subsectionName, JsonArray subsectionBody) {
         this.partiesSubsections.putValue(JsonCreator.getJsonObject(subsectionName, subsectionBody));
     }
 
-    private void parseAndAddCriminalCaseProsecutorSubsection(int startParagraph, String inlineFirstParagraph) {
-        Subsection subsection = new SectionParties(wordParagraph, startParagraph)
-                                    .setInlineParagraph(inlineFirstParagraph)
-                                    .parse();
-        addSubsectionContent(Keywords.UBUSHINJACYAHA, subsection.getBody());
-        updateSubsectionStart(subsection.getLastParagraph());
+    private void parseAndAddCriminalCaseProsecutorSubsection(int startParagraph, String inlineParagraph) {
+        section.setStartingParagraph(startParagraph)
+                .setInlineParagraph(inlineParagraph)
+                .parse();
+        addSubsectionContent(Keywords.UBUSHINJACYAHA, section.getBody());
+        updateSubsectionStart(section.getLastParagraph());
     }
 
     private void updateSubsectionStart(int paragraphIndex) {

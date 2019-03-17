@@ -2,10 +2,10 @@ package com.panavis.WordToJsonConverter.Parsers;
 
 import com.panavis.WordToJsonConverter.Style.WordParagraph;
 
-public class SectionParties extends Subsection {
+public class SectionParties extends Section {
 
-    SectionParties(WordParagraph wordParagraph, int startParagraph) {
-        super(wordParagraph, startParagraph);
+    SectionParties(WordParagraph wordParagraph) {
+        super(wordParagraph);
     }
 
     @Override
