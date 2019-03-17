@@ -41,8 +41,8 @@ class SectionBody extends Section {
     private boolean isClosingSentence(int paragraphIndex, String text) {
         String firstWord = text.split(" ")[0];
         String style = wordParagraph.getUnitNumbering(paragraphIndex).style;
-        return sentenceHasDate(text) &&
-                text.contains(RUKIJIJWE) &&
+        return (text.contains(RUKIJIJWE) || text.contains(RUSOMEWE)) &&
+                sentenceHasDate(text) &&
                 StringFormatting.isCaseSensitive(firstWord) &&
                 !(style.equals(LIST_PARAGRAPH));
     }
