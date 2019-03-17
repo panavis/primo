@@ -1,9 +1,8 @@
 package com.panavis.WordToJsonConverter;
 
-import com.panavis.WordToJsonConverter.Constants.Keywords;
+import static com.panavis.WordToJsonConverter.Constants.Keywords.*;
 import com.panavis.WordToJsonConverter.ResultTypes.SectionResult;
-import com.panavis.WordToJsonConverter.Wrappers.JsonArray;
-import com.panavis.WordToJsonConverter.Wrappers.JsonObject;
+import com.panavis.WordToJsonConverter.Wrappers.*;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
 import java.util.*;
@@ -22,20 +21,20 @@ class CaseTitleTestsHelpers {
 
     private static void setupActualCaseTitles() {
         for (XWPFDocument wordDoc : TestsSetup.wordDocxData) {
-            Converter converter = TestsSetup.getConverterObject(wordDoc, Keywords.TITLE);
+            Converter converter = TestsSetup.getConverterObject(wordDoc, TITLE);
             converter.parseCaseSections();
-            SectionResult titleResult = converter.getParsedCaseSection(Keywords.TITLE);
+            SectionResult titleResult = converter.getParsedCaseSection(TITLE);
             JsonObject titleObject = titleResult.getSectionContent();
-            String jsonTitle = titleObject.getStringByKey(Keywords.TITLE);
+            String jsonTitle = titleObject.getStringByKey(TITLE);
             allActualCaseTitles.add(jsonTitle);
         }
     }
 
     private static void setUpExpectedCaseTitles() {
         for (JsonObject caseFile : TestsSetup.expectedJsonContent) {
-            JsonArray caseContent =  caseFile.getArrayByKey(Keywords.CASE);
+            JsonArray caseContent =  caseFile.getArrayByKey(CASE);
             JsonObject titleObject = caseContent.getJsonByIndex(0);
-            allExpectedCaseTitles.add(titleObject.getStringByKey(Keywords.TITLE));
+            allExpectedCaseTitles.add(titleObject.getStringByKey(TITLE));
         }
     }
 

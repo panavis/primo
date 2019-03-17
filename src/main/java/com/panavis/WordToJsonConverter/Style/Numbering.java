@@ -1,7 +1,7 @@
 package com.panavis.WordToJsonConverter.Style;
 
 import com.panavis.WordToJsonConverter.Constants.Format;
-import com.panavis.WordToJsonConverter.Constants.Keywords;
+import static com.panavis.WordToJsonConverter.Constants.Keywords.*;
 import org.apache.poi.xwpf.usermodel.*;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.*;
 
@@ -38,8 +38,8 @@ public class Numbering {
             String paragraphStyle = paragraph.getStyle();
 
             if (paragraphStyle != null &&
-                    (   paragraphStyle.equals("ListParagraph") ||
-                            (paragraphStyle.startsWith(Keywords.HEADING) &&
+                    (   paragraphStyle.equals(LIST_PARAGRAPH) ||
+                            (paragraphStyle.startsWith(HEADING) &&
                                     paragraph.getNumIlvl() != null)))
             {
                 BigInteger numId = paragraph.getNumID();

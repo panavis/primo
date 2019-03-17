@@ -1,6 +1,7 @@
 package com.panavis.WordToJsonConverter.Parsers;
 
 import com.panavis.WordToJsonConverter.Constants.Format;
+import static com.panavis.WordToJsonConverter.Constants.Keywords.*;
 import com.panavis.WordToJsonConverter.ResultTypes.TextParagraphIndex;
 import com.panavis.WordToJsonConverter.Style.WordParagraph;
 import com.panavis.WordToJsonConverter.Utils.*;
@@ -56,8 +57,8 @@ abstract class Section {
 
     boolean startsCaseBackgroundSection(int paragraphIndex) {
         String text = wordParagraph.getParagraphText(paragraphIndex).toLowerCase();
-        return text.contains("imiterere") && text.contains("y") &&
-                text.contains("urubanza");
+        return text.contains(IMITERERE) && text.contains("y") &&
+                text.contains(URUBANZA);
     }
 
     Section setStartingParagraph(int startParagraph) {

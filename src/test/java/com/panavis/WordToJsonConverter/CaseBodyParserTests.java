@@ -21,8 +21,7 @@ public class CaseBodyParserTests {
     }
 
     private JsonObject getCaseBackground(int caseIndex) {
-        JsonObject caseBackground = getCaseBodySubsection(caseIndex, 0);
-        return caseBackground;
+        return getCaseBodySubsection(caseIndex, 0);
     }
 
     private JsonObject getCaseBodySubsection(int caseIndex, int subsectionIndex) {
@@ -48,6 +47,23 @@ public class CaseBodyParserTests {
     public void comm_court_huye_2011_hasCaseBackgroundSection() {
         JsonObject caseBackground = getCaseBackground(0);
         assertTrue(caseBackground.hasKey("I . IMITERERE Y\u2019URUBANZA"));
+    }
+
+    @Test
+    public void comm_court_huye_2011_BackgroundSectionHasLengthOneArray() {
+        JsonArray caseBackground = getCaseBackgroundSection(0, "I . IMITERERE Y\u2019URUBANZA");
+        assertEquals(1, caseBackground.getSize());
+    }
+
+    @Test
+    public void comm_court_huye_2011_CaseBackgroundMatchesExpectedContent() {
+        JsonArray caseBackground = getCaseBackgroundSection(0, "I . IMITERERE Y\u2019URUBANZA");
+        String actualContent = caseBackground.toString();
+
+        JsonArray expectedArray = getExpectedCaseSubsection(0, 4, 0, "I . IMITERERE Y\u2019URUBANZA");
+        String expectedContent = expectedArray.toString();
+
+        assertEquals(expectedContent, actualContent);
     }
 
     @Test
@@ -105,9 +121,93 @@ public class CaseBodyParserTests {
     }
 
     @Test
+    public void comm_court_huye_2016_BackgroundSectionHasLengthTwoArray() {
+        JsonArray caseBackground = getCaseBackgroundSection(1, "I.\tIMITERERE Y\u2019URUBANZA");
+        assertEquals(2, caseBackground.getSize());
+    }
+
+    @Test
+    public void comm_court_huye_2016_CaseBackgroundMatchesExpectedContent() {
+        JsonArray caseBackground = getCaseBackgroundSection(1, "I.\tIMITERERE Y\u2019URUBANZA");
+        String actualContent = caseBackground.toString();
+
+        JsonArray expectedArray = getExpectedCaseSubsection(1, 4, 0, "I.\tIMITERERE Y\u2019URUBANZA");
+        String expectedContent = expectedArray.toString();
+
+        assertEquals(expectedContent, actualContent);
+    }
+
+    @Test
+    public void comm_court_huye_2016_secondSubsectionOfBodyHasExpectedHeading() {
+        JsonObject secondSubsection = getCaseBodySubsection(1, 1);
+        assertTrue(secondSubsection.hasKey("II.\tISESENGURA RY\u2019IBIBAZO BIGIZE URUBANZA"));
+    }
+
+    @Test
+    public void comm_court_huye_2016_secondSubsectionHasExpectedLength() {
+        JsonObject secondSubsection = getCaseBodySubsection(1, 1);
+        JsonArray subsectionArray = secondSubsection.getArrayByKey("II.\tISESENGURA RY\u2019IBIBAZO BIGIZE URUBANZA");
+
+        assertEquals(17, subsectionArray.getSize());
+    }
+
+    @Test
+    public void comm_court_huye_2016_secondSubsectionMatchesExpectedContent() {
+        JsonObject secondSubsection = getCaseBodySubsection(1, 1);
+        String actualSubsection = secondSubsection.getArrayByKey("II.\tISESENGURA RY\u2019IBIBAZO BIGIZE URUBANZA").toString();
+
+        String expectedSubsection = getExpectedCaseSubsection(1, 4,
+                1, "II.\tISESENGURA RY\u2019IBIBAZO BIGIZE URUBANZA").toString();
+
+        assertEquals(expectedSubsection, actualSubsection);
+    }
+
+    @Test
+    public void comm_court_huye_2016_thirdSubsectionOfBodyHasExpectedHeading() {
+        JsonObject secondSubsection = getCaseBodySubsection(1, 2);
+        assertTrue(secondSubsection.hasKey("III.\tICYEMEZO CY\u2019URUKIKO"));
+    }
+
+    @Test
+    public void comm_court_huye_2016_thirdSubsectionHasExpectedLength() {
+        JsonObject secondSubsection = getCaseBodySubsection(1, 2);
+        JsonArray subsectionArray = secondSubsection.getArrayByKey("III.\tICYEMEZO CY\u2019URUKIKO");
+
+        assertEquals(2, subsectionArray.getSize());
+    }
+
+    @Test
+    public void comm_court_huye_2016_thirdSubsectionMatchesExpectedContent() {
+        JsonObject secondSubsection = getCaseBodySubsection(1, 2);
+        String actualSubsection = secondSubsection.getArrayByKey("III.\tICYEMEZO CY\u2019URUKIKO").toString();
+
+        String expectedSubsection = getExpectedCaseSubsection(1, 4,
+                2, "III.\tICYEMEZO CY\u2019URUKIKO").toString();
+
+        assertEquals(expectedSubsection, actualSubsection);
+    }
+
+    @Test
     public void comm_court_huye_2018_hasCaseBackgroundSection() {
         JsonObject caseBackground = getCaseBackground(2);
         assertTrue(caseBackground.hasKey("I . IMITERERE Y\u2019URUBANZA"));
+    }
+
+    @Test
+    public void comm_court_huye_2018_BackgroundSectionHasLengthThreeArray() {
+        JsonArray caseBackground = getCaseBackgroundSection(2, "I . IMITERERE Y\u2019URUBANZA");
+        assertEquals(3, caseBackground.getSize());
+    }
+
+    @Test
+    public void comm_court_huye_2018_CaseBackgroundMatchesExpectedContent() {
+        JsonArray caseBackground = getCaseBackgroundSection(2, "I . IMITERERE Y\u2019URUBANZA");
+        String actualContent = caseBackground.toString();
+
+        JsonArray expectedArray = getExpectedCaseSubsection(2, 4, 0, "I . IMITERERE Y\u2019URUBANZA");
+        String expectedContent = expectedArray.toString();
+
+        assertEquals(expectedContent, actualContent);
     }
 
     @Test
@@ -255,24 +355,6 @@ public class CaseBodyParserTests {
     }
 
     @Test
-    public void comm_court_huye_2011_BackgroundSectionHasLengthOneArray() {
-        JsonArray caseBackground = getCaseBackgroundSection(0, "I . IMITERERE Y\u2019URUBANZA");
-        assertEquals(1, caseBackground.getSize());
-    }
-
-    @Test
-    public void comm_court_huye_2016_BackgroundSectionHasLengthTwoArray() {
-        JsonArray caseBackground = getCaseBackgroundSection(1, "I.\tIMITERERE Y\u2019URUBANZA");
-        assertEquals(2, caseBackground.getSize());
-    }
-
-    @Test
-    public void comm_court_huye_2018_BackgroundSectionHasLengthThreeArray() {
-        JsonArray caseBackground = getCaseBackgroundSection(2, "I . IMITERERE Y\u2019URUBANZA");
-        assertEquals(3, caseBackground.getSize());
-    }
-
-    @Test
     public void comm_court_nyarugenge_2014_BackgroundSectionHasLengthThreeArray() {
         JsonArray caseBackground = getCaseBackgroundSection(4, "I.\tIMITERERE Y\u2019URUBANZA");
         assertEquals(3, caseBackground.getSize());
@@ -357,39 +439,6 @@ public class CaseBodyParserTests {
         JsonArray caseArray = caseObject.getArrayByKey(CASE);
         JsonObject caseBody = caseArray.getJsonByIndex(sectionIndex);
         return caseBody.getArrayByKey(CASE_BODY);
-    }
-
-    @Test
-    public void comm_court_huye_2011_CaseBackgroundMatchesExpectedContent() {
-        JsonArray caseBackground = getCaseBackgroundSection(0, "I . IMITERERE Y\u2019URUBANZA");
-        String actualContent = caseBackground.toString();
-
-        JsonArray expectedArray = getExpectedCaseSubsection(0, 4, 0, "I . IMITERERE Y\u2019URUBANZA");
-        String expectedContent = expectedArray.toString();
-
-        assertEquals(expectedContent, actualContent);
-    }
-
-    @Test
-    public void comm_court_huye_2016_CaseBackgroundMatchesExpectedContent() {
-        JsonArray caseBackground = getCaseBackgroundSection(1, "I.\tIMITERERE Y\u2019URUBANZA");
-        String actualContent = caseBackground.toString();
-
-        JsonArray expectedArray = getExpectedCaseSubsection(1, 4, 0, "I.\tIMITERERE Y\u2019URUBANZA");
-        String expectedContent = expectedArray.toString();
-
-        assertEquals(expectedContent, actualContent);
-    }
-
-    @Test
-    public void comm_court_huye_2018_CaseBackgroundMatchesExpectedContent() {
-        JsonArray caseBackground = getCaseBackgroundSection(2, "I . IMITERERE Y\u2019URUBANZA");
-        String actualContent = caseBackground.toString();
-
-        JsonArray expectedArray = getExpectedCaseSubsection(2, 4, 0, "I . IMITERERE Y\u2019URUBANZA");
-        String expectedContent = expectedArray.toString();
-
-        assertEquals(expectedContent, actualContent);
     }
 
     @Test

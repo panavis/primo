@@ -1,6 +1,6 @@
 package com.panavis.WordToJsonConverter;
 
-import com.panavis.WordToJsonConverter.Constants.Keywords;
+import static com.panavis.WordToJsonConverter.Constants.Keywords.*;
 import com.panavis.WordToJsonConverter.Style.*;
 import org.apache.poi.xwpf.usermodel.*;
 
@@ -43,8 +43,8 @@ public class ConverterInitializer {
         for (int index = 0; index < paragraphs.size(); index++) {
             String paragraphStyle = paragraphs.get(index).getStyle();
             if (paragraphStyle != null &&
-                    (paragraphStyle.equals("ListParagraph") ||
-                    paragraphStyle.startsWith(Keywords.HEADING)))
+                    (paragraphStyle.equals(LIST_PARAGRAPH) ||
+                    paragraphStyle.startsWith(HEADING)))
             {
                 numberedParagraphs.put(index, true);
             }

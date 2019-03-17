@@ -1,5 +1,6 @@
 package com.panavis.WordToJsonConverter.Parsers;
 
+import static com.panavis.WordToJsonConverter.Constants.Keywords.*;
 import com.panavis.WordToJsonConverter.Style.*;
 import com.panavis.WordToJsonConverter.Utils.StringFormatting;
 
@@ -33,16 +34,17 @@ class SectionBody extends Section {
     }
 
     private boolean isClosingHeading(int nextParagraph, String paragraphText) {
-        return wordParagraph.isIndentedAndCapitalized(nextParagraph) && paragraphText.contains("inteko");
+        return wordParagraph.isIndentedAndCapitalized(nextParagraph) &&
+                paragraphText.contains(INTEKO);
     }
 
     private boolean isClosingSentence(int paragraphIndex, String text) {
         String firstWord = text.split(" ")[0];
         String style = wordParagraph.getUnitNumbering(paragraphIndex).style;
         return sentenceHasDate(text) &&
-                text.contains("rukijijwe") &&
+                text.contains(RUKIJIJWE) &&
                 StringFormatting.isCaseSensitive(firstWord) &&
-                !(style.equals("ListParagraph"));
+                !(style.equals(LIST_PARAGRAPH));
     }
 
     private boolean sentenceHasDate(String text) {

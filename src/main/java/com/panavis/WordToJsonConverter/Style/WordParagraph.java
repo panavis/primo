@@ -139,17 +139,4 @@ public class WordParagraph {
             sectionHeading = currentParagraph.split(Format.COLON)[0];
         return trimColons(sectionHeading);
     }
-
-    public boolean startsProsecutorSubsection(int paragraphIndex) {
-        String text = getParagraphText(paragraphIndex);
-        return text.toLowerCase().contains(Keywords.UBUSHINJACYAHA) &&
-                previousParagraphIsNotSubsectionHeading(paragraphIndex);
-    }
-
-    private boolean previousParagraphIsNotSubsectionHeading(int paragraphIndex) {
-        if (paragraphIndex - 1 < 0) return true;
-        String pP = getHeadingFromParagraph(paragraphIndex - 1).toUpperCase();
-        return !isSectionHeading(paragraphIndex - 1) ||
-                Headings.PARTIES_HEADINGS.contains(pP);
-    }
 }
