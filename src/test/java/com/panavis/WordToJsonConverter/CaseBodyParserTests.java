@@ -1,11 +1,17 @@
 package com.panavis.WordToJsonConverter;
 
-import static com.panavis.WordToJsonConverter.Constants.Keywords.*;
-import static junit.framework.TestCase.*;
 import com.panavis.WordToJsonConverter.ResultTypes.SectionResult;
-import com.panavis.WordToJsonConverter.Wrappers.*;
+import com.panavis.WordToJsonConverter.Wrappers.JsonArray;
+import com.panavis.WordToJsonConverter.Wrappers.JsonObject;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
-import org.junit.*;
+import org.junit.BeforeClass;
+import org.junit.Ignore;
+import org.junit.Test;
+
+import static com.panavis.WordToJsonConverter.Constants.Keywords.CASE;
+import static com.panavis.WordToJsonConverter.Constants.Keywords.CASE_BODY;
+import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertTrue;
 
 public class CaseBodyParserTests {
 
@@ -60,6 +66,72 @@ public class CaseBodyParserTests {
     public void comm_court_huye_2018_secondSubsectionOfBodyHasExpectedHeading() {
         JsonObject secondSubsection = getCaseBodySubsection(2, 1);
         assertTrue(secondSubsection.hasKey("II. ISESENGURA RY\u2019INZITIZI YATANZWE"));
+    }
+
+    @Test
+    public void comm_court_huye_2018_thirdSubsectionOfBodyHasExpectedHeading() {
+        JsonObject secondSubsection = getCaseBodySubsection(2, 2);
+        assertTrue(secondSubsection.hasKey("UKO URUKIKO RUBIBONA"));
+    }
+
+    @Test
+    public void comm_court_huye_2018_fourthSubsectionOfBodyHasExpectedHeading() {
+        JsonObject secondSubsection = getCaseBodySubsection(2, 3);
+        assertTrue(secondSubsection.hasKey("III. ICYEMEZO CY\u2019URUKIKO"));
+    }
+
+    @Test
+    public void comm_court_huye_2018_secondSubsectionHasExpectedLength() {
+        JsonObject secondSubsection = getCaseBodySubsection(2, 1);
+        JsonArray subsectionArray = secondSubsection.getArrayByKey("II. ISESENGURA RY\u2019INZITIZI YATANZWE");
+        assertEquals(1, subsectionArray.getSize());
+    }
+
+    @Test
+    public void comm_court_huye_2018_thirdSubsectionHasExpectedLength() {
+        JsonObject secondSubsection = getCaseBodySubsection(2, 2);
+        JsonArray subsectionArray = secondSubsection.getArrayByKey("UKO URUKIKO RUBIBONA");
+        assertEquals(1, subsectionArray.getSize());
+    }
+
+    @Test
+    public void comm_court_huye_2018_fourthSubsectionHasExpectedLength() {
+        JsonObject secondSubsection = getCaseBodySubsection(2, 3);
+        JsonArray subsectionArray = secondSubsection.getArrayByKey("III. ICYEMEZO CY\u2019URUKIKO");
+        assertEquals(1, subsectionArray.getSize());
+    }
+
+    @Test
+    public void comm_court_huye_2018_secondSubsectionMatchesExpectedContent() {
+        JsonObject secondSubsection = getCaseBodySubsection(2, 1);
+        String actualSubsection = secondSubsection.getArrayByKey("II. ISESENGURA RY\u2019INZITIZI YATANZWE").toString();
+
+        String expectedSubsection = getExpectedCaseSubsection(2, 4,
+                1, "II. ISESENGURA RY\u2019INZITIZI YATANZWE").toString();
+
+        assertEquals(expectedSubsection, actualSubsection);
+    }
+
+    @Test
+    public void comm_court_huye_2018_thirdSubsectionMatchesExpectedContent() {
+        JsonObject secondSubsection = getCaseBodySubsection(2, 2);
+        String actualSubsection = secondSubsection.getArrayByKey("UKO URUKIKO RUBIBONA").toString();
+
+        String expectedSubsection = getExpectedCaseSubsection(2, 4,
+                2, "UKO URUKIKO RUBIBONA").toString();
+
+        assertEquals(expectedSubsection, actualSubsection);
+    }
+
+    @Test
+    public void comm_court_huye_2018_fourthSubsectionMatchesExpectedContent() {
+        JsonObject secondSubsection = getCaseBodySubsection(2, 3);
+        String actualSubsection = secondSubsection.getArrayByKey("III. ICYEMEZO CY\u2019URUKIKO").toString();
+
+        String expectedSubsection = getExpectedCaseSubsection(2, 4,
+                3, "III. ICYEMEZO CY\u2019URUKIKO").toString();
+
+        assertEquals(expectedSubsection, actualSubsection);
     }
 
     @Test
@@ -225,9 +297,10 @@ public class CaseBodyParserTests {
         assertEquals(7, caseBackground.getSize());
     }
 
-    private JsonArray getExpectedCaseBackground(int caseIndex, int sectionIndex, String heading) {
+    private JsonArray getExpectedCaseSubsection(int caseIndex, int sectionIndex,
+                                                int subsectionIndex, String heading) {
         JsonArray caseBodyArray = getExpectedCaseBodyArray(caseIndex, sectionIndex);
-        JsonObject caseBackground = caseBodyArray.getJsonByIndex(0);
+        JsonObject caseBackground = caseBodyArray.getJsonByIndex(subsectionIndex);
         return caseBackground.getArrayByKey(heading);
     }
 
@@ -243,7 +316,7 @@ public class CaseBodyParserTests {
         JsonArray caseBackground = getCaseBackgroundSection(0, "I . IMITERERE Y\u2019URUBANZA");
         String actualContent = caseBackground.toString();
 
-        JsonArray expectedArray = getExpectedCaseBackground(0, 4, "I . IMITERERE Y\u2019URUBANZA");
+        JsonArray expectedArray = getExpectedCaseSubsection(0, 4, 0, "I . IMITERERE Y\u2019URUBANZA");
         String expectedContent = expectedArray.toString();
 
         assertEquals(expectedContent, actualContent);
@@ -254,7 +327,7 @@ public class CaseBodyParserTests {
         JsonArray caseBackground = getCaseBackgroundSection(1, "I.\tIMITERERE Y\u2019URUBANZA");
         String actualContent = caseBackground.toString();
 
-        JsonArray expectedArray = getExpectedCaseBackground(1, 4, "I.\tIMITERERE Y\u2019URUBANZA");
+        JsonArray expectedArray = getExpectedCaseSubsection(1, 4, 0, "I.\tIMITERERE Y\u2019URUBANZA");
         String expectedContent = expectedArray.toString();
 
         assertEquals(expectedContent, actualContent);
@@ -265,7 +338,7 @@ public class CaseBodyParserTests {
         JsonArray caseBackground = getCaseBackgroundSection(2, "I . IMITERERE Y\u2019URUBANZA");
         String actualContent = caseBackground.toString();
 
-        JsonArray expectedArray = getExpectedCaseBackground(2, 4, "I . IMITERERE Y\u2019URUBANZA");
+        JsonArray expectedArray = getExpectedCaseSubsection(2, 4, 0, "I . IMITERERE Y\u2019URUBANZA");
         String expectedContent = expectedArray.toString();
 
         assertEquals(expectedContent, actualContent);
@@ -276,7 +349,7 @@ public class CaseBodyParserTests {
         JsonArray caseBackground = getCaseBackgroundSection(4, "I.\tIMITERERE Y\u2019URUBANZA");
         String actualContent = caseBackground.toString();
 
-        JsonArray expectedArray = getExpectedCaseBackground(4, 4, "I.\tIMITERERE Y\u2019URUBANZA");
+        JsonArray expectedArray = getExpectedCaseSubsection(4, 4, 0, "I.\tIMITERERE Y\u2019URUBANZA");
         String expectedContent = expectedArray.toString();
 
         assertEquals(expectedContent, actualContent);
@@ -287,7 +360,7 @@ public class CaseBodyParserTests {
         JsonArray caseBackground = getCaseBackgroundSection(5, "I.\tIMITERERE Y\u2019URUBANZA");
         String actualContent = caseBackground.toString();
 
-        JsonArray expectedArray = getExpectedCaseBackground(5, 4, "I.\tIMITERERE Y\u2019URUBANZA");
+        JsonArray expectedArray = getExpectedCaseSubsection(5, 4, 0, "I.\tIMITERERE Y\u2019URUBANZA");
         String expectedContent = expectedArray.toString();
 
         assertEquals(expectedContent, actualContent);
@@ -298,7 +371,7 @@ public class CaseBodyParserTests {
         JsonArray caseBackground = getCaseBackgroundSection(6, "IMITERERE Y\u2019URUBANZA");
         String actualContent = caseBackground.toString();
 
-        JsonArray expectedArray = getExpectedCaseBackground(6, 4, "IMITERERE Y\u2019URUBANZA");
+        JsonArray expectedArray = getExpectedCaseSubsection(6, 4, 0, "IMITERERE Y\u2019URUBANZA");
         String expectedContent = expectedArray.toString();
 
         assertEquals(expectedContent, actualContent);
@@ -309,7 +382,7 @@ public class CaseBodyParserTests {
         JsonArray caseBackground = getCaseBackgroundSection(7, "I.\tIMITERERE Y\u2019URUBANZA");
         String actualContent = caseBackground.toString();
 
-        JsonArray expectedArray = getExpectedCaseBackground(7, 4, "I.\tIMITERERE Y\u2019URUBANZA");
+        JsonArray expectedArray = getExpectedCaseSubsection(7, 4, 0, "I.\tIMITERERE Y\u2019URUBANZA");
         String expectedContent = expectedArray.toString();
 
         assertEquals(expectedContent, actualContent);
@@ -320,7 +393,7 @@ public class CaseBodyParserTests {
         JsonArray caseBackground = getCaseBackgroundSection(8, "I.\tIMITERERE Y\u2019URUBANZA");
         String actualContent = caseBackground.toString();
 
-        JsonArray expectedArray = getExpectedCaseBackground(8, 4, "I.\tIMITERERE Y\u2019URUBANZA");
+        JsonArray expectedArray = getExpectedCaseSubsection(8, 4, 0, "I.\tIMITERERE Y\u2019URUBANZA");
         String expectedContent = expectedArray.toString();
 
         assertEquals(expectedContent, actualContent);
@@ -331,7 +404,7 @@ public class CaseBodyParserTests {
         JsonArray caseBackground = getCaseBackgroundSection(11, "I.\t IMITERERE Y\u2019URUBANZA");
         String actualContent = caseBackground.toString();
 
-        JsonArray expectedArray = getExpectedCaseBackground(11, 4, "I.\tIMITERERE Y\u2019URUBANZA");
+        JsonArray expectedArray = getExpectedCaseSubsection(11, 4, 0, "I.\tIMITERERE Y\u2019URUBANZA");
         String expectedContent = expectedArray.toString();
 
         assertEquals(expectedContent, actualContent);
@@ -342,7 +415,7 @@ public class CaseBodyParserTests {
         JsonArray caseBackground = getCaseBackgroundSection(13, "I.\tIMITERERE Y\u2019 URUBANZA");
         String actualContent = caseBackground.toString();
 
-        JsonArray expectedArray = getExpectedCaseBackground(13, 4, "I.\tIMITERERE Y\u2019 URUBANZA");
+        JsonArray expectedArray = getExpectedCaseSubsection(13, 4, 0, "I.\tIMITERERE Y\u2019 URUBANZA");
         String expectedContent = expectedArray.toString();
 
         assertEquals(expectedContent, actualContent);
@@ -353,7 +426,7 @@ public class CaseBodyParserTests {
         JsonArray caseBackground = getCaseBackgroundSection(15, "I.\tIMITERERE Y\u2019URUBANZA");
         String actualContent = caseBackground.getStringByIndex(0);
 
-        JsonArray expectedArray = getExpectedCaseBackground(15, 4, "I.\tIMITERERE Y\u2019URUBANZA");
+        JsonArray expectedArray = getExpectedCaseSubsection(15, 4, 0, "I.\tIMITERERE Y\u2019URUBANZA");
         String expectedContent = expectedArray.getStringByIndex(0);
 
         assertEquals(expectedContent, actualContent);
@@ -364,7 +437,7 @@ public class CaseBodyParserTests {
         JsonArray caseBackground = getCaseBackgroundSection(16, "I.\tIMITERERE Y\u2019URUBANZA");
         String actualContent = caseBackground.getStringByIndex(0);
 
-        JsonArray expectedArray = getExpectedCaseBackground(16, 4, "I.\tIMITERERE Y\u2019URUBANZA");
+        JsonArray expectedArray = getExpectedCaseSubsection(16, 4, 0, "I.\tIMITERERE Y\u2019URUBANZA");
         String expectedContent = expectedArray.getStringByIndex(0);
 
         assertEquals(expectedContent, actualContent);
@@ -375,7 +448,7 @@ public class CaseBodyParserTests {
         JsonArray caseBackground = getCaseBackgroundSection(17, "1.\tImiterere y\u2019urubanza");
         String actualContent = caseBackground.getStringByIndex(0);
 
-        JsonArray expectedArray = getExpectedCaseBackground(17, 4, "1.\tImiterere y\u2019urubanza");
+        JsonArray expectedArray = getExpectedCaseSubsection(17, 4, 0, "1.\tImiterere y\u2019urubanza");
         String expectedContent = expectedArray.getStringByIndex(0);
 
         assertEquals(expectedContent, actualContent);
@@ -386,7 +459,7 @@ public class CaseBodyParserTests {
         JsonArray caseBackground = getCaseBackgroundSection(18, "I.\tIMITERERE Y\u2019URUBANZA");
         String actualContent = caseBackground.getStringByIndex(0);
 
-        JsonArray expectedArray = getExpectedCaseBackground(18, 4, "I.\tIMITERERE Y\u2019URUBANZA");
+        JsonArray expectedArray = getExpectedCaseSubsection(18, 4, 0, "I.\tIMITERERE Y\u2019URUBANZA");
         String expectedContent = expectedArray.getStringByIndex(0);
 
         assertEquals(expectedContent, actualContent);

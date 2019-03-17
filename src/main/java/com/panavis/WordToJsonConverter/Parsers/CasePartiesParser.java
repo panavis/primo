@@ -10,7 +10,7 @@ import com.panavis.WordToJsonConverter.Wrappers.*;
 public class CasePartiesParser implements ICaseParties {
 
     private WordParagraph wordParagraph;
-    private Section section;
+    private SectionParties section;
     private JsonArray partiesSubsections;
     private boolean reachedSubjectMatterSection;
     private int subsectionStart;
@@ -71,7 +71,7 @@ public class CasePartiesParser implements ICaseParties {
     private int getPartiesSubsections(int startParagraph) {
         subsectionStart = startParagraph;
         while (!reachedSubjectMatterSection && startParagraph < wordParagraph.numberOfParagraphs()) {
-            if (this.wordParagraph.startsSubjectMatterSection(subsectionStart)) {
+            if (section.startsSubjectMatterSection(subsectionStart)) {
                 reachedSubjectMatterSection = true;
                 break;
             }

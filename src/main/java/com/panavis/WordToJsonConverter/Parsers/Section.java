@@ -52,6 +52,12 @@ abstract class Section {
                     .append(wordParagraph.getBlankLinesAfterParagraph(paragraphIndex));
     }
 
+    boolean startsCaseBackgroundSection(int paragraphIndex) {
+        String text = wordParagraph.getParagraphText(paragraphIndex).toLowerCase();
+        return text.contains("imiterere") && text.contains("y") &&
+                text.contains("urubanza");
+    }
+
     Section setStartingParagraph(int startParagraph) {
         this.startParagraph = startParagraph;
         return this;

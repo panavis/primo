@@ -18,12 +18,11 @@ class SectionBody extends Section {
         if (isCaseClosing(paragraphIndex)) return false;
         String text = wordParagraph.getParagraphText(paragraphIndex);
         String nextNumbering = currentNumbering.next;
-        if (nextNumberingIsAvailable(nextNumbering))
-            return !MatchesNextNumbering(text, nextNumbering);
-
+        if (nextNumberingIsAvailable(nextNumbering)) {
+            return !matchesNextNumbering(text, nextNumbering);
+        }
         String currentStyle = wordParagraph.getUnitNumbering(paragraphIndex).style;
-        boolean v = isTextCapitalizedAndHasSameStyle(text, currentStyle);
-        return !v;
+        return !isTextCapitalizedAndHasSameStyle(text, currentStyle);
     }
 
     boolean isCaseClosing(int nextParagraph) {
@@ -56,7 +55,7 @@ class SectionBody extends Section {
         return !nextNumbering.trim().isEmpty();
     }
 
-    private boolean MatchesNextNumbering(String text, String nextNumbering) {
+    private boolean matchesNextNumbering(String text, String nextNumbering) {
         return text.startsWith(nextNumbering);
     }
 

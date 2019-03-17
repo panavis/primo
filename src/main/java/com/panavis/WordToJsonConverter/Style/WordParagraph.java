@@ -27,22 +27,22 @@ public class WordParagraph {
 
 
     private XWPFParagraph getParagraph(int paragraphIndex) {
-        return this.paragraphs.get(paragraphIndex);
+        return paragraphs.get(paragraphIndex);
     }
 
     public String getParagraphText(int paragraphIndex) {
         String text = getParagraph(paragraphIndex).getText().trim();
-        if (this.numberedParagraphs.get(paragraphIndex))
-            text = this.unitNumberings.get(paragraphIndex).current + text;
+        if (numberedParagraphs.get(paragraphIndex))
+            text = unitNumberings.get(paragraphIndex).current + text;
         return text;
     }
 
     public UnitNumbering getUnitNumbering(int paragraphIndex) {
-        return this.unitNumberings.get(paragraphIndex);
+        return unitNumberings.get(paragraphIndex);
     }
 
     public int numberOfParagraphs() {
-        return this.paragraphs.size();
+        return paragraphs.size();
     }
 
     public boolean isSectionHeading(int paragraphIndex) {
@@ -105,24 +105,8 @@ public class WordParagraph {
                 text.matches("^[a-zA-Z]");
     }
 
-    public boolean startsSubjectMatterSection(int paragraphIndex) {
-        String paragraphText = getParagraphText(paragraphIndex);
-        boolean subjectMatterStart = false;
-        for (String heading : Headings.SUBJECT_MATTER_HEADINGS) {
-            if (paragraphText.toUpperCase().startsWith(heading))
-                subjectMatterStart = true;
-        }
-        return subjectMatterStart;
-    }
-
-    public boolean startsCaseBackgroundSection(int paragraphIndex) {
-        String text = getParagraphText(paragraphIndex).toLowerCase();
-        return text.contains("imiterere") && text.contains("y") &&
-                text.contains("urubanza");
-    }
-
     public String getBlankLinesAfterParagraph(int paragraphIndex) {
-        int blanks = this.postParagraphBlanks.get(paragraphIndex);
+        int blanks = postParagraphBlanks.get(paragraphIndex);
         return StringFormatting.duplicateLineSeparator(blanks);
     }
 
