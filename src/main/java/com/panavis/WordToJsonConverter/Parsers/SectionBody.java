@@ -40,6 +40,7 @@ class SectionBody extends Section {
         String firstWord = text.split(" ")[0];
         String style = wordParagraph.getUnitNumbering(paragraphIndex).style;
         return sentenceHasDate(text) &&
+                text.contains("rukijijwe") &&
                 StringFormatting.isCaseSensitive(firstWord) &&
                 !(style.equals("ListParagraph"));
     }

@@ -30,6 +30,10 @@ public class WordParagraph {
         return paragraphs.get(paragraphIndex);
     }
 
+    public boolean paragraphExists(int index) {
+        return index >= 0 && index < numberOfParagraphs();
+    }
+
     public String getParagraphText(int paragraphIndex) {
         String text = getParagraph(paragraphIndex).getText().trim();
         if (numberedParagraphs.get(paragraphIndex))
@@ -60,10 +64,6 @@ public class WordParagraph {
                 isOneWordAndIsUpperCase(paragraphIndex)
         );
     }
-//    TODO
-//    private boolean paragraphExists(int index) {
-//        return index >= 0 && index < numberOfParagraphs();
-//    }
 
     public boolean isIndentedAndCapitalized(int paragraphIndex) {
         String firstWord = getParagraphText(paragraphIndex).split(" ")[0];

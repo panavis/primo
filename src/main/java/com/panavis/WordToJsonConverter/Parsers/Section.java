@@ -38,7 +38,9 @@ abstract class Section {
     private TextParagraphIndex getRemainingSubsectionBody(int startParagraph) {
         StringBuilder remainingBody = new StringBuilder();
         int paragraphIndex = startParagraph + 1;
-        while(isStillInOneSubsection(paragraphIndex)) {
+        while(wordParagraph.paragraphExists(paragraphIndex) &&
+                isStillInOneSubsection(paragraphIndex))
+        {
             addParagraphToSubsection(remainingBody, paragraphIndex);
             paragraphIndex++;
         }

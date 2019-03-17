@@ -21,7 +21,9 @@ public class CaseBodyParser implements ICaseBodyParser {
     public SectionResult parse(int startParagraph) {
         if (section.startsCaseBackgroundSection(startParagraph)) {
             int nextParagraph = startParagraph;
-            while(!section.isCaseClosing(nextParagraph)) {
+            while(wordParagraph.paragraphExists(nextParagraph) &&
+                    !section.isCaseClosing(nextParagraph))
+            {
                 UnitNumbering numbering = wordParagraph.getUnitNumbering(nextParagraph);
                 section.setCurrentNumbering(numbering)
                         .setStartingParagraph(nextParagraph)
