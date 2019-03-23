@@ -1,10 +1,12 @@
 package com.panavis.WordToJsonConverter.Parsers;
 
-import static com.panavis.WordToJsonConverter.Constants.Keywords.*;
-import com.panavis.WordToJsonConverter.Style.*;
+import com.panavis.WordToJsonConverter.Style.UnitNumbering;
+import com.panavis.WordToJsonConverter.Style.WordParagraph;
 import com.panavis.WordToJsonConverter.Utils.StringFormatting;
 
 import java.util.regex.Pattern;
+
+import static com.panavis.WordToJsonConverter.Constants.Keywords.*;
 
 class SectionBody extends Section {
 
@@ -22,13 +24,19 @@ class SectionBody extends Section {
         if (nextNumberingIsAvailable(nextNumbering)) {
             return !matchesNextNumbering(text, nextNumbering);
         }
+        return !hasSameBodyHeadingFormat(paragraphIndex, text);
+    }
+
+    private boolean hasSameBodyHeadingFormat(int paragraphIndex, String text) {
         String currentStyle = wordParagraph.getUnitNumbering(paragraphIndex).style;
-        return !isTextCapitalizedAndHasSameStyle(text, currentStyle);
+        boolean capitalizedAndHasSameStyle = isTextCapitalizedAndHasSameStyle(text, currentStyle);
+        boolean nonDynamicNumbering = capitalizedAndHasSameStyle && text.contains(".");
+        boolean noNumbering = capitalizedAndHasSameStyle && wordParagraph.isBeginningUnderlined(paragraphIndex);
+        return nonDynamicNumbering || noNumbering;
     }
 
     boolean isCaseClosing(int nextParagraph) {
         String paragraphText = wordParagraph.getParagraphText(nextParagraph).toLowerCase();
-
         return isClosingSentence(nextParagraph, paragraphText) ||
                 isClosingHeading(nextParagraph, paragraphText);
     }
@@ -41,10 +49,13 @@ class SectionBody extends Section {
     private boolean isClosingSentence(int paragraphIndex, String text) {
         String firstWord = text.split(" ")[0];
         String style = wordParagraph.getUnitNumbering(paragraphIndex).style;
-        return (text.contains(RUKIJIJWE) || text.contains(RUSOMEWE)) &&
-                sentenceHasDate(text) &&
+        return hasClosingKeywords(text) && sentenceHasDate(text) &&
                 StringFormatting.isCaseSensitive(firstWord) &&
                 !(style.equals(LIST_PARAGRAPH));
+    }
+
+    private boolean hasClosingKeywords(String text) {
+        return text.contains(RUKIJIJWE) || text.contains(RUSOMEWE);
     }
 
     private boolean sentenceHasDate(String text) {

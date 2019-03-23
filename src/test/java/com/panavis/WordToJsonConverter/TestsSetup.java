@@ -56,7 +56,7 @@ public class TestsSetup {
         return filePaths;
     }
 
-    private static XWPFDocument createWordDocumentObject(String wordPath) {
+    static XWPFDocument createWordDocumentObject(String wordPath) {
         XWPFDocument wordDoc = null;
         try {
             wordDoc = new XWPFDocument(OPCPackage.open(wordPath));

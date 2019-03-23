@@ -138,4 +138,10 @@ public class WordParagraph {
             sectionHeading = currentParagraph.split(Format.COLON)[0];
         return trimColons(sectionHeading);
     }
+
+    public boolean isBeginningUnderlined(int paragraphIndex) {
+        XWPFParagraph paragraph = getParagraph(paragraphIndex);
+        return ParagraphRun.isFirstRunUnderlined(paragraph);
+    }
+
 }

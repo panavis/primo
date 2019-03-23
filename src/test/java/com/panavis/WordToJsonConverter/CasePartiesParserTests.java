@@ -19,7 +19,8 @@ public class CasePartiesParserTests {
     @Ignore("Ignore: Parties section troubleshooter.")
     @Test
     public void troubleshootOneCaseSeparately() {
-        SectionResult result = CasePartiesTestsHelpers.parseOneCaseAndReturnPartiesSection(1);
+        SectionResult result = CasePartiesTestsHelpers.parseOneCaseAndReturnPartiesSection(6);
+        System.out.println(result.getSectionContent());
     }
 
     @Test
