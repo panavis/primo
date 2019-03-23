@@ -1,5 +1,6 @@
 package com.panavis.WordToJsonConverter.Parsers;
 
+import com.panavis.WordToJsonConverter.Constants.Format;
 import com.panavis.WordToJsonConverter.Style.UnitNumbering;
 import com.panavis.WordToJsonConverter.Style.WordParagraph;
 import com.panavis.WordToJsonConverter.Utils.StringFormatting;
@@ -20,19 +21,45 @@ class SectionBody extends Section {
     boolean isStillInOneSubsection(int paragraphIndex) {
         if (isCaseClosing(paragraphIndex)) return false;
         String text = wordParagraph.getParagraphText(paragraphIndex);
-        String nextNumbering = currentNumbering.next;
-        if (nextNumberingIsAvailable(nextNumbering)) {
-            return !matchesNextNumbering(text, nextNumbering);
+        UnitNumbering paragraphNumbering = wordParagraph.getUnitNumbering(paragraphIndex);
+        if (!currentNumbering.current.equals(Format.EMPTY_STRING) &&
+                paragraphHasNumbering(paragraphNumbering.current)) {
+            return !matchesNextNumbering(text, currentNumbering.next);
         }
         return !hasSameBodyHeadingFormat(paragraphIndex, text);
     }
 
+    private boolean paragraphHasNumbering(String currentNumbering) {
+        return !currentNumbering.trim().isEmpty();
+    }
+
+    private boolean matchesNextNumbering(String text, String nextNumbering) {
+        return text.startsWith(nextNumbering);
+    }
+
     private boolean hasSameBodyHeadingFormat(int paragraphIndex, String text) {
         String currentStyle = wordParagraph.getUnitNumbering(paragraphIndex).style;
-        boolean capitalizedAndHasSameStyle = isTextCapitalizedAndHasSameStyle(text, currentStyle);
-        boolean nonDynamicNumbering = capitalizedAndHasSameStyle && text.contains(".");
-        boolean noNumbering = capitalizedAndHasSameStyle && wordParagraph.isBeginningUnderlined(paragraphIndex);
+        boolean hasSameStyle = isTextCapitalizedAndHasSameStyle(text, currentStyle);
+        boolean nonDynamicNumbering = hasNonDynamicNumbering(paragraphIndex, text, hasSameStyle);
+        boolean noNumbering = hasSameStyle &&
+                wordParagraph.isBeginningUnderlined(paragraphIndex);
         return nonDynamicNumbering || noNumbering;
+    }
+
+    private boolean hasNonDynamicNumbering(int paragraphIndex, String text, boolean hasSameStyle) {
+        boolean hasNextHeadingStart = false;
+        if (!currentNumbering.next.equals(Format.EMPTY_STRING))
+            hasNextHeadingStart = text.startsWith(currentNumbering.next);
+        String firstWord = text.split(" ")[0];
+        boolean hasNextHeadingInBold = firstWord.endsWith(".") &&
+                hasSameStyle &&
+                wordParagraph.isFirstRunBold(paragraphIndex);
+        return hasNextHeadingStart || hasNextHeadingInBold;
+    }
+
+    private boolean isTextCapitalizedAndHasSameStyle(String text, String currentStyle) {
+        return StringFormatting.isTextCapitalized(text) &&
+                currentStyle.equals(currentNumbering.style);
     }
 
     boolean isCaseClosing(int nextParagraph) {
@@ -63,19 +90,6 @@ class SectionBody extends Section {
         Pattern dateMonthSpelled = Pattern.compile("\\b\\d{1,2}\\b.+\\b\\d{4}");
         return dateAllDigits.matcher(text).find() ||
                 dateMonthSpelled.matcher(text).find();
-    }
-
-    private boolean nextNumberingIsAvailable(String nextNumbering) {
-        return !nextNumbering.trim().isEmpty();
-    }
-
-    private boolean matchesNextNumbering(String text, String nextNumbering) {
-        return text.startsWith(nextNumbering);
-    }
-
-    private boolean isTextCapitalizedAndHasSameStyle(String text, String currentStyle) {
-        return StringFormatting.isTextCapitalized(text) &&
-                currentStyle.equals(currentNumbering.style);
     }
 
     Section setCurrentNumbering(UnitNumbering unitNumbering) {

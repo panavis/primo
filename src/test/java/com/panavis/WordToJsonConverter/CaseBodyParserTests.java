@@ -481,6 +481,70 @@ public class CaseBodyParserTests {
     }
 
     @Test
+    public void high_court_chamber_nyanza_2014_BackgroundSectionHasLengthFourArray() {
+        JsonArray caseBackground = getCaseBackgroundSection(7, "I.\tIMITERERE Y\u2019URUBANZA");
+        assertEquals(4, caseBackground.getSize());
+    }
+
+    @Test
+    public void high_court_chamber_nyanza_2014_CaseBackgroundMatchesExpectedContent() {
+        JsonArray caseBackground = getCaseBackgroundSection(7, "I.\tIMITERERE Y\u2019URUBANZA");
+        String actualContent = caseBackground.toString();
+
+        JsonArray expectedArray = getExpectedCaseSubsection(7, 4, 0, "I.\tIMITERERE Y\u2019URUBANZA");
+        String expectedContent = expectedArray.toString();
+
+        assertEquals(expectedContent, actualContent);
+    }
+
+    @Test
+    public void high_court_chamber_2014_secondSubsectionHasExpectedHeading() {
+        JsonObject caseBody = getCaseBodySubsection(7, 1);
+        assertTrue(caseBody.hasKey("II.\tISESENGURA RY\u2019IKIBAZO KIRI MU RUBANZA"));
+    }
+
+    @Test
+    public void high_court_chamber_2014_secondSubsectionHasExpectedLength() {
+        JsonObject secondSubsection = getCaseBodySubsection(7, 1);
+        JsonArray subsectionArray = secondSubsection.getArrayByKey("II.\tISESENGURA RY\u2019IKIBAZO KIRI MU RUBANZA");
+        assertEquals(13, subsectionArray.getSize());
+    }
+
+    @Test
+    public void high_court_chamber_2014_secondSubsectionMatchesExpectedContent() {
+        JsonObject secondSubsection = getCaseBodySubsection(7, 1);
+        String actualSubsection = secondSubsection.getArrayByKey("II.\tISESENGURA RY\u2019IKIBAZO KIRI MU RUBANZA").toString();
+
+        String expectedSubsection = getExpectedCaseSubsection(7, 4,
+                1, "II.\tISESENGURA RY\u2019IKIBAZO KIRI MU RUBANZA").toString();
+
+        assertEquals(expectedSubsection, actualSubsection);
+    }
+
+    @Test
+    public void high_court_chamber_2014_thirdSubsectionOfBodyHasExpectedHeading() {
+        JsonObject thirdSubsection = getCaseBodySubsection(7, 2);
+        assertTrue(thirdSubsection.hasKey("III. ICYEMEZO CY\u2019URUKIKO"));
+    }
+
+    @Test
+    public void high_court_chamber_2014_thirdSubsectionHasExpectedLength() {
+        JsonObject thirdSubsection = getCaseBodySubsection(7, 2);
+        JsonArray subsectionArray = thirdSubsection.getArrayByKey("III. ICYEMEZO CY\u2019URUKIKO");
+        assertEquals(4, subsectionArray.getSize());
+    }
+
+    @Test
+    public void high_court_chamber_2014_thirdSubsectionMatchesExpectedContent() {
+        JsonObject thirdSubsection = getCaseBodySubsection(7, 2);
+        String actualSubsection = thirdSubsection.getArrayByKey("III. ICYEMEZO CY\u2019URUKIKO").toString();
+
+        String expectedSubsection = getExpectedCaseSubsection(7, 4,
+                2, "III. ICYEMEZO CY\u2019URUKIKO").toString();
+        assertEquals(expectedSubsection, actualSubsection);
+    }
+
+    @Test
     public void high_court_chamber_nyanza_2018_hasCaseBackgroundSection() {
         JsonObject caseBody = getCaseBackground(8);
         assertTrue(caseBody.hasKey("I.\tIMITERERE Y\u2019URUBANZA"));
@@ -526,12 +590,6 @@ public class CaseBodyParserTests {
     public void supreme_court_comm_2017_hasCaseBackgroundSection() {
         JsonObject caseBody = getCaseBackground(18);
         assertTrue(caseBody.hasKey("I.\tIMITERERE Y\u2019URUBANZA"));
-    }
-
-    @Test
-    public void high_court_chamber_nyanza_2014_BackgroundSectionHasLengthFourArray() {
-        JsonArray caseBackground = getCaseBackgroundSection(7, "I.\tIMITERERE Y\u2019URUBANZA");
-        assertEquals(4, caseBackground.getSize());
     }
 
     @Test
@@ -595,17 +653,6 @@ public class CaseBodyParserTests {
         JsonArray caseArray = caseObject.getArrayByKey(CASE);
         JsonObject caseBody = caseArray.getJsonByIndex(sectionIndex);
         return caseBody.getArrayByKey(CASE_BODY);
-    }
-
-    @Test
-    public void high_court_chamber_nyanza_2014_CaseBackgroundMatchesExpectedContent() {
-        JsonArray caseBackground = getCaseBackgroundSection(7, "I.\tIMITERERE Y\u2019URUBANZA");
-        String actualContent = caseBackground.toString();
-
-        JsonArray expectedArray = getExpectedCaseSubsection(7, 4, 0, "I.\tIMITERERE Y\u2019URUBANZA");
-        String expectedContent = expectedArray.toString();
-
-        assertEquals(expectedContent, actualContent);
     }
 
     @Test

@@ -53,7 +53,7 @@ public class WordParagraph {
         String text = getParagraphText(paragraphIndex);
         if (!StringFormatting.isCaseSensitive(text)) return false;
 
-        return (ParagraphRun.isFirstRunUnderlined(paragraph) ||
+        return (ParagraphRun.isFirstOrSecondRunUnderlined(paragraph) ||
                 ParagraphRun.isFirstRunBoldAndSecondRunStartsWithColon(paragraph) ||
                 ParagraphRun.isFirstRunCapitalizedAndEndsWithColon(paragraph) ||
                 ParagraphRun.isFirstRunBoldAndEndsWithColon(paragraph) ||
@@ -73,7 +73,7 @@ public class WordParagraph {
 
     private boolean isUpperCaseAndHasNumberedHeading(int paragraphIndex) {
         XWPFParagraph paragraph = getParagraph(paragraphIndex);
-        XWPFRun firstRun = ParagraphRun.getFirstRun(paragraph);
+        XWPFRun firstRun = ParagraphRun.getRun(paragraph, 0);
         UnitNumbering unitNumbering = unitNumberings.get(paragraphIndex);
         return StringFormatting.isTextCapitalized(firstRun.text()) &&
                 (numberedParagraphs.get(paragraphIndex) &&
@@ -141,7 +141,10 @@ public class WordParagraph {
 
     public boolean isBeginningUnderlined(int paragraphIndex) {
         XWPFParagraph paragraph = getParagraph(paragraphIndex);
-        return ParagraphRun.isFirstRunUnderlined(paragraph);
+        return ParagraphRun.isFirstOrSecondRunUnderlined(paragraph);
     }
 
+    public boolean isFirstRunBold(int paragraphIndex) {
+        return ParagraphRun.isFirstRunBold(getParagraph(paragraphIndex));
+    }
 }
