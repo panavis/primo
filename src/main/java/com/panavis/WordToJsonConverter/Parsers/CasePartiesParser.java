@@ -13,6 +13,7 @@ public class CasePartiesParser implements ICaseParties {
     private SectionParties section;
     private JsonArray partiesSubsections;
     private boolean reachedSubjectMatterSection;
+    private boolean lacksHeadingAfterProsecutorSection;
     private int subsectionStart;
 
     public CasePartiesParser(WordParagraph wordParagraph) {
@@ -20,6 +21,7 @@ public class CasePartiesParser implements ICaseParties {
         this.section = new SectionParties(wordParagraph);
         this.partiesSubsections = new JsonArray();
         this.reachedSubjectMatterSection = false;
+        this.lacksHeadingAfterProsecutorSection = false;
     }
 
     public SectionResult parse(int startParagraph) {
@@ -81,12 +83,18 @@ public class CasePartiesParser implements ICaseParties {
     }
 
     private void addPartiesSubsection(int paragraphIndex) {
-        String paragraphText = this.wordParagraph.getParagraphText(paragraphIndex);
+        String paragraphText = wordParagraph.getParagraphText(paragraphIndex);
          if (this.wordParagraph.isSectionHeading(paragraphIndex)) {
              parseAndAddNormalSubsection(paragraphIndex);
          } else if (startsProsecutorSubsection(paragraphIndex)) {
             parseAndAddCriminalCaseProsecutorSubsection(paragraphIndex, paragraphText);
-        } else {
+        } else if (lacksHeadingAfterProsecutorSection) {
+            JsonArray sectionBody = new JsonArray();
+            sectionBody.putValue(paragraphText);
+            addSubsectionContent(USHINJWA.toLowerCase(), sectionBody);
+            updateSubsectionStart(paragraphIndex + 1);
+         }
+         else {
              updateSubsectionStart(paragraphIndex + 1);
          }
     }
@@ -106,11 +114,33 @@ public class CasePartiesParser implements ICaseParties {
     }
 
     private void parseAndAddCriminalCaseProsecutorSubsection(int startParagraph, String inlineParagraph) {
-        section.setStartingParagraph(startParagraph)
-                .setInlineParagraph(inlineParagraph)
-                .parse();
-        addSubsectionContent(UBUSHINJACYAHA, section.getBody());
-        updateSubsectionStart(section.getLastParagraph());
+        String nextParagraphText = getNextParagraphText(startParagraph);
+        if (nextParagraphText.toLowerCase().equals("na")) {
+            JsonArray sectionBody = new JsonArray();
+            sectionBody.putValue(wordParagraph.getParagraphText(startParagraph));
+            addSubsectionContent(UBUSHINJACYAHA, sectionBody);
+            updateSubsectionStart(startParagraph + 2);
+            updateAvailabilityOfHeadingAfterProsecutorSection(subsectionStart);
+        } else {
+            section.setStartingParagraph(startParagraph)
+                    .setInlineParagraph(inlineParagraph)
+                    .parse();
+            addSubsectionContent(UBUSHINJACYAHA, section.getBody());
+            updateSubsectionStart(section.getLastParagraph());
+        }
+    }
+
+    private String getNextParagraphText(int paragraphIndex) {
+        String text = "";
+        if (wordParagraph.paragraphExists(paragraphIndex + 1))
+            text = wordParagraph.getParagraphText(paragraphIndex + 1);
+        return text;
+    }
+
+    private void updateAvailabilityOfHeadingAfterProsecutorSection(int startParagraph) {
+
+        lacksHeadingAfterProsecutorSection = wordParagraph.paragraphExists(startParagraph) &&
+                                            !wordParagraph.isSectionHeading(startParagraph);
     }
 
     private void updateSubsectionStart(int paragraphIndex) {
