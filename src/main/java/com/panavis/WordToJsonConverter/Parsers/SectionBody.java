@@ -1,6 +1,6 @@
 package com.panavis.WordToJsonConverter.Parsers;
 
-import com.panavis.WordToJsonConverter.Style.UnitNumbering;
+import com.panavis.WordToJsonConverter.Style.Numbering.UnitNumbering;
 import com.panavis.WordToJsonConverter.Style.WordParagraph;
 import com.panavis.WordToJsonConverter.Utils.StringFormatting;
 import static com.panavis.WordToJsonConverter.Utils.StringFormatting.*;

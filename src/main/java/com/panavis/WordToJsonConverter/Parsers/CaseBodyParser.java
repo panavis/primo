@@ -2,6 +2,7 @@ package com.panavis.WordToJsonConverter.Parsers;
 
 import static com.panavis.WordToJsonConverter.Constants.Keywords.*;
 import com.panavis.WordToJsonConverter.ResultTypes.SectionResult;
+import com.panavis.WordToJsonConverter.Style.Numbering.UnitNumbering;
 import com.panavis.WordToJsonConverter.Utils.StringFormatting;
 import com.panavis.WordToJsonConverter.Style.*;
 import com.panavis.WordToJsonConverter.Wrappers.*;

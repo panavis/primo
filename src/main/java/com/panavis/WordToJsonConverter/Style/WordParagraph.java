@@ -2,6 +2,7 @@ package com.panavis.WordToJsonConverter.Style;
 
 import com.panavis.WordToJsonConverter.Constants.Keywords;
 import com.panavis.WordToJsonConverter.ConverterInitializer;
+import com.panavis.WordToJsonConverter.Style.Numbering.UnitNumbering;
 import com.panavis.WordToJsonConverter.Utils.StringFormatting;
 import org.apache.poi.xwpf.usermodel.*;
 import java.util.*;

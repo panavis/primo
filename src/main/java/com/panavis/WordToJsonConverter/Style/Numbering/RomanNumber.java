@@ -2,7 +2,7 @@ package com.panavis.WordToJsonConverter.Style.Numbering;
 
 import java.util.TreeMap;
 
-class RomanNumber {
+public class RomanNumber {
 
     private final static TreeMap<Integer, String> map = new TreeMap<Integer, String>();
 
@@ -24,7 +24,7 @@ class RomanNumber {
 
     }
 
-    static String toRoman(int number) {
+    public static String toRoman(int number) {
         int l =  map.floorKey(number);
         if ( number == l ) {
             return map.get(number);
