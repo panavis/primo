@@ -89,10 +89,7 @@ public class CasePartiesParser implements ICaseParties {
          } else if (startsProsecutorSubsection(paragraphIndex)) {
             parseAndAddCriminalCaseProsecutorSubsection(paragraphIndex, paragraphText);
         } else if (lacksHeadingAfterProsecutorSection) {
-            JsonArray sectionBody = new JsonArray();
-            sectionBody.putValue(paragraphText);
-            addSubsectionContent(USHINJWA.toLowerCase(), sectionBody);
-            updateSubsectionStart(paragraphIndex + 1);
+             parseAndAddPostProsecutorSubsectionWithoutHeading(paragraphIndex);
          }
          else {
              updateSubsectionStart(paragraphIndex + 1);
@@ -100,11 +97,11 @@ public class CasePartiesParser implements ICaseParties {
     }
 
     private void parseAndAddNormalSubsection(int startParagraph) {
-        String subsectionName = wordParagraph.getHeadingFromParagraph(startParagraph);
         String inlineParagraph = wordParagraph.getInlineHeadingFirstParagraph(startParagraph);
         section.setStartingParagraph(startParagraph)
                 .setInlineParagraph(inlineParagraph)
                 .parse();
+        String subsectionName = wordParagraph.getHeadingFromParagraph(startParagraph);
         addSubsectionContent(subsectionName, section.getBody());
         updateSubsectionStart(section.getLastParagraph());
     }
@@ -138,9 +135,16 @@ public class CasePartiesParser implements ICaseParties {
     }
 
     private void updateAvailabilityOfHeadingAfterProsecutorSection(int startParagraph) {
-
         lacksHeadingAfterProsecutorSection = wordParagraph.paragraphExists(startParagraph) &&
                                             !wordParagraph.isSectionHeading(startParagraph);
+    }
+
+    private void parseAndAddPostProsecutorSubsectionWithoutHeading(int paragraphIndex) {
+        int logicalHeadingIndex = paragraphIndex - 1;
+        section.setStartingParagraph(logicalHeadingIndex)
+                .parse();
+        addSubsectionContent(USHINJWA.toLowerCase(), section.getBody());
+        updateSubsectionStart(section.getLastParagraph());
     }
 
     private void updateSubsectionStart(int paragraphIndex) {

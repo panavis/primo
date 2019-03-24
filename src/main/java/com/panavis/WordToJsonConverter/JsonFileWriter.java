@@ -3,13 +3,13 @@ package com.panavis.WordToJsonConverter;
 import java.io.FileWriter;
 import java.io.IOException;
 
-public class JsonFileWriter {
+class JsonFileWriter {
 
-    public static void createFile(String path, String jsonString) throws IOException {
+    static void createFile(String path, String jsonString) throws IOException {
 
         try (FileWriter file = new FileWriter(path)) {
             file.write(jsonString);
-            System.out.println("It cannot be this easy");
+            System.out.println("Created file: "+ path);
         }
     }
 }

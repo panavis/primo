@@ -22,13 +22,12 @@ abstract class Section {
 
     abstract boolean isStillInOneSubsection(int paragraphIndex);
 
-    Section parse() {
+    void parse() {
         if (inlineParagraphHasText())
-            inlineParagraph = inlineParagraph + wordParagraph.getBlankLinesAfterParagraph(startParagraph);
+            inlineParagraph += wordParagraph.getBlankLinesAfterParagraph(startParagraph);
         TextParagraphIndex remainingAndIndex = getRemainingSubsectionBody(startParagraph);
         subsectionBody = inlineParagraph.concat(remainingAndIndex.getSubsectionParagraphs()).trim();
         lastParagraph = remainingAndIndex.getParagraphIndex();
-        return this;
     }
 
     private boolean inlineParagraphHasText() {
