@@ -1,7 +1,6 @@
 package com.panavis.WordToJsonConverter.Style;
 
 import com.panavis.WordToJsonConverter.Constants.Keywords;
-import com.panavis.WordToJsonConverter.ConverterInitializer;
 import com.panavis.WordToJsonConverter.Style.Numbering.UnitNumbering;
 import com.panavis.WordToJsonConverter.Utils.StringFormatting;
 import org.apache.poi.xwpf.usermodel.*;
@@ -17,13 +16,11 @@ public class WordParagraph {
     private final Map<Integer, UnitNumbering> unitNumberings;
 
     public WordParagraph(XWPFDocument wordDocument) {
-        this.paragraphs = ConverterInitializer.getNonEmptyParagraphs(wordDocument);
-        this.postParagraphBlanks = ConverterInitializer.getPostParagraphBlanks(wordDocument);
-        this.numberedParagraphs = ConverterInitializer.getNumberedParagraphs(this.paragraphs);
-        XWPFNumbering numbering = wordDocument.getNumbering();
-        this.unitNumberings = ConverterInitializer.getParagraphsNumbering(numbering, this.paragraphs);
+        this.paragraphs = WordPreprocessor.getNonEmptyParagraphs(wordDocument);
+        this.postParagraphBlanks = WordPreprocessor.getPostParagraphBlanks(wordDocument);
+        this.numberedParagraphs = WordPreprocessor.getNumberedParagraphs(this.paragraphs);
+        this.unitNumberings = WordPreprocessor.getUnitNumberings(wordDocument.getNumbering(), this.paragraphs);
     }
-
 
     private XWPFParagraph getParagraph(int paragraphIndex) {
         return paragraphs.get(paragraphIndex);

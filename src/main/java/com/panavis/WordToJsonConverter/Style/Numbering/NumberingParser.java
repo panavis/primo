@@ -1,7 +1,6 @@
 package com.panavis.WordToJsonConverter.Style.Numbering;
 
 import static com.panavis.WordToJsonConverter.Constants.Keywords.*;
-
 import com.panavis.WordToJsonConverter.Style.Numbering.Formats.DefaultFormat;
 import org.apache.poi.xwpf.usermodel.*;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.*;
@@ -43,7 +42,7 @@ public class NumberingParser {
         return unitNumberings;
     }
 
-    private static boolean paragraphHasNumbering(XWPFParagraph paragraph, String paragraphStyle) {
+    public static boolean paragraphHasNumbering(XWPFParagraph paragraph, String paragraphStyle) {
         return paragraphStyle != null &&
                 (paragraphStyle.equals(LIST_PARAGRAPH) ||
                         (paragraphStyle.startsWith(HEADING) && paragraph.getNumIlvl() != null));
