@@ -1,9 +1,9 @@
 package com.panavis.WordToJsonConverter.Parsers;
 
-import com.panavis.WordToJsonConverter.Constants.Format;
 import com.panavis.WordToJsonConverter.Style.UnitNumbering;
 import com.panavis.WordToJsonConverter.Style.WordParagraph;
 import com.panavis.WordToJsonConverter.Utils.StringFormatting;
+import static com.panavis.WordToJsonConverter.Utils.StringFormatting.*;
 
 import java.util.regex.Pattern;
 
@@ -22,9 +22,9 @@ class SectionBody extends Section {
         if (isCaseClosing(paragraphIndex)) return false;
         String text = wordParagraph.getParagraphText(paragraphIndex);
         UnitNumbering paragraphNumbering = wordParagraph.getUnitNumbering(paragraphIndex);
-        if (!currentNumbering.current.equals(Format.EMPTY_STRING) &&
+        if (!currentNumbering.realNext.equals(EMPTY_STRING) &&
                 paragraphHasNumbering(paragraphNumbering.current)) {
-            return !matchesNextNumbering(text, currentNumbering.next);
+            return !matchesNextNumbering(text, currentNumbering.realNext);
         }
         return !hasSameBodyHeadingFormat(paragraphIndex, text);
     }
@@ -48,8 +48,8 @@ class SectionBody extends Section {
 
     private boolean hasNonDynamicNumbering(int paragraphIndex, String text, boolean hasSameStyle) {
         boolean hasNextHeadingStart = false;
-        if (!currentNumbering.next.equals(Format.EMPTY_STRING))
-            hasNextHeadingStart = text.startsWith(currentNumbering.next);
+        if (!currentNumbering.logicalNext.equals(EMPTY_STRING))
+            hasNextHeadingStart = text.startsWith(currentNumbering.logicalNext);
         String firstWord = text.split(" ")[0];
         boolean hasNextHeadingInBold = firstWord.endsWith(".") &&
                 hasSameStyle &&

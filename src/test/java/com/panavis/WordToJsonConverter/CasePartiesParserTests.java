@@ -20,7 +20,6 @@ public class CasePartiesParserTests {
     @Test
     public void troubleshootOneCaseSeparately() {
         SectionResult result = CasePartiesTestsHelpers.parseOneCaseAndReturnPartiesSection(6);
-        System.out.println(result.getSectionContent());
     }
 
     @Test

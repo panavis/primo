@@ -1,6 +1,5 @@
 package com.panavis.WordToJsonConverter.Utils;
 
-import com.panavis.WordToJsonConverter.Constants.Format;
 import com.panavis.WordToJsonConverter.Wrappers.*;
 
 public class JsonCreator {
@@ -19,7 +18,7 @@ public class JsonCreator {
     public static JsonArray getJsonArrayFromStringArray(String[] content) {
         JsonArray jsonArray = new JsonArray();
         for (String subContent : content)
-            if (!subContent.equals(Format.EMPTY_STRING))
+            if (!subContent.equals(StringFormatting.EMPTY_STRING))
                 jsonArray.putValue(subContent.trim());
         return jsonArray;
     }

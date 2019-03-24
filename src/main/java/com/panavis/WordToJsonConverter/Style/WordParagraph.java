@@ -1,6 +1,5 @@
 package com.panavis.WordToJsonConverter.Style;
 
-import com.panavis.WordToJsonConverter.Constants.Format;
 import com.panavis.WordToJsonConverter.Constants.Keywords;
 import com.panavis.WordToJsonConverter.ConverterInitializer;
 import com.panavis.WordToJsonConverter.Utils.StringFormatting;
@@ -82,7 +81,7 @@ public class WordParagraph {
 
     private boolean hasColonAndPreColonPartHasStyle(int paragraphIndex) {
         String paragraphText = getParagraphText(paragraphIndex);
-        String[] textParts = paragraphText.split(Format.COLON);
+        String[] textParts = paragraphText.split(StringFormatting.COLON);
         int numberOfParts = textParts.length;
         String firstPart = textParts[0];
 
@@ -135,7 +134,7 @@ public class WordParagraph {
         String sectionHeading = currentParagraph;
 
         if (hasColonAndPreColonPartHasStyle(paragraphIndex))
-            sectionHeading = currentParagraph.split(Format.COLON)[0];
+            sectionHeading = currentParagraph.split(StringFormatting.COLON)[0];
         return trimColons(sectionHeading);
     }
 

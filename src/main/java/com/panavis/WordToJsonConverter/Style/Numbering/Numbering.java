@@ -1,7 +1,10 @@
-package com.panavis.WordToJsonConverter.Style;
+package com.panavis.WordToJsonConverter.Style.Numbering;
 
-import com.panavis.WordToJsonConverter.Constants.Format;
 import static com.panavis.WordToJsonConverter.Constants.Keywords.*;
+
+import static com.panavis.WordToJsonConverter.Utils.StringFormatting.*;
+
+import com.panavis.WordToJsonConverter.Style.UnitNumbering;
 import org.apache.poi.xwpf.usermodel.*;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.*;
 
@@ -17,10 +20,9 @@ public class Numbering {
     private Map<String, String> numberingFormatDisplays;
     private Map<String, Integer> numberingCountStart;
     private Map<Integer, UnitNumbering> unitNumberings;
-    private List<XWPFParagraph> paragraphs;
+    private Map<String, Integer> previousUnitNumbering;
 
-    private Numbering(XWPFNumbering numbering, List<XWPFParagraph> paragraphs) {
-        this.paragraphs = paragraphs;
+    private Numbering(XWPFNumbering numbering) {
         this.numbering = numbering;
         this.uniqueNumIds = new ArrayList<>();
         this.numberingTracker = new HashMap<>();
@@ -28,10 +30,11 @@ public class Numbering {
         this.numberingFormatDisplays = new HashMap<>();
         this.numberingCountStart = new HashMap<>();
         this.unitNumberings = new HashMap<>();
+        this.previousUnitNumbering = new HashMap<>();
     }
 
     public static Map<Integer, UnitNumbering> getParagraphsNumbering(XWPFNumbering numbering, List<XWPFParagraph> paragraphs) {
-        Numbering docNumbering = new Numbering(numbering, paragraphs);
+        Numbering docNumbering = new Numbering(numbering);
 
         for (int i = 0; i < paragraphs.size(); i++) {
             XWPFParagraph paragraph = paragraphs.get(i);
@@ -78,6 +81,7 @@ public class Numbering {
         UnitNumbering unitNumbering = this.getNumberingPrefix(uniqueId, style);
         unitNumbering.current  = unitNumbering.current + "\t";
         this.unitNumberings.put(paragraphIndex, unitNumbering);
+        this.previousUnitNumbering.put(uniqueId, paragraphIndex);
     }
 
     private UnitNumbering getNumberingPrefix(String uniqueId, String style) {
@@ -85,15 +89,14 @@ public class Numbering {
         String formatDisplay = this.numberingFormatDisplays.get(uniqueId);
         int currentNumber = this.numberingTracker.get(uniqueId) +
                 this.numberingCountStart.get(uniqueId) - 1;
-
-        UnitNumbering unitNumbering = new UnitNumbering("", "", style);
         String digit = String.valueOf(currentNumber);
         String nextDigit = String.valueOf(currentNumber + 1);
+        UnitNumbering unitNumbering = new UnitNumbering(EMPTY_STRING, EMPTY_STRING, style);
         switch (formatName) {
             case "decimal": {
                 String current = formatDisplay.replaceAll("%\\d+", digit);
-                String next = formatDisplay.replaceAll("%\\d+", nextDigit);
-                unitNumbering = new UnitNumbering(current, next, style);
+                String logicalNext = formatDisplay.replaceAll("%\\d+", nextDigit);
+                unitNumbering = new UnitNumbering(current, logicalNext, style);
                 break;
             }
             case "lowerLetter": {
@@ -133,6 +136,11 @@ public class Numbering {
                 break;
             }
         }
+        // TODO move out of method. Make `currentNumber` instance variable
+        if (this.previousUnitNumbering.containsKey(uniqueId)) {
+            int previousParagraph = this.previousUnitNumbering.get(uniqueId);
+            this.unitNumberings.get(previousParagraph).realNext = unitNumbering.current;
+        }
         return unitNumbering;
     }
 
@@ -149,8 +157,8 @@ public class Numbering {
     }
 
     private void addDefaultNumberingPrefix(int paragraphIndex) {
-        this.unitNumberings.put(paragraphIndex, new UnitNumbering(Format.EMPTY_STRING,
-                Format.EMPTY_STRING, "Text"));
+        this.unitNumberings.put(paragraphIndex, new UnitNumbering(EMPTY_STRING, EMPTY_STRING,
+                "Text"));
     }
 
     private void saveNumFormatDisplay(String uniqueid, CTLvl abstractNumLvl) {
@@ -183,36 +191,4 @@ public class Numbering {
             this.numberingTracker.put(uniqueId, 1);
         }
     }
-}
-
-class RomanNumber {
-
-    private final static TreeMap<Integer, String> map = new TreeMap<Integer, String>();
-
-    static {
-
-        map.put(1000, "M");
-        map.put(900, "CM");
-        map.put(500, "D");
-        map.put(400, "CD");
-        map.put(100, "C");
-        map.put(90, "XC");
-        map.put(50, "L");
-        map.put(40, "XL");
-        map.put(10, "X");
-        map.put(9, "IX");
-        map.put(5, "V");
-        map.put(4, "IV");
-        map.put(1, "I");
-
-    }
-
-    static String toRoman(int number) {
-        int l =  map.floorKey(number);
-        if ( number == l ) {
-            return map.get(number);
-        }
-        return map.get(l) + toRoman(number-l);
-    }
-
 }

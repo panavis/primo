@@ -1,6 +1,5 @@
 package com.panavis.WordToJsonConverter.Style;
 
-import com.panavis.WordToJsonConverter.Constants.Format;
 import com.panavis.WordToJsonConverter.Utils.StringFormatting;
 import org.apache.poi.xwpf.usermodel.*;
 
@@ -15,7 +14,7 @@ class ParagraphRun {
         if (numberOfRuns > 1)
             secondRunText = runs.get(1).text().trim();
         XWPFRun firstRun = runs.get(0);
-        return firstRun.isBold() && secondRunText.startsWith(Format.COLON);
+        return firstRun.isBold() && secondRunText.startsWith(StringFormatting.COLON);
     }
 
     static boolean isFirstRunHighlyIndentedAndCapitalized(XWPFParagraph paragraph) {
@@ -36,12 +35,12 @@ class ParagraphRun {
     static boolean isFirstRunCapitalizedAndEndsWithColon(XWPFParagraph paragraph) {
         XWPFRun firstRun = getRun(paragraph, 0);
         return StringFormatting.isTextCapitalized(firstRun.text()) &&
-                paragraph.getText().endsWith(Format.COLON);
+                paragraph.getText().endsWith(StringFormatting.COLON);
     }
 
     static boolean isFirstRunBoldAndEndsWithColon(XWPFParagraph paragraph) {
         return ParagraphRun.isFirstRunBold(paragraph) &&
-                paragraph.getText().endsWith(Format.COLON);
+                paragraph.getText().endsWith(StringFormatting.COLON);
     }
 
     static boolean isFirstOrSecondRunUnderlined(XWPFParagraph paragraph) {

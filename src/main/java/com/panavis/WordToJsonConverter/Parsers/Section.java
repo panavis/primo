@@ -1,6 +1,5 @@
 package com.panavis.WordToJsonConverter.Parsers;
 
-import com.panavis.WordToJsonConverter.Constants.Format;
 import static com.panavis.WordToJsonConverter.Constants.Keywords.*;
 import com.panavis.WordToJsonConverter.ResultTypes.TextParagraphIndex;
 import com.panavis.WordToJsonConverter.Style.WordParagraph;
@@ -72,7 +71,7 @@ abstract class Section {
     }
 
     JsonArray getBody() {
-        String[] contentArray = subsectionBody.split(Format.DOUBLE_BLANK);
+        String[] contentArray = subsectionBody.split(StringFormatting.DOUBLE_BLANK);
         return JsonCreator.getJsonArrayFromStringArray(contentArray);
     }
 
