@@ -485,4 +485,22 @@ public class CaseSubjectMatterParserTests {
                 IKIBURANWA, 1);
         assertEquals(expectedSubsectionContent, actualSubsectionContent);
     }
+
+    @Test
+    public void Case_019_SubjectMatterMatchesExpectedContentSubsectionOne() {
+        String actualSubsectionContent = CaseSubjectMatterTestsHelpers.getActualSubsectionContent(19,
+                ICYAHA_AREGWA, 0);
+        String expectedSubsectionContent = CaseSubjectMatterTestsHelpers.getExpectedSubsectionContent(19                   ,
+                ICYAHA_AREGWA, 0);
+        assertEquals(expectedSubsectionContent, actualSubsectionContent);
+    }
+
+    @Test
+    public void case_019_SubjectMatterMatchesExpectedContentSubsectionTwo() {
+        String actualSubsectionContent = CaseSubjectMatterTestsHelpers.getActualSubsectionContent(19,
+                IKIREGERWA, 1);
+        String expectedSubsectionContent = CaseSubjectMatterTestsHelpers.getExpectedSubsectionContent(19,
+                IKIREGERWA, 1);
+        assertEquals(expectedSubsectionContent, actualSubsectionContent);
+    }
 }
