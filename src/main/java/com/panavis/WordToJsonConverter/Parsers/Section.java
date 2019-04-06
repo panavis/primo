@@ -48,7 +48,7 @@ abstract class Section {
 
     private void addParagraphToSubsection(StringBuilder remainingBody, int paragraphIndex) {
         String paragraphText = wordParagraph.getParagraphText(paragraphIndex);
-        if (StringFormatting.isCaseSensitive(paragraphText))
+        if (StringFormatting.isCaseSensitive(paragraphText) || StringFormatting.includesNumbers(paragraphText))
             remainingBody.append(paragraphText)
                     .append(wordParagraph.getBlankLinesAfterParagraph(paragraphIndex));
     }

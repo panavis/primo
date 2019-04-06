@@ -52,8 +52,7 @@ class SectionBody extends Section {
             hasNextHeadingStart = text.startsWith(currentNumbering.logicalNext);
         String firstWord = text.split(" ")[0];
         boolean hasNextHeadingInBold = firstWord.endsWith(".") &&
-                hasSameStyle &&
-                wordParagraph.isFirstRunBold(paragraphIndex);
+                hasSameStyle && wordParagraph.isFirstRunBold(paragraphIndex);
         return hasNextHeadingStart || hasNextHeadingInBold;
     }
 
