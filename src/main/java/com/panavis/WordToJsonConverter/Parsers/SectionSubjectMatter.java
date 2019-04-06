@@ -13,7 +13,7 @@ public class SectionSubjectMatter extends Section {
     public boolean isStillInOneSubsection(int paragraphIndex) {
         if (hasAnotherSubsection(paragraphIndex)) return false;
         if (wordParagraph.isSectionHeading(paragraphIndex)) return false;
-        return !startsCaseBackgroundSection(paragraphIndex);
+        return !startsCaseBodySection(paragraphIndex);
     }
 
     boolean hasAnotherSubsection(int paragraphIndex) {

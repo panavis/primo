@@ -53,7 +53,7 @@ abstract class Section {
                     .append(wordParagraph.getBlankLinesAfterParagraph(paragraphIndex));
     }
 
-    boolean startsCaseBackgroundSection(int paragraphIndex) {
+    boolean startsCaseBodySection(int paragraphIndex) {
         String text = wordParagraph.getParagraphText(paragraphIndex).toLowerCase();
         return text.contains(IMITERERE) && text.contains("y") &&
                 text.contains(URUBANZA);

@@ -20,7 +20,7 @@ public class CaseBodyParser implements ICaseBodyParser {
     }
 
     public SectionResult parse(int startParagraph) {
-        if (section.startsCaseBackgroundSection(startParagraph)) {
+        if (section.startsCaseBodySection(startParagraph)) {
             int nextParagraph = startParagraph;
             while(wordParagraph.paragraphExists(nextParagraph) &&
                     !section.isCaseClosing(nextParagraph))

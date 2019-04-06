@@ -43,8 +43,8 @@ public class CaseSubjectMatterParser implements ICaseSubjectMatter {
         return wordParagraph.getHeadingFromParagraph(startParagraph);
     }
 
-    private void updateSubsectionStartAndNumber(SectionSubjectMatter subsection, int paragraphIndex) {
-        if (subsection.hasAnotherSubsection(paragraphIndex)) {
+    private void updateSubsectionStartAndNumber(SectionSubjectMatter section, int paragraphIndex) {
+        if (section.hasAnotherSubsection(paragraphIndex)) {
             numberOfSubsections++;
             subsectionStart = paragraphIndex;
         }
