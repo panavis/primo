@@ -11,7 +11,7 @@ class CaseSubjectMatterTestsHelpers {
     private static Map<Integer, JsonArray> allActualSubjectMatterJsons = new HashMap<>();
     private static Map<Integer, JsonArray> allExpectedSubjectMatterJsons = new HashMap<>();
 
-    static void setUpAllActualSubjectMatterJsons() {
+    static void setUpAllActualAndExpectedJsons() {
         setUpActualJsons();
         setUpExpectedJsons();
     }

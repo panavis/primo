@@ -12,7 +12,7 @@ public class CaseSubjectMatterParserTests {
     @BeforeClass
     public static void setUp() {
         TestsSetup.setUp();
-        CaseSubjectMatterTestsHelpers.setUpAllActualSubjectMatterJsons();
+        CaseSubjectMatterTestsHelpers.setUpAllActualAndExpectedJsons();
     }
 
     @Ignore("Ignore: SubjectMatter section troubleshooter.")
