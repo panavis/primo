@@ -108,4 +108,14 @@ public class CaseTitleParserTests {
     public void case_019_caseHasExpectedTitle() {
         CaseTitleTestsHelpers.assertActualTitleMatchesExactlyExpectedTitle(19);
     }
+
+    @Test
+    public void case_20_caseHasExpectedTitle() {
+        CaseTitleTestsHelpers.assertActualTitleMatchesExactlyExpectedTitle(20);
+    }
+
+    @Test
+    public void case_21_caseHasExpectedTitle() {
+        CaseTitleTestsHelpers.assertActualTitleMatchesExactlyExpectedTitle(21);
+    }
 }

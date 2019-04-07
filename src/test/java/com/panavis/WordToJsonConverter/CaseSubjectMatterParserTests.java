@@ -119,6 +119,25 @@ public class CaseSubjectMatterParserTests {
     }
 
     @Test
+    public void Case_019_SubjectMatterHasExpectedLength() {
+        JsonArray subjectMatterArray = CaseSubjectMatterTestsHelpers.getActualSubjectMatterSectionArray(19);
+        assertEquals(2, subjectMatterArray.getSize());
+    }
+
+    @Test
+    public void Case_020_SubjectMatterHasExpectedLength() {
+        JsonArray subjectMatterArray = CaseSubjectMatterTestsHelpers.getActualSubjectMatterSectionArray(20);
+        assertEquals(1, subjectMatterArray.getSize());
+    }
+
+    @Test
+    public void Case_021_SubjectMatterHasExpectedLength() {
+        JsonArray subjectMatterArray = CaseSubjectMatterTestsHelpers.getActualSubjectMatterSectionArray(21);
+        assertEquals(2, subjectMatterArray.getSize());
+    }
+
+
+    @Test
     public void case_000_has_Ikiregerwa_subheading() {
         JsonObject subsection = CaseSubjectMatterTestsHelpers.getActualSubjectMatterSubsection(0, 0);
         assertTrue(subsection.hasKey(IKIREGERWA));
@@ -218,6 +237,36 @@ public class CaseSubjectMatterParserTests {
     public void case_018_hasSecond_Ikiburanwa_subheading() {
         JsonObject subsection = CaseSubjectMatterTestsHelpers.getActualSubjectMatterSubsection(18, 1);
         assertTrue(subsection.hasKey(IKIBURANWA));
+    }
+
+    @Test
+    public void case_019_hasSecond_Icyaha_Aregwa_subheading() {
+        JsonObject subsection = CaseSubjectMatterTestsHelpers.getActualSubjectMatterSubsection(19, 0);
+        assertTrue(subsection.hasKey(ICYAHA_AREGWA));
+    }
+
+    @Test
+    public void case_019_hasSecond_Ikiregerwa_subheading() {
+        JsonObject subsection = CaseSubjectMatterTestsHelpers.getActualSubjectMatterSubsection(19, 1);
+        assertTrue(subsection.hasKey(IKIREGERWA));
+    }
+
+    @Test
+    public void case_020_hasSecond_Icyaha_Baregwa_subheading() {
+        JsonObject subsection = CaseSubjectMatterTestsHelpers.getActualSubjectMatterSubsection(20, 0);
+        assertTrue(subsection.hasKey(ICYAHA_BAREGWA));
+    }
+
+    @Test
+    public void case_021_hasSecond_Icyaha_Aregwa_subheading() {
+        JsonObject subsection = CaseSubjectMatterTestsHelpers.getActualSubjectMatterSubsection(21, 0);
+        assertTrue(subsection.hasKey(ICYAHA_AREGWA));
+    }
+
+    @Test
+    public void case_021_hasSecond_Ikiregerwa_subheading() {
+        JsonObject subsection = CaseSubjectMatterTestsHelpers.getActualSubjectMatterSubsection(21, 1);
+        assertTrue(subsection.hasKey(IKIREGERWA));
     }
 
     @Test
@@ -329,6 +378,41 @@ public class CaseSubjectMatterParserTests {
     public void Case_018_SubsectionHasANestedArrayWithExpectedLength() {
         JsonObject subsection = CaseSubjectMatterTestsHelpers.getActualSubjectMatterSubsection(18, 0);
         JsonArray actualSubsectionArray = subsection.getArrayByKey(IKIBURANWA);
+        assertEquals(1, actualSubsectionArray.getSize());
+    }
+
+    @Test
+    public void Case_019_SubsectionOneHasANestedArrayWithExpectedLength() {
+        JsonObject subsection = CaseSubjectMatterTestsHelpers.getActualSubjectMatterSubsection(19, 0);
+        JsonArray actualSubsectionArray = subsection.getArrayByKey(ICYAHA_AREGWA);
+        assertEquals(1, actualSubsectionArray.getSize());
+    }
+
+    @Test
+    public void Case_019_SubsectionTwoHasANestedArrayWithExpectedLength() {
+        JsonObject subsection = CaseSubjectMatterTestsHelpers.getActualSubjectMatterSubsection(19, 1);
+        JsonArray actualSubsectionArray = subsection.getArrayByKey(IKIREGERWA);
+        assertEquals(1, actualSubsectionArray.getSize());
+    }
+
+    @Test
+    public void Case_020_SubsectionHasANestedArrayWithExpectedLength() {
+        JsonObject subsection = CaseSubjectMatterTestsHelpers.getActualSubjectMatterSubsection(20, 0);
+        JsonArray actualSubsectionArray = subsection.getArrayByKey(ICYAHA_BAREGWA);
+        assertEquals(1, actualSubsectionArray.getSize());
+    }
+
+    @Test
+    public void Case_021_SubsectionOneHasANestedArrayWithExpectedLength() {
+        JsonObject subsection = CaseSubjectMatterTestsHelpers.getActualSubjectMatterSubsection(21, 0);
+        JsonArray actualSubsectionArray = subsection.getArrayByKey(ICYAHA_AREGWA);
+        assertEquals(1, actualSubsectionArray.getSize());
+    }
+
+    @Test
+    public void Case_021_SubsectionTwoHasANestedArrayWithExpectedLength() {
+        JsonObject subsection = CaseSubjectMatterTestsHelpers.getActualSubjectMatterSubsection(21, 1);
+        JsonArray actualSubsectionArray = subsection.getArrayByKey(IKIREGERWA);
         assertEquals(1, actualSubsectionArray.getSize());
     }
 
@@ -500,6 +584,33 @@ public class CaseSubjectMatterParserTests {
         String actualSubsectionContent = CaseSubjectMatterTestsHelpers.getActualSubsectionContent(19,
                 IKIREGERWA, 1);
         String expectedSubsectionContent = CaseSubjectMatterTestsHelpers.getExpectedSubsectionContent(19,
+                IKIREGERWA, 1);
+        assertEquals(expectedSubsectionContent, actualSubsectionContent);
+    }
+
+    @Test
+    public void Case_020_SubjectMatterMatchesExpectedContentSubsectionOne() {
+        String actualSubsectionContent = CaseSubjectMatterTestsHelpers.getActualSubsectionContent(20,
+                ICYAHA_BAREGWA, 0);
+        String expectedSubsectionContent = CaseSubjectMatterTestsHelpers.getExpectedSubsectionContent(20                   ,
+                ICYAHA_BAREGWA, 0);
+        assertEquals(expectedSubsectionContent, actualSubsectionContent);
+    }
+
+    @Test
+    public void Case_021_SubjectMatterMatchesExpectedContentSubsectionOne() {
+        String actualSubsectionContent = CaseSubjectMatterTestsHelpers.getActualSubsectionContent(21,
+                ICYAHA_AREGWA, 0);
+        String expectedSubsectionContent = CaseSubjectMatterTestsHelpers.getExpectedSubsectionContent(21                   ,
+                ICYAHA_AREGWA, 0);
+        assertEquals(expectedSubsectionContent, actualSubsectionContent);
+    }
+
+    @Test
+    public void case_021_SubjectMatterMatchesExpectedContentSubsectionTwo() {
+        String actualSubsectionContent = CaseSubjectMatterTestsHelpers.getActualSubsectionContent(21,
+                IKIREGERWA, 1);
+        String expectedSubsectionContent = CaseSubjectMatterTestsHelpers.getExpectedSubsectionContent(21,
                 IKIREGERWA, 1);
         assertEquals(expectedSubsectionContent, actualSubsectionContent);
     }
