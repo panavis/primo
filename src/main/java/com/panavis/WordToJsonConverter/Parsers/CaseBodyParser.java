@@ -7,7 +7,7 @@ import com.panavis.WordToJsonConverter.Utils.StringFormatting;
 import com.panavis.WordToJsonConverter.Style.*;
 import com.panavis.WordToJsonConverter.Wrappers.*;
 
-public class CaseBodyParser implements ICaseBodyParser {
+public class CaseBodyParser implements ICaseSectionParser {
 
     private WordParagraph wordParagraph;
     private JsonArray bodySubsections;
@@ -20,8 +20,8 @@ public class CaseBodyParser implements ICaseBodyParser {
     }
 
     public SectionResult parse(int startParagraph) {
+        int nextParagraph = startParagraph;
         if (section.startsCaseBodySection(startParagraph)) {
-            int nextParagraph = startParagraph;
             while(wordParagraph.paragraphExists(nextParagraph) &&
                     !section.isCaseClosing(nextParagraph))
             {
@@ -34,7 +34,7 @@ public class CaseBodyParser implements ICaseBodyParser {
             }
         }
         JsonObject caseBody = getCaseBody();
-        return new SectionResult(caseBody, 0);
+        return new SectionResult(caseBody, nextParagraph);
     }
 
     private void addCaseBodySubsection(int startParagraph, Section section) {

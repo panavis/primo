@@ -7,7 +7,7 @@ import com.panavis.WordToJsonConverter.ResultTypes.SectionResult;
 import com.panavis.WordToJsonConverter.Style.WordParagraph;
 import com.panavis.WordToJsonConverter.Wrappers.JsonObject;
 
-public class CaseTitleParser implements ICaseTitle {
+public class CaseTitleParser implements ICaseSectionParser {
 
     private WordParagraph wordParagraph;
 
@@ -15,10 +15,10 @@ public class CaseTitleParser implements ICaseTitle {
         this.wordParagraph = wordParagraph;
     }
 
-    public SectionResult parse() {
+    public SectionResult parse(int startParagraph) {
         String caseTitle = "";
         int paragraphIndex;
-        for (paragraphIndex = 0;
+        for (paragraphIndex = startParagraph;
              paragraphIndex < this.wordParagraph.numberOfParagraphs();
              paragraphIndex++) {
 

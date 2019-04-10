@@ -26,6 +26,13 @@ class CaseBodyParserHelpers {
         }
     }
 
+    private static JsonArray getExpectedCaseBodyArray(int caseIndex) {
+        JsonObject caseObject = TestsSetup.expectedJsonContent.get(caseIndex);
+        JsonArray caseArray = caseObject.getArrayByKey(CASE);
+        JsonObject caseBody = caseArray.getJsonByIndex(4);
+        return caseBody.getArrayByKey(CASE_BODY);
+    }
+
     private static void setUpActualJsons() {
         for (int i = 0; i < TestsSetup.wordDocxData.size(); i++) {
             SectionResult caseBodyResult = getCaseBodyResult(i);
@@ -61,12 +68,5 @@ class CaseBodyParserHelpers {
         JsonArray caseBodyArray = allExpectedCaseBodyJsons.get(caseIndex);
         JsonObject caseBackground = caseBodyArray.getJsonByIndex(subsectionIndex);
         return caseBackground.getArrayByKey(heading);
-    }
-
-    private static JsonArray getExpectedCaseBodyArray(int caseIndex) {
-        JsonObject caseObject = TestsSetup.expectedJsonContent.get(caseIndex);
-        JsonArray caseArray = caseObject.getArrayByKey(CASE);
-        JsonObject caseBody = caseArray.getJsonByIndex(4);
-        return caseBody.getArrayByKey(CASE_BODY);
     }
 }

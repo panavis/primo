@@ -7,7 +7,7 @@ import com.panavis.WordToJsonConverter.Style.WordParagraph;
 import com.panavis.WordToJsonConverter.Utils.JsonCreator;
 import com.panavis.WordToJsonConverter.Wrappers.*;
 
-public class CasePartiesParser implements ICaseParties {
+public class CasePartiesParser implements ICaseSectionParser {
 
     private WordParagraph wordParagraph;
     private SectionParties section;

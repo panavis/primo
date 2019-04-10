@@ -73,53 +73,48 @@ public class TestsSetup {
     static Converter getConverterObject(XWPFDocument wordDocument, String section) {
         WordParagraph wordParagraph = new WordParagraph(wordDocument);
         CaseTitleParser titleParser = new CaseTitleParser(wordParagraph);
-        ICaseParties partiesParser = isSectionBeyondTitle(section) ?
+        ICaseSectionParser partiesParser = isSectionBeyondTitle(section) ?
                 new CasePartiesParser(wordParagraph) :
-                new MockPartiesParser();
-        ICaseSubjectMatter subjectMatterParser = isSectionBeyondParties(section) ?
+                new MockSectionParser();
+        ICaseSectionParser subjectMatterParser = isSectionBeyondParties(section) ?
                 new CaseSubjectMatterParser(wordParagraph) :
-                new MockSubjectMatterParser();
-        ICaseBodyParser caseBodyParser = isSectionBeyondSubjectMatter(section) ?
+                new MockSectionParser();
+        ICaseSectionParser caseBodyParser = isSectionBeyondSubjectMatter(section) ?
                 new CaseBodyParser(wordParagraph) :
-                new MockCaseBodyParser();
+                new MockSectionParser();
+        ICaseSectionParser caseClosingParser = isSectionBeyondBody(section) ?
+                new CaseClosingParser(wordParagraph) :
+                new MockSectionParser();
         return new Converter(titleParser, partiesParser, subjectMatterParser,
-                            caseBodyParser);
+                            caseBodyParser,caseClosingParser);
     }
 
     private static boolean isSectionBeyondTitle(String section) {
         return section.equals(PARTIES) ||
                 section.equals(SUBJECT_MATTER) ||
-                section.equals(CASE_BODY);
+                section.equals(CASE_BODY) ||
+                section.equals(CASE_CLOSING);
     }
 
     private static boolean isSectionBeyondParties(String section) {
         return section.equals(SUBJECT_MATTER) ||
-                section.equals(CASE_BODY);
+                section.equals(CASE_BODY) ||
+                section.equals(CASE_CLOSING);
     }
 
     private static boolean isSectionBeyondSubjectMatter(String section) {
-        return section.equals(CASE_BODY);
+        return section.equals(CASE_BODY) ||
+                section.equals(CASE_CLOSING);
+    }
+
+    private static boolean isSectionBeyondBody(String section) {
+        return section.equals(CASE_CLOSING);
     }
 }
 
-class MockPartiesParser implements ICaseParties {
+class MockSectionParser implements ICaseSectionParser {
 
     public SectionResult parse(int startParagraph) {
         return new SectionResult(new JsonObject(), 0);
     }
 }
-
-class MockSubjectMatterParser implements ICaseSubjectMatter {
-
-    public SectionResult parse(int startParagraph) {
-        return new SectionResult(new JsonObject(), 0);
-    }
-}
-
-class MockCaseBodyParser implements ICaseBodyParser {
-
-    public SectionResult parse(int startParagraph) {
-        return new SectionResult(new JsonObject(), 0);
-    }
-}
-
