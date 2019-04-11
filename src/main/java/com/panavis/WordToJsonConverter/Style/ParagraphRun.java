@@ -17,14 +17,11 @@ class ParagraphRun {
         return firstRun.isBold() && secondRunText.startsWith(StringFormatting.COLON);
     }
 
-    static boolean isFirstRunHighlyIndentedAndCapitalized(XWPFParagraph paragraph) {
-        XWPFRun firstRun = getRun(paragraph, 0);
+    static boolean isFirstRunHighlyIndented(XWPFParagraph paragraph) {
         int HEADING_INDENT = -1;
         int TWO_TABS_ESTIMATE = 2000;
-
         int leftIndent = paragraph.getIndentationLeft();
-        return (leftIndent == HEADING_INDENT || leftIndent > TWO_TABS_ESTIMATE) &&
-                StringFormatting.isTextCapitalized(firstRun.text());
+        return (leftIndent == HEADING_INDENT || leftIndent > TWO_TABS_ESTIMATE);
     }
 
     static XWPFRun getRun(XWPFParagraph paragraph, int runIndex) {

@@ -5,16 +5,14 @@ import com.panavis.WordToJsonConverter.Style.WordParagraph;
 import com.panavis.WordToJsonConverter.Utils.StringFormatting;
 import static com.panavis.WordToJsonConverter.Utils.StringFormatting.*;
 
-import java.util.regex.Pattern;
-
-import static com.panavis.WordToJsonConverter.Constants.Keywords.*;
-
 class SectionBody extends Section {
 
     private UnitNumbering currentNumbering;
+    private SectionClosing sectionClosing;
 
     SectionBody(WordParagraph wordParagraph) {
         super(wordParagraph);
+        this.sectionClosing = new SectionClosing(wordParagraph);
     }
 
     @Override
@@ -62,33 +60,9 @@ class SectionBody extends Section {
     }
 
     boolean isCaseClosing(int nextParagraph) {
-        String paragraphText = wordParagraph.getParagraphText(nextParagraph).toLowerCase();
-        return isClosingSentence(nextParagraph, paragraphText) ||
-                isClosingHeading(nextParagraph, paragraphText);
-    }
-
-    private boolean isClosingHeading(int nextParagraph, String paragraphText) {
-        return wordParagraph.isIndentedAndCapitalized(nextParagraph) &&
-                paragraphText.contains(INTEKO);
-    }
-
-    private boolean isClosingSentence(int paragraphIndex, String text) {
-        String firstWord = text.split(" ")[0];
-        String style = wordParagraph.getUnitNumbering(paragraphIndex).style;
-        return hasClosingKeywords(text) && sentenceHasDate(text) &&
-                StringFormatting.isCaseSensitive(firstWord) &&
-                !(style.equals(LIST_PARAGRAPH));
-    }
-
-    private boolean hasClosingKeywords(String text) {
-        return text.contains(RUKIJIJWE) || text.contains(RUSOMEWE);
-    }
-
-    private boolean sentenceHasDate(String text) {
-        Pattern dateAllDigits = Pattern.compile("\\b\\d{1,2}\\/\\d{1,2}\\/\\d{4}");
-        Pattern dateMonthSpelled = Pattern.compile("\\b\\d{1,2}\\b.+\\b\\d{4}");
-        return dateAllDigits.matcher(text).find() ||
-                dateMonthSpelled.matcher(text).find();
+        String paragraphText = wordParagraph.getParagraphText(nextParagraph);
+        return sectionClosing.isClosingSentence(nextParagraph, paragraphText) ||
+                sectionClosing.isClosingHeading(nextParagraph, paragraphText);
     }
 
     Section setCurrentNumbering(UnitNumbering unitNumbering) {

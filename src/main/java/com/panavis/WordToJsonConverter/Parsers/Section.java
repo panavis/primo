@@ -64,6 +64,10 @@ abstract class Section {
         return this;
     }
 
+    int getStartParagraph() {
+        return this.startParagraph;
+    }
+
     Section setInlineParagraph(String inlineParagraph) {
         this.inlineParagraph = inlineParagraph;
         return this;

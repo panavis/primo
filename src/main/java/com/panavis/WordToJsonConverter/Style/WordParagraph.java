@@ -54,18 +54,25 @@ public class WordParagraph {
                 ParagraphRun.isFirstRunBoldAndSecondRunStartsWithColon(paragraph) ||
                 ParagraphRun.isFirstRunCapitalizedAndEndsWithColon(paragraph) ||
                 ParagraphRun.isFirstRunBoldAndEndsWithColon(paragraph) ||
-                isIndentedAndCapitalized(paragraphIndex) ||
+                hasLeftIndentationAndIsCapitalized(paragraphIndex) ||
                 isUpperCaseAndHasNumberedHeading(paragraphIndex) ||
                 hasColonAndPreColonPartHasStyle(paragraphIndex) ||
                 isOneWordAndIsUpperCase(paragraphIndex)
         );
     }
 
-    public boolean isIndentedAndCapitalized(int paragraphIndex) {
+    private boolean hasLeftIndentationAndIsCapitalized(int paragraphIndex) {
+        XWPFRun firstRun = ParagraphRun.getRun(getParagraph(paragraphIndex), 0);
+        return hasSignificantLeftIndentation(paragraphIndex) &&
+                StringFormatting.isTextCapitalized(firstRun.text());
+    }
+
+    public boolean hasSignificantLeftIndentation(int paragraphIndex) {
         String firstWord = getParagraphText(paragraphIndex).split(" ")[0];
+        XWPFParagraph paragraph = getParagraph(paragraphIndex);
         int MIN_HEADING_LENGTH = 3;
         return firstWord.length() > MIN_HEADING_LENGTH &&
-                ParagraphRun.isFirstRunHighlyIndentedAndCapitalized(getParagraph(paragraphIndex));
+                ParagraphRun.isFirstRunHighlyIndented(paragraph);
     }
 
     private boolean isUpperCaseAndHasNumberedHeading(int paragraphIndex) {
@@ -102,8 +109,12 @@ public class WordParagraph {
     }
 
     public String getBlankLinesAfterParagraph(int paragraphIndex) {
-        int blanks = postParagraphBlanks.get(paragraphIndex);
+        int blanks = getNumberOfAfterBlanks(paragraphIndex);
         return StringFormatting.duplicateLineSeparator(blanks);
+    }
+
+    public int getNumberOfAfterBlanks(int paragraphIndex) {
+        return postParagraphBlanks.get(paragraphIndex);
     }
 
     public String getCaseSensitiveRunText(int paragraphIndex) {
