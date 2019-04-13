@@ -1,6 +1,6 @@
 package com.panavis.WordToJsonConverter.Parsers;
 
-import com.panavis.WordToJsonConverter.Constants.Keywords;
+import static com.panavis.WordToJsonConverter.Constants.Keywords.*;
 import com.panavis.WordToJsonConverter.ResultTypes.SectionResult;
 import com.panavis.WordToJsonConverter.Style.WordParagraph;
 import com.panavis.WordToJsonConverter.Wrappers.JsonArray;
@@ -20,7 +20,8 @@ public class CasePanelParser implements ICaseSectionParser {
 
     @Override
     public SectionResult parse(int startParagraph) {
-        int nextParagraph = startParagraph + 1;
+        String startingParagraph = wordParagraph.getParagraphText(startParagraph);
+        int nextParagraph = startingParagraph.toLowerCase().contains(INTEKO) ? startParagraph + 1 : startParagraph;
         List panelistsTitles = Collections.emptyList();
         List panelistsNames = Collections.emptyList();
         if (wordParagraph.paragraphExists(nextParagraph)) {
@@ -28,6 +29,18 @@ public class CasePanelParser implements ICaseSectionParser {
             panelistsTitles = Arrays.asList(titles);
         }
         nextParagraph++;
+        if (wordParagraph.paragraphExists(nextParagraph)) {
+            String paragraphText = wordParagraph.getParagraphText(nextParagraph);
+            String[] words = paragraphText.split("\t");
+            boolean signatures = true;
+            for (String word : words) {
+                if (!word.toLowerCase().startsWith("s") || word.length() > 3) {
+                    signatures = false;
+                    break;
+                }
+            }
+            if (signatures) nextParagraph++;
+        }
         if (wordParagraph.paragraphExists(nextParagraph)) {
             String[] names = wordParagraph.getParagraphText(nextParagraph).split("\t");
             panelistsNames = Arrays.asList(names);
@@ -44,7 +57,7 @@ public class CasePanelParser implements ICaseSectionParser {
         panelArray.putValue(firstPanelist);
         panelArray.putValue(secondPanelist);
         JsonObject casePanel = new JsonObject();
-        casePanel.addNameValuePair(Keywords.INTEKO, panelArray);
+        casePanel.addNameValuePair(INTEKO, panelArray);
         return new SectionResult(casePanel, 0);
     }
 }
