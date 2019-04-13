@@ -85,30 +85,41 @@ public class TestsSetup {
         ICaseSectionParser caseClosingParser = isSectionBeyondBody(section) ?
                 new CaseClosingParser(wordParagraph) :
                 new MockSectionParser();
+        ICaseSectionParser casePanelParser = isSectionBeyondClosing(section) ?
+                new CasePanelParser(wordParagraph) :
+                new MockSectionParser();
         return new Converter(titleParser, partiesParser, subjectMatterParser,
-                            caseBodyParser,caseClosingParser);
+                            caseBodyParser,caseClosingParser, casePanelParser);
     }
 
     private static boolean isSectionBeyondTitle(String section) {
         return section.equals(PARTIES) ||
                 section.equals(SUBJECT_MATTER) ||
                 section.equals(CASE_BODY) ||
-                section.equals(CASE_CLOSING);
+                section.equals(CASE_CLOSING) ||
+                section.equals(INTEKO);
     }
 
     private static boolean isSectionBeyondParties(String section) {
         return section.equals(SUBJECT_MATTER) ||
                 section.equals(CASE_BODY) ||
-                section.equals(CASE_CLOSING);
+                section.equals(CASE_CLOSING) ||
+                section.equals(INTEKO);
     }
 
     private static boolean isSectionBeyondSubjectMatter(String section) {
         return section.equals(CASE_BODY) ||
-                section.equals(CASE_CLOSING);
+                section.equals(CASE_CLOSING) ||
+                section.equals(INTEKO);
     }
 
     private static boolean isSectionBeyondBody(String section) {
-        return section.equals(CASE_CLOSING);
+        return section.equals(CASE_CLOSING) ||
+                section.equals(INTEKO);
+    }
+
+    private static boolean isSectionBeyondClosing(String section) {
+        return section.equals(INTEKO);
     }
 }
 

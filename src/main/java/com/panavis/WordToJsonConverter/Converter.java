@@ -15,16 +15,18 @@ class Converter {
     private ICaseSectionParser subjectMatterParser;
     private ICaseSectionParser caseBodyParser;
     private ICaseSectionParser caseClosingParser;
+    private ICaseSectionParser casePanelParser;
 
     Converter(ICaseSectionParser titleParser, ICaseSectionParser partiesParser,
               ICaseSectionParser subjectMatterParser, ICaseSectionParser caseBodyParser,
-              ICaseSectionParser caseClosingParser) {
+              ICaseSectionParser caseClosingParser, ICaseSectionParser casePanelParser) {
         this.parsedCase = new HashMap<>();
         this.titleParser = titleParser;
         this.partiesParser = partiesParser;
         this.subjectMatterParser = subjectMatterParser;
         this.caseBodyParser = caseBodyParser;
         this.caseClosingParser = caseClosingParser;
+        this.casePanelParser = casePanelParser;
     }
 
     void parseCaseSections() {
@@ -32,8 +34,9 @@ class Converter {
         parsePartiesAndUpdateNextParagraph();
         parseSubjectMatterAndUpdateNextParagraph();
         parseCaseBodyAndUpdateNextParagraph();
-        SectionResult caseClosing = this.caseClosingParser.parse(nextParagraph);
-        this.parsedCase.put(CASE_CLOSING, caseClosing);
+        parseCaseClosingAndUpdateNextParagraph();
+        SectionResult casePanel = this.casePanelParser.parse(nextParagraph);
+        this.parsedCase.put(INTEKO, casePanel);
     }
 
     private void parseTitleAndUpdateNextParagraph() {
@@ -58,6 +61,12 @@ class Converter {
         SectionResult caseBody = this.caseBodyParser.parse(nextParagraph);
         this.parsedCase.put(CASE_BODY, caseBody);
         nextParagraph = caseBody.getNextParagraph();
+    }
+
+    private void parseCaseClosingAndUpdateNextParagraph() {
+        SectionResult caseClosing = this.caseClosingParser.parse(nextParagraph);
+        this.parsedCase.put(CASE_CLOSING, caseClosing);
+        nextParagraph = caseClosing.getNextParagraph();
     }
 
     SectionResult getParsedCaseSection(String section) {
