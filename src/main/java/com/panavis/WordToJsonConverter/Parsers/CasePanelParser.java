@@ -32,8 +32,7 @@ public class CasePanelParser implements ICaseSectionParser {
 
     @Override
     public SectionResult parse(int startParagraph) {
-        int nextParagraph = this.sectionClosing.isClosingHeading(startParagraph) ?
-                            startParagraph + 1 : startParagraph;
+        int nextParagraph = getFirstParagraphOfPanel(startParagraph);
         JsonArray panelArray = new JsonArray();
         boolean hasReachedEnding = false;
         while (wordParagraph.paragraphExists(nextParagraph) && !hasReachedEnding) {
@@ -72,9 +71,12 @@ public class CasePanelParser implements ICaseSectionParser {
                 String name = namesIterator.next();
                 if (hasTabInOneFullName(panelistsNames, namesIterator, name))
                     name = name + " " + namesIterator.next();
-                JsonObject panelist = new JsonObject();
-                panelist.addNameValuePair(title, name);
-                panelArray.putValue(panelist);
+                name = removeTrailingSignature(name);
+                if (!name.isEmpty() && !title.isEmpty()) {
+                    JsonObject panelist = new JsonObject();
+                    panelist.addNameValuePair(title, name);
+                    panelArray.putValue(panelist);
+                }
             }
             hasReachedEnding = hasReachedCaseWriter(panelistsTitles) && !hasNonWriterTitlesBelow(nextParagraph);
         }
@@ -82,6 +84,23 @@ public class CasePanelParser implements ICaseSectionParser {
         JsonObject casePanel = new JsonObject();
         casePanel.addNameValuePair(INTEKO, panelArray);
         return new SectionResult(casePanel, 0);
+    }
+
+    private int getFirstParagraphOfPanel(int startParagraph) {
+        int panelStart = wordParagraph.numberOfParagraphs();
+        if (wordParagraph.paragraphExists(startParagraph))
+            panelStart = this.sectionClosing.isClosingHeading(startParagraph) ?
+                            startParagraph + 1 : startParagraph;
+        return panelStart;
+    }
+
+    private String removeTrailingSignature(String name) {
+        int signatureLength = "Sé ".length();
+        if (name.startsWith("Sé ") || name.startsWith("Se "))
+            name = name.substring(signatureLength);
+        if (name.endsWith(" Sé") || name.endsWith(" Se"))
+            name = name.substring(0, name.length() - signatureLength);
+        return name;
     }
 
     private int getPanelistTitleIndex(String[] firstListElement) {
