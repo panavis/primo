@@ -19,20 +19,25 @@ class SectionClosing extends Section {
 
     @Override
     boolean isStillInOneSubsection(int paragraphIndex) {
-        String paragraphText = wordParagraph.getParagraphText(paragraphIndex);
         if (endingReached) return false;
         if (wordParagraph.getNumberOfAfterBlanks(paragraphIndex) > 1)
             endingReached = true;
-        return !isClosingHeading(paragraphIndex, paragraphText);
+        return !isClosingHeading(paragraphIndex);
     }
 
-    boolean isClosingHeading(int nextParagraph, String text) {
-        return text.toLowerCase().trim().equals(INTEKO) &&
-                (wordParagraph.hasSignificantLeftIndentation(nextParagraph) ||
-                        StringFormatting.isTextCapitalized(text));
+    boolean isClosingHeading(int nextParagraph) {
+        String text = wordParagraph.getParagraphText(nextParagraph);
+        return text.toLowerCase().trim().contains(INTEKO) &&
+                (
+                        (wordParagraph.hasSignificantLeftIndentation(nextParagraph) ||
+                        StringFormatting.isTextCapitalized(text))
+                ||
+                                wordParagraph.isBeginningUnderlined(nextParagraph)
+                );
     }
 
-    boolean isClosingSentence(int paragraphIndex, String text) {
+    boolean isClosingSentence(int paragraphIndex) {
+        String text = wordParagraph.getParagraphText(paragraphIndex);
         String firstWord = text.split(" ")[0];
         String style = wordParagraph.getUnitNumbering(paragraphIndex).style;
         text = text.toLowerCase();

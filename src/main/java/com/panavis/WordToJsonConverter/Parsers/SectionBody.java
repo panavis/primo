@@ -60,9 +60,8 @@ class SectionBody extends Section {
     }
 
     boolean isCaseClosing(int nextParagraph) {
-        String paragraphText = wordParagraph.getParagraphText(nextParagraph);
-        return sectionClosing.isClosingSentence(nextParagraph, paragraphText) ||
-                sectionClosing.isClosingHeading(nextParagraph, paragraphText);
+        return sectionClosing.isClosingSentence(nextParagraph) ||
+                sectionClosing.isClosingHeading(nextParagraph);
     }
 
     Section setCurrentNumbering(UnitNumbering unitNumbering) {

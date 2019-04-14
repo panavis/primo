@@ -8,11 +8,9 @@ import com.panavis.WordToJsonConverter.Wrappers.JsonObject;
 
 public class CaseClosingParser implements ICaseSectionParser{
 
-    private WordParagraph wordParagraph;
     private SectionClosing section;
 
     public CaseClosingParser(WordParagraph wordParagraph) {
-        this.wordParagraph = wordParagraph;
         this.section = new SectionClosing(wordParagraph);
     }
 
@@ -20,8 +18,7 @@ public class CaseClosingParser implements ICaseSectionParser{
     public SectionResult parse(int startParagraph) {
         int nextSectionStart = startParagraph;
         JsonArray closingText = new JsonArray();
-        String paragraphText = wordParagraph.getParagraphText(startParagraph);
-        if (section.isClosingSentence(startParagraph, paragraphText)) {
+        if (section.isClosingSentence(startParagraph)) {
             int logicalHeadingIndex = startParagraph -1;
             section.setStartingParagraph(logicalHeadingIndex)
                    .parse();
