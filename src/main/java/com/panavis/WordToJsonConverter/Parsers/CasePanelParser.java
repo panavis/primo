@@ -10,6 +10,18 @@ import com.panavis.WordToJsonConverter.Wrappers.JsonObject;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.ListIterator;
+
+class PanelSectionLine {
+
+    List<String> panelLine;
+    int index;
+
+    PanelSectionLine(List<String> panelLine, int index) {
+        this.panelLine = panelLine;
+        this.index = index;
+    }
+}
 
 public class CasePanelParser implements ICaseSectionParser {
 
@@ -23,21 +35,15 @@ public class CasePanelParser implements ICaseSectionParser {
 
     @Override
     public SectionResult parse(int startParagraph) {
-        List panelistsTitles = Collections.emptyList();
-        List panelistsNames = Collections.emptyList();
         int nextParagraph = this.sectionClosing.isClosingHeading(startParagraph) ?
                             startParagraph + 1 : startParagraph;
-        if (isSignatureLine(nextParagraph)) nextParagraph++;
-        if (wordParagraph.paragraphExists(nextParagraph)) {
-            String[] titles = wordParagraph.getParagraphText(nextParagraph).split("\t");
-            panelistsTitles = Arrays.asList(titles);
-        }
-        nextParagraph++;
-        if (isSignatureLine(nextParagraph)) nextParagraph++;
-        if (wordParagraph.paragraphExists(nextParagraph)) {
-            String[] names = wordParagraph.getParagraphText(nextParagraph).split("\t");
-            panelistsNames = Arrays.asList(names);
-        }
+        JsonArray panelArray = new JsonArray();
+
+        PanelSectionLine panelLineFirstLine = getPanelSectionLine(nextParagraph);
+        List<String> panelistsTitles = panelLineFirstLine.panelLine;
+        nextParagraph = panelLineFirstLine.index + 1;
+        PanelSectionLine panelLineSecondLine = getPanelSectionLine(nextParagraph);
+        List<String> panelistsNames = panelLineSecondLine.panelLine;
 
         boolean isPanelistList = false;
         for (Object word: panelistsNames) {
@@ -52,26 +58,37 @@ public class CasePanelParser implements ICaseSectionParser {
             panelistsTitles = panelistsNamesCopy;
         }
 
-
-        String firstTitle = panelistsTitles.get(0).toString();
-        String secondTitle = panelistsTitles.get(1).toString();
-        String firstName = panelistsNames.get(0).toString();
-        int secondNameIndex = 1;
-        if ((firstName.split(" ").length == 1) && panelistsNames.size() > 2) {
-            firstName = firstName + " " + panelistsNames.get(1);
-            secondNameIndex = 2;
+        ListIterator<String> namesIterator = panelistsNames.listIterator();
+        ListIterator<String> titlesIterator = panelistsTitles.listIterator();
+        while (namesIterator.hasNext() && titlesIterator.hasNext()) {
+            String title = titlesIterator.next();
+            String name = namesIterator.next();
+            if (hasTabInOneFullName(panelistsNames, namesIterator, name))
+                name = name + " " + namesIterator.next();
+            JsonObject panelist = new JsonObject();
+            panelist.addNameValuePair(title, name);
+            panelArray.putValue(panelist);
         }
-        String secondName = panelistsNames.get(secondNameIndex).toString();
-        JsonObject firstPanelist = new JsonObject();
-        firstPanelist.addNameValuePair(firstTitle, firstName);
-        JsonObject secondPanelist = new JsonObject();
-        secondPanelist.addNameValuePair(secondTitle, secondName);
-        JsonArray panelArray = new JsonArray();
-        panelArray.putValue(firstPanelist);
-        panelArray.putValue(secondPanelist);
+
         JsonObject casePanel = new JsonObject();
         casePanel.addNameValuePair(INTEKO, panelArray);
         return new SectionResult(casePanel, 0);
+    }
+
+    private boolean hasTabInOneFullName(List<String> panelistsNames, ListIterator<String> namesIterator, String name) {
+        return name.split(" ").length == 1 &&
+                panelistsNames.size() > 2 &&
+                namesIterator.hasNext();
+    }
+
+    private PanelSectionLine getPanelSectionLine(int paragraphIndex) {
+        List<String> panelLine = Collections.emptyList();
+        if (isSignatureLine(paragraphIndex)) paragraphIndex++;
+        if (wordParagraph.paragraphExists(paragraphIndex)) {
+            String[] words = wordParagraph.getParagraphText(paragraphIndex).split("\t");
+            panelLine = Arrays.asList(words);
+        }
+        return new PanelSectionLine(panelLine, paragraphIndex);
     }
 
     private boolean isSignatureLine(int nextParagraph) {

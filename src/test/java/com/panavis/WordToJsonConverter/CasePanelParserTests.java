@@ -223,6 +223,12 @@ public class CasePanelParserTests {
     }
 
     @Test
+    public void case_006_shouldHaveTwoPeopleInPanelSection() {
+        JsonArray casePanelArray = getCasePanelArray(6);
+        assertEquals(2, casePanelArray.getSize());
+    }
+
+    @Test
     public void case_007_shouldHaveTwoPeopleInPanelSection() {
         JsonArray casePanelArray = getCasePanelArray(7);
         assertEquals(2, casePanelArray.getSize());
@@ -299,12 +305,6 @@ public class CasePanelParserTests {
     }
 
     @Test
-    public void case_013_shouldHaveTwoPeopleInPanelSection() {
-        JsonArray casePanelArray = getCasePanelArray(8);
-        assertEquals(2, casePanelArray.getSize());
-    }
-
-    @Test
     public void case_011_shouldHaveTwoPeopleInPanelSection() {
         JsonArray casePanelArray = getCasePanelArray(11);
         assertEquals(2, casePanelArray.getSize());
@@ -343,6 +343,12 @@ public class CasePanelParserTests {
     }
 
     @Test
+    public void case_013_shouldHaveTwoPeopleInPanelSection() {
+        JsonArray casePanelArray = getCasePanelArray(13);
+        assertEquals(2, casePanelArray.getSize());
+    }
+
+    @Test
     public void case_013_firstPanelistShouldBeJudge() {
         JsonObject firstPanelist = getCasePanelArray(13).getJsonByIndex(0);
         assertTrue(firstPanelist.hasKey("UMUCAMANZA"));
@@ -373,6 +379,4 @@ public class CasePanelParserTests {
         String expectedName = expectedPanelist.getStringByKey("UMWANDITSI");
         assertEquals(expectedName, actualName);
     }
-
-
 }
