@@ -378,4 +378,74 @@ public class CasePanelParserTests {
         String expectedName = expectedPanelist.getStringByKey("UMWANDITSI");
         assertEquals(expectedName, actualName);
     }
+
+    @Test
+    public void case_017_shouldHaveTwoPeopleInPanelSection() {
+        JsonArray casePanelArray = getCasePanelArray(17);
+        assertEquals(4, casePanelArray.getSize());
+    }
+
+    @Test
+    public void case_017_firstPanelistShouldBePresident() {
+        JsonObject firstPanelist = getCasePanelArray(17).getJsonByIndex(0);
+        assertTrue(firstPanelist.hasKey("Perezida"));
+    }
+
+    @Test
+    public void case_017_firstPanelistShouldHaveExpectedName() {
+        JsonObject firstPanelist = getCasePanelArray(17).getJsonByIndex(0);
+        String actualName = firstPanelist.getStringByKey("Perezida");
+
+        JsonObject expectedPanelist = getExpectedCasePanel(17).getJsonByIndex(0);
+        String expectedName = expectedPanelist.getStringByKey("Perezida");
+        assertEquals(expectedName, actualName);
+    }
+
+    @Test
+    public void case_017_secondPanelistShouldBeJudge() {
+        JsonObject firstPanelist = getCasePanelArray(17).getJsonByIndex(1);
+        assertTrue(firstPanelist.hasKey("Umucamanza"));
+    }
+
+    @Test
+    public void case_017_secondPanelistShouldHaveExpectedName() {
+        JsonObject firstPanelist = getCasePanelArray(17).getJsonByIndex(1);
+        String actualName = firstPanelist.getStringByKey("Umucamanza");
+
+        JsonObject expectedPanelist = getExpectedCasePanel(17).getJsonByIndex(1);
+        String expectedName = expectedPanelist.getStringByKey("Umucamanza");
+        assertEquals(expectedName, actualName);
+    }
+
+    @Test
+    public void case_017_thirdPanelistShouldBeJudge() {
+        JsonObject firstPanelist = getCasePanelArray(17).getJsonByIndex(2);
+        assertTrue(firstPanelist.hasKey("Umucamanza"));
+    }
+
+    @Test
+    public void case_017_thirdPanelistShouldHaveExpectedName() {
+        JsonObject firstPanelist = getCasePanelArray(17).getJsonByIndex(2);
+        String actualName = firstPanelist.getStringByKey("Umucamanza");
+
+        JsonObject expectedPanelist = getExpectedCasePanel(17).getJsonByIndex(2);
+        String expectedName = expectedPanelist.getStringByKey("Umucamanza");
+        assertEquals(expectedName, actualName);
+    }
+
+    @Test
+    public void case_017_fourthPanelistShouldBeWriter() {
+        JsonObject firstPanelist = getCasePanelArray(17).getJsonByIndex(3);
+        assertTrue(firstPanelist.hasKey("Umwanditsi"));
+    }
+
+    @Test
+    public void case_017_fourthPanelistShouldHaveExpectedName() {
+        JsonObject firstPanelist = getCasePanelArray(17).getJsonByIndex(3);
+        String actualName = firstPanelist.getStringByKey("Umwanditsi");
+
+        JsonObject expectedPanelist = getExpectedCasePanel(17).getJsonByIndex(3);
+        String expectedName = expectedPanelist.getStringByKey("Umwanditsi");
+        assertEquals(expectedName, actualName);
+    }
 }

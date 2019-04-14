@@ -7,10 +7,7 @@ import com.panavis.WordToJsonConverter.Utils.StringFormatting;
 import com.panavis.WordToJsonConverter.Wrappers.JsonArray;
 import com.panavis.WordToJsonConverter.Wrappers.JsonObject;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.ListIterator;
+import java.util.*;
 
 class PanelSectionLine {
 
@@ -40,21 +37,28 @@ public class CasePanelParser implements ICaseSectionParser {
         JsonArray panelArray = new JsonArray();
         boolean hasReachedEnding = false;
         while (wordParagraph.paragraphExists(nextParagraph) && !hasReachedEnding) {
-
             PanelSectionLine firstPanelLine = getPanelSectionLine(nextParagraph);
             List<String> panelistsTitles = firstPanelLine.panelLine;
             nextParagraph = firstPanelLine.index + 1;
-            PanelSectionLine secondPanelLine = getPanelSectionLine(nextParagraph);
-            List<String> panelistsNames = secondPanelLine.panelLine;
-            nextParagraph = secondPanelLine.index + 1;
-            boolean orderIsReversed = false;
-            for (String word : panelistsNames) {
-                if (hasPanelistTitleKeyword(word)) {
-                    orderIsReversed = true;
-                }
+
+            List<String> panelistsNames;
+            String[] firstListElement = panelistsTitles.get(0).split(" ");
+            String firstWord = firstListElement[0];
+            if (hasTitleKeywordInList(panelistsTitles) && !isJudge(firstWord) && !isCaseWriter(firstWord)) {
+                int titleIndex = getPanelistTitleIndex(firstListElement);
+                panelistsTitles.set(0, String.join(" ", Arrays.copyOfRange(firstListElement, 0, titleIndex)));
+                panelistsNames = new ArrayList<>(panelistsTitles);
+                String[] titleArray = Arrays.copyOfRange(firstListElement, titleIndex, firstListElement.length);
+                String title = String.join(" ", titleArray);
+                panelistsTitles = new ArrayList<>();
+                panelistsTitles.add(title);
+            } else {
+                PanelSectionLine secondPanelLine = getPanelSectionLine(nextParagraph);
+                panelistsNames = secondPanelLine.panelLine;
+                nextParagraph = secondPanelLine.index + 1;
             }
 
-
+            boolean orderIsReversed = hasTitleKeywordInList(panelistsNames);
             List panelistsNamesCopy = Arrays.asList(panelistsNames.toArray());
             if (orderIsReversed) {
                 panelistsNames = panelistsTitles;
@@ -72,12 +76,34 @@ public class CasePanelParser implements ICaseSectionParser {
                 panelist.addNameValuePair(title, name);
                 panelArray.putValue(panelist);
             }
-            hasReachedEnding = hasReachedCaseWriter(panelistsTitles) && !hasNonWriterTitles(nextParagraph);
+            hasReachedEnding = hasReachedCaseWriter(panelistsTitles) && !hasNonWriterTitlesBelow(nextParagraph);
         }
 
         JsonObject casePanel = new JsonObject();
         casePanel.addNameValuePair(INTEKO, panelArray);
         return new SectionResult(casePanel, 0);
+    }
+
+    private int getPanelistTitleIndex(String[] firstListElement) {
+        int titleIndex = 0;
+        for (int i = 0; i < firstListElement.length; i++) {
+            String word = firstListElement[i];
+            if (isCaseWriter(word) || isJudge(word)) {
+                titleIndex = i;
+                break;
+            }
+        }
+        return titleIndex;
+    }
+
+    private boolean hasTitleKeywordInList(List<String> panelistsNames) {
+        boolean orderIsReversed = false;
+        for (String word : panelistsNames) {
+            if (hasPanelistTitleKeyword(word)) {
+                orderIsReversed = true;
+            }
+        }
+        return orderIsReversed;
     }
 
     private PanelSectionLine getPanelSectionLine(int paragraphIndex) {
@@ -126,7 +152,7 @@ public class CasePanelParser implements ICaseSectionParser {
         return w.contains("anditsi");
     }
 
-    private boolean hasNonWriterTitles(int paragraphIndex) {
+    private boolean hasNonWriterTitlesBelow(int paragraphIndex) {
         boolean hasOtherTitles = false;
         while (wordParagraph.paragraphExists(paragraphIndex)) {
             String text = wordParagraph.getParagraphText(paragraphIndex).toLowerCase();
