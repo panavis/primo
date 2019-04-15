@@ -92,6 +92,13 @@ public class CaseClosingParserTests {
     }
 
     @Test
+    public void case_014_hasExpectedClosingText() {
+        String actualClosingText = CaseClosingParserHelpers.getActualClosingText(14);
+        String expectedClosingText = CaseClosingParserHelpers.getExpectedClosingText(14);
+        assertEquals(expectedClosingText, actualClosingText);
+    }
+
+    @Test
     public void case_015_hasExpectedClosingText() {
         String actualClosingText = CaseClosingParserHelpers.getActualClosingText(15);
         String expectedClosingText = CaseClosingParserHelpers.getExpectedClosingText(15);

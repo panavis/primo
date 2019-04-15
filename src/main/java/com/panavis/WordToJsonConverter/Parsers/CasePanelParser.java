@@ -104,21 +104,21 @@ public class CasePanelParser implements ICaseSectionParser {
     }
 
     private boolean firstWordMatchesSignaturePattern(int nextParagraph) {
-        boolean signatureLine = false;
+        boolean isMatch = false;
         String paragraphText = wordParagraph.getParagraphText(nextParagraph);
         String[] words = paragraphText.split("\t");
         String firstWord = words[0].toLowerCase();
         String firstLetter = firstWord.length() != 0 ?
                             firstWord.substring(0,1) : "CASE_SENSITIVE_PLACEHOLDER";
         if (!StringFormatting.isCaseSensitive(firstLetter)) {
-            signatureLine = true;
+            isMatch = true;
         }
         Pattern signature = Pattern.compile("^s[ée]/?$");
         if (signature.matcher(firstWord).find()) {
-            signatureLine = true;
+            isMatch = true;
 
         }
-        return signatureLine;
+        return isMatch;
     }
 
     private boolean isNameAndTitleOnTheSameLine(List<String> panelistsTitles) {
