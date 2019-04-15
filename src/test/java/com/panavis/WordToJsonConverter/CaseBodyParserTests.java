@@ -531,7 +531,7 @@ public class CaseBodyParserTests {
         assertTrue(caseBody.hasKey("I.\tIMITERERE Y\u2019URUBANZA"));
     }
 
-    @Ignore("Ignore: repeated numbering")
+    @Ignore("Ignore: repeated numbering (case body section)")
     @Test
     public void case_009_BackgroundSectionHasLengthOneArray() {
         JsonArray caseBackground = CaseBodyParserHelpers.getCaseBackgroundSection(9, "I.\tIMITERERE Y\u2019URUBANZA");
