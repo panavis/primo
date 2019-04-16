@@ -33,33 +33,24 @@ class ParsingValidator {
         boolean validParties = false;
         if (parsedCase.hasSection(PARTIES)) {
             JsonObject partiesJson = parsedCase.get(PARTIES).getSectionContent();
-            validParties = hasAtLeastTwoParties(partiesJson);
+            Set<String> keys = partiesJson.getKeys();
+            if (hasPartiesSectionHeading(keys)) {
+                validParties = hasAtLeastTwoValidSubsections(partiesJson, keys);
+            }
         }
         return validParties;
     }
 
-    private boolean hasAtLeastTwoParties(JsonObject partiesJson) {
-        boolean validParties = false;
-        Set<String> keys = partiesJson.getKeys();
-        if (hasOneHeading(keys))
-            validParties = headingHasTwoSubsections(partiesJson, keys);
-        return validParties;
-    }
-
-    private boolean headingHasTwoSubsections(JsonObject partiesJson, Set<String> keys) {
-        boolean validParties = false;
+    private boolean hasAtLeastTwoValidSubsections(JsonObject partiesJson, Set<String> keys) {
+        boolean validParties;
         String partiesHeading = keys.iterator().next();
         JsonArray partiesArray = partiesJson.getArrayByKey(partiesHeading);
-        if (hasAtLeastTwoElements(partiesArray)) validParties = true;
+        validParties = partiesArray.getSize() >= 2 && allSubsectionsHaveContent(partiesArray);
         return validParties;
     }
 
-    private boolean hasOneHeading(Set<String> keys) {
+    private boolean hasPartiesSectionHeading(Set<String> keys) {
         return keys.size() == 1;
-    }
-
-    private boolean hasAtLeastTwoElements(JsonArray subsectionArray) {
-        return subsectionArray.getSize() >= 2;
     }
 
     boolean isSubjectMatterValid() {

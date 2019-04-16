@@ -9,6 +9,8 @@ import com.panavis.WordToJsonConverter.Wrappers.JsonObject;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.stream.IntStream;
+
 import static org.junit.Assert.*;
 
 public class ParsingValidatorTests {
@@ -20,6 +22,26 @@ public class ParsingValidatorTests {
         parsedCase = new ParsedCase();
     }
 
+    private JsonObject getSubsectionJson(String heading, String content) {
+        JsonArray subsectionArray = new JsonArray();
+        subsectionArray.putValue(content);
+        JsonObject subsectionJson = new JsonObject();
+        subsectionJson.addNameValuePair(heading, subsectionArray);
+        return subsectionJson;
+    }
+
+    private JsonArray getArrayWithSubsectionNtimes(JsonObject subsection, int times) {
+        JsonArray sectionArray = new JsonArray();
+        IntStream.range(0, times).forEach(i -> sectionArray.putValue(subsection));
+        return sectionArray;
+    }
+
+    private JsonObject createJsonWithEmptyArray(String caseBody) {
+        JsonObject caseBodyJson = new JsonObject();
+        caseBodyJson.addNameValuePair(caseBody, new JsonArray());
+        return caseBodyJson;
+    }
+
     @Test
     public void caseMissingTitleSectionIsNotValid() {
         ParsingValidator validator = new ParsingValidator(parsedCase);
@@ -28,8 +50,7 @@ public class ParsingValidatorTests {
 
     @Test
     public void caseWithEmptyTitleIsNotValid() {
-        JsonObject titleJson = new JsonObject();
-        titleJson.addNameValuePair(TITLE, "");
+        JsonObject titleJson = createJsonWithText(TITLE, "");
         SectionResult titleResult = new SectionResult(titleJson, 0);
         parsedCase.set(TITLE, titleResult);
 
@@ -38,10 +59,15 @@ public class ParsingValidatorTests {
         assertFalse(validator.isTitleValid());
     }
 
+    private JsonObject createJsonWithText(String title, String s) {
+        JsonObject titleJson = new JsonObject();
+        titleJson.addNameValuePair(title, s);
+        return titleJson;
+    }
+
     @Test
     public void titleSectionIsValidWhenNonEmpty() {
-        JsonObject titleJson = new JsonObject();
-        titleJson.addNameValuePair(TITLE, "Some title");
+        JsonObject titleJson = createJsonWithText(TITLE, "Some title");
         SectionResult titleResult = new SectionResult(titleJson, 0);
         parsedCase.set(TITLE, titleResult);
 
@@ -58,8 +84,7 @@ public class ParsingValidatorTests {
 
     @Test
     public void caseWithEmptyPartiesIsNotValid() {
-        JsonObject partiesJson = new JsonObject();
-        partiesJson.addNameValuePair("HABURANA", new JsonArray());
+        JsonObject partiesJson = createJsonWithEmptyArray("HABURANA");
         SectionResult partiesResult = new SectionResult(partiesJson, 0);
         parsedCase.set(PARTIES, partiesResult);
 
@@ -70,10 +95,10 @@ public class ParsingValidatorTests {
 
     @Test
     public void caseWithOnePartyIsNotValid() {
+        JsonObject subsectionJson = getSubsectionJson("SUBHEADING", "subsection Content");
+        JsonArray sectionArray = getArrayWithSubsectionNtimes(subsectionJson, 1);
         JsonObject partiesJson = new JsonObject();
-        JsonArray partiesArray = new JsonArray();
-        partiesArray.putValue("Just one party");
-        partiesJson.addNameValuePair("HABURANA", partiesArray);
+        partiesJson.addNameValuePair(Headings.HABURANA, sectionArray);
         SectionResult partiesResult = new SectionResult(partiesJson, 0);
         parsedCase.set(PARTIES, partiesResult);
 
@@ -83,18 +108,31 @@ public class ParsingValidatorTests {
     }
 
     @Test
-    public void partiesSectionWithTwoOrMorePartiesIsValid() {
+    public void caseWithAtLeastTwoNonEmptySubsectionsIsValid() {
+        JsonObject subsectionJson = getSubsectionJson("SUBHEADING", "some actual content");
+        JsonArray sectionArray = getArrayWithSubsectionNtimes(subsectionJson, 2);
         JsonObject partiesJson = new JsonObject();
-        JsonArray partiesArray = new JsonArray();
-        partiesArray.putValue("first party");
-        partiesArray.putValue("second party");
-        partiesJson.addNameValuePair(Headings.HABURANA, partiesArray);
+        partiesJson.addNameValuePair(Headings.HABURANA, sectionArray);
         SectionResult partiesResult = new SectionResult(partiesJson, 0);
         parsedCase.set(PARTIES, partiesResult);
 
         ParsingValidator validator = new ParsingValidator(parsedCase);
 
         assertTrue(validator.arePartiesValid());
+    }
+
+    @Test
+    public void caseWithEmptySectionIsNotValid() {
+        JsonObject subsectionJson = getSubsectionJson("SUBHEADING", "");
+        JsonArray sectionArray = getArrayWithSubsectionNtimes(subsectionJson, 2);
+        JsonObject partiesJson = new JsonObject();
+        partiesJson.addNameValuePair(Headings.HABURANA, sectionArray);
+        SectionResult partiesResult = new SectionResult(partiesJson, 0);
+        parsedCase.set(PARTIES, partiesResult);
+
+        ParsingValidator validator = new ParsingValidator(parsedCase);
+
+        assertFalse(validator.arePartiesValid());
     }
 
     @Test
@@ -105,8 +143,7 @@ public class ParsingValidatorTests {
 
     @Test
     public void caseWithEmptySubjectMatterIsNotValid() {
-        JsonObject subjectMatterJson = new JsonObject();
-        subjectMatterJson.addNameValuePair(SUBJECT_MATTER, new JsonArray());
+        JsonObject subjectMatterJson = createJsonWithEmptyArray(SUBJECT_MATTER);
         SectionResult subjectMatterResult = new SectionResult(subjectMatterJson, 0);
         parsedCase.set(SUBJECT_MATTER, subjectMatterResult);
 
@@ -117,10 +154,8 @@ public class ParsingValidatorTests {
 
     @Test
     public void subjectMatterSectionWithSubheadingAndEmptyArrayIsNotValid() {
-        JsonObject subjectMatterContent = new JsonObject();
-        subjectMatterContent.addNameValuePair("SUBHEADING", new JsonArray());
-        JsonArray subjectMatterArray = new JsonArray();
-        subjectMatterArray.putValue(subjectMatterContent);
+        JsonObject subjectMatterContent = createJsonWithEmptyArray("SUBHEADING");
+        JsonArray subjectMatterArray = getArrayWithSubsectionNtimes(subjectMatterContent, 1);
         JsonObject subjectMatterJson = new JsonObject();
         subjectMatterJson.addNameValuePair(SUBJECT_MATTER, subjectMatterArray);
         SectionResult subjectMatterResult = new SectionResult(subjectMatterJson, 0);
@@ -133,12 +168,8 @@ public class ParsingValidatorTests {
 
     @Test
     public void subjectMatterSectionWithSubheadingAndEmptyStringIsNotValid() {
-        JsonObject subjectMatterContent = new JsonObject();
-        JsonArray subjectMatterText = new JsonArray();
-        subjectMatterText.putValue("");
-        subjectMatterContent.addNameValuePair("SUBHEADING", subjectMatterText);
-        JsonArray subjectMatterArray = new JsonArray();
-        subjectMatterArray.putValue(subjectMatterContent);
+        JsonObject subjectMatterContent = getSubsectionJson("SUBHEADING", "");
+        JsonArray subjectMatterArray = getArrayWithSubsectionNtimes(subjectMatterContent, 1);
         JsonObject subjectMatterJson = new JsonObject();
         subjectMatterJson.addNameValuePair(SUBJECT_MATTER, subjectMatterArray);
         SectionResult subjectMatterResult = new SectionResult(subjectMatterJson, 0);
@@ -150,13 +181,9 @@ public class ParsingValidatorTests {
     }
 
     @Test
-    public void subjectMatterSectionWithAtLeastOneSubheadingAndActualContentIsValid() {
-        JsonObject subjectMatterContent = new JsonObject();
-        JsonArray subjectMatterText = new JsonArray();
-        subjectMatterText.putValue("What the subject matter is");
-        subjectMatterContent.addNameValuePair("SUBHEADING", subjectMatterText);
-        JsonArray subjectMatterArray = new JsonArray();
-        subjectMatterArray.putValue(subjectMatterContent);
+    public void subjectMatterSectionWithOneSubsectionIsNotValid() {
+        JsonObject subjectMatterContent = getSubsectionJson("SUBHEADING", "What the subject matter is");
+        JsonArray subjectMatterArray = getArrayWithSubsectionNtimes(subjectMatterContent, 1);
         JsonObject subjectMatterJson = new JsonObject();
         subjectMatterJson.addNameValuePair(SUBJECT_MATTER, subjectMatterArray);
         SectionResult subjectMatterResult = new SectionResult(subjectMatterJson, 0);
@@ -175,8 +202,7 @@ public class ParsingValidatorTests {
 
     @Test
     public void caseWithEmptyCaseBodyIsNotValid() {
-        JsonObject caseBodyJson = new JsonObject();
-        caseBodyJson.addNameValuePair(CASE_BODY, new JsonArray());
+        JsonObject caseBodyJson = createJsonWithEmptyArray(CASE_BODY);
         SectionResult caseBodyResult = new SectionResult(caseBodyJson, 0);
         parsedCase.set(CASE_BODY, caseBodyResult);
 
@@ -187,12 +213,8 @@ public class ParsingValidatorTests {
 
     @Test
     public void caseWithOneCaseBodySubsectionIsNotValid() {
-        JsonArray subsectionText = new JsonArray();
-        subsectionText.putValue("some body subsection content");
-        JsonObject subsection = new JsonObject();
-        subsection.addNameValuePair("CASE_BACKGROUND", subsectionText);
-        JsonArray bodyArray = new JsonArray();
-        bodyArray.putValue(subsection);
+        JsonObject subsection = getSubsectionJson("CASE_BACKGROUND", "some content");
+        JsonArray bodyArray = getArrayWithSubsectionNtimes(subsection, 1);
         JsonObject caseBodyJson = new JsonObject();
         caseBodyJson.addNameValuePair(CASE_BODY, bodyArray);
         SectionResult caseBodyResult = new SectionResult(caseBodyJson, 0);
@@ -206,14 +228,8 @@ public class ParsingValidatorTests {
 
     @Test
     public void caseBodySectionWithThreeSubsectionsWithActualContentIstValid() {
-        JsonArray subsectionText = new JsonArray();
-        subsectionText.putValue("some body subsection content");
-        JsonObject subsection = new JsonObject();
-        subsection.addNameValuePair("CASE_BACKGROUND", subsectionText);
-        JsonArray bodyArray = new JsonArray();
-        bodyArray.putValue(subsection);
-        bodyArray.putValue(subsection);
-        bodyArray.putValue(subsection); // Adding subsection three times
+        JsonObject subsection = getSubsectionJson("CASE_BACKGROUND", "some content");
+        JsonArray bodyArray = getArrayWithSubsectionNtimes(subsection, 3);
         JsonObject caseBodyJson = new JsonObject();
         caseBodyJson.addNameValuePair(CASE_BODY, bodyArray);
         SectionResult caseBodyResult = new SectionResult(caseBodyJson, 0);
@@ -232,8 +248,7 @@ public class ParsingValidatorTests {
 
     @Test
     public void caseWithEmptyCasePanelIsNotValid() {
-        JsonObject casePanelJson = new JsonObject();
-        casePanelJson.addNameValuePair(INTEKO, new JsonArray());
+        JsonObject casePanelJson = createJsonWithEmptyArray(INTEKO);
         SectionResult casePanelResult = new SectionResult(casePanelJson, 0);
         parsedCase.set(INTEKO, casePanelResult);
 
@@ -244,11 +259,9 @@ public class ParsingValidatorTests {
 
     @Test
     public void caseWithOnePanelistIsNotValid() {
+        JsonObject panelist = createJsonWithText("title", "full name");
+        JsonArray panelArray = getArrayWithSubsectionNtimes(panelist, 1);
         JsonObject casePanelJson = new JsonObject();
-        JsonObject panelist = new JsonObject();
-        panelist.addNameValuePair("title", "full name");
-        JsonArray panelArray = new JsonArray();
-        panelArray.putValue(panelist);
         casePanelJson.addNameValuePair(INTEKO, panelArray);
         SectionResult casePanelResult = new SectionResult(casePanelJson, 0);
         parsedCase.set(INTEKO, casePanelResult);
@@ -259,13 +272,10 @@ public class ParsingValidatorTests {
     }
 
     @Test
-    public void caseWithAtLeastTwoPanelistAndNonEmptyTileAndNameIsValid() {
+    public void caseWithAtLeastTwoPanelistsAndNonEmptyTileAndNameIsValid() {
+        JsonObject panelist = createJsonWithText("title", "full name");
+        JsonArray panelArray = getArrayWithSubsectionNtimes(panelist, 2);
         JsonObject casePanelJson = new JsonObject();
-        JsonObject panelist = new JsonObject();
-        panelist.addNameValuePair("title", "full name");
-        JsonArray panelArray = new JsonArray();
-        panelArray.putValue(panelist);
-        panelArray.putValue(panelist);  // Added panelist twice
         casePanelJson.addNameValuePair(INTEKO, panelArray);
         SectionResult casePanelResult = new SectionResult(casePanelJson, 0);
         parsedCase.set(INTEKO, casePanelResult);
@@ -277,13 +287,10 @@ public class ParsingValidatorTests {
 
     @Test
     public void caseWithWithTwoTitleNamePairsInOneJsonObjectIsNottValid() {
-        JsonObject casePanelJson = new JsonObject();
-        JsonObject panelist = new JsonObject();
-        panelist.addNameValuePair("title", "full name");
+        JsonObject panelist = createJsonWithText("title", "full name");
         panelist.addNameValuePair("titleTwo", "full name"); // Two key/value pairs
-        JsonArray panelArray = new JsonArray();
-        panelArray.putValue(panelist);
-        panelArray.putValue(panelist);  // Added panelist twice
+        JsonArray panelArray = getArrayWithSubsectionNtimes(panelist, 2);
+        JsonObject casePanelJson = new JsonObject();
         casePanelJson.addNameValuePair(INTEKO, panelArray);
         SectionResult casePanelResult = new SectionResult(casePanelJson, 0);
         parsedCase.set(INTEKO, casePanelResult);
