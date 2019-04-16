@@ -15,11 +15,11 @@ public class TestNonSampleFile {
         Converter converter = TestsSetup.getConverterObject(wordDoc, Keywords.CASE_BODY);
         converter.parseCaseSections();
         String jsonFile = "/home/amucunguzi/Documents/cases_manually/demo/demo_two.json";
-        JSONObject gson = JsonObject.toParsedGson(converter.getParsedCase());
+        /*JSONObject gson = JsonObject.toParsedGson(converter.getParsedCase());
         try {
             JsonFileWriter.createFile(jsonFile, gson.toJSONString());
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 }

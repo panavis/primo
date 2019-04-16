@@ -234,37 +234,37 @@ public class CaseSubjectMatterParserTests {
     }
 
     @Test
-    public void case_018_hasSecond_Ikiburanwa_subheading() {
+    public void case_018_has_second_Ikiburanwa_subheading() {
         JsonObject subsection = CaseSubjectMatterTestsHelpers.getActualSubjectMatterSubsection(18, 1);
         assertTrue(subsection.hasKey(IKIBURANWA));
     }
 
     @Test
-    public void case_019_hasSecond_Icyaha_Aregwa_subheading() {
+    public void case_019_has_Icyaha_Aregwa_subheading() {
         JsonObject subsection = CaseSubjectMatterTestsHelpers.getActualSubjectMatterSubsection(19, 0);
         assertTrue(subsection.hasKey(ICYAHA_AREGWA));
     }
 
     @Test
-    public void case_019_hasSecond_Ikiregerwa_subheading() {
+    public void case_019_has_Ikiregerwa_subheading() {
         JsonObject subsection = CaseSubjectMatterTestsHelpers.getActualSubjectMatterSubsection(19, 1);
         assertTrue(subsection.hasKey(IKIREGERWA));
     }
 
     @Test
-    public void case_020_hasSecond_Icyaha_Baregwa_subheading() {
+    public void case_020_has_Icyaha_Baregwa_subheading() {
         JsonObject subsection = CaseSubjectMatterTestsHelpers.getActualSubjectMatterSubsection(20, 0);
         assertTrue(subsection.hasKey(ICYAHA_BAREGWA));
     }
 
     @Test
-    public void case_021_hasSecond_Icyaha_Aregwa_subheading() {
+    public void case_021_has_Icyaha_Aregwa_subheading() {
         JsonObject subsection = CaseSubjectMatterTestsHelpers.getActualSubjectMatterSubsection(21, 0);
         assertTrue(subsection.hasKey(ICYAHA_AREGWA));
     }
 
     @Test
-    public void case_021_hasSecond_Ikiregerwa_subheading() {
+    public void case_021_has_Ikiregerwa_subheading() {
         JsonObject subsection = CaseSubjectMatterTestsHelpers.getActualSubjectMatterSubsection(21, 1);
         assertTrue(subsection.hasKey(IKIREGERWA));
     }

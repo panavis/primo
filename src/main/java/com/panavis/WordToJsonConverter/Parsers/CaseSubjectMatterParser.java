@@ -36,6 +36,7 @@ public class CaseSubjectMatterParser implements ICaseSectionParser {
             updateSubsectionStartAndNumber(section, nextParagraph);
             numberOfSubsections--;
         }
+        sectionContent.addNameValuePair(SUBJECT_MATTER, sectionArray);
         return new SectionResult(sectionContent, nextParagraph);
     }
 
@@ -53,6 +54,5 @@ public class CaseSubjectMatterParser implements ICaseSectionParser {
     private void addSubsectionContent(JsonArray subsectionBody) {
         String heading = getSubjectMatterHeading(subsectionStart);
         sectionArray.putValue(JsonCreator.getJsonObject(heading, subsectionBody));
-        sectionContent.addNameValuePair(SUBJECT_MATTER, sectionArray);
     }
 }

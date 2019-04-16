@@ -36,7 +36,7 @@ public class JsonObject {
         return (JsonArray) this.jsonObject.get(key);
     }
 
-    private Set<String> getKeys() {
+    public Set<String> getKeys() {
         return this.jsonObject.keySet();
     }
 
