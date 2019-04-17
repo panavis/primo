@@ -1,6 +1,6 @@
 package com.panavis.primo.Parsers;
 
-import com.panavis.primo.Converter;
+import com.panavis.primo.Primo;
 import com.panavis.primo.TestsSetup;
 import com.panavis.primo.Wrappers.JsonArray;
 import com.panavis.primo.Wrappers.JsonObject;
@@ -30,9 +30,9 @@ class CaseClosingParserHelpers {
 
     static JsonArray getActualCaseClosingArray(int caseIndex) {
         XWPFDocument wordDocument = TestsSetup.wordDocxData.get(caseIndex);
-        Converter converter = TestsSetup.getConverterObject(wordDocument, CASE_CLOSING);
-        converter.parseCaseSections();
-        JsonObject actualCaseClosing = converter.getParsedCaseSection(CASE_CLOSING).getSectionContent();
+        Primo primo = TestsSetup.getConverterObject(wordDocument, CASE_CLOSING);
+        primo.parseCaseSections();
+        JsonObject actualCaseClosing = primo.getParsedCaseSection(CASE_CLOSING).getSectionContent();
         return actualCaseClosing.getArrayByKey(CASE_CLOSING);
     }
 

@@ -1,6 +1,6 @@
 package com.panavis.primo.Parsers;
 
-import com.panavis.primo.Converter;
+import com.panavis.primo.Primo;
 import com.panavis.primo.ResultTypes.SectionResult;
 import com.panavis.primo.TestsSetup;
 import com.panavis.primo.Wrappers.JsonArray;
@@ -55,9 +55,9 @@ class CaseBodyParserHelpers {
 
     private static SectionResult getCaseBodyResult(int caseIndex) {
         XWPFDocument wordDocument = TestsSetup.wordDocxData.get(caseIndex);
-        Converter converter = TestsSetup.getConverterObject(wordDocument, CASE_BODY);
-        converter.parseCaseSections();
-        return converter.getParsedCaseSection(CASE_BODY);
+        Primo primo = TestsSetup.getConverterObject(wordDocument, CASE_BODY);
+        primo.parseCaseSections();
+        return primo.getParsedCaseSection(CASE_BODY);
     }
 
     static JsonArray getCaseBackgroundSection(int caseIndex, String heading) {

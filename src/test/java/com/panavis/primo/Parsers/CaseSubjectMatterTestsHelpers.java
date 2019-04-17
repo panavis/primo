@@ -2,7 +2,7 @@ package com.panavis.primo.Parsers;
 
 import static com.panavis.primo.Constants.Keywords.*;
 
-import com.panavis.primo.Converter;
+import com.panavis.primo.Primo;
 import com.panavis.primo.ResultTypes.SectionResult;
 import com.panavis.primo.TestsSetup;
 import com.panavis.primo.Wrappers.*;
@@ -40,9 +40,9 @@ class CaseSubjectMatterTestsHelpers {
 
     static SectionResult parseOneCaseAndReturnSubjectMatterSection(int i) {
         XWPFDocument wordDocument = TestsSetup.wordDocxData.get(i);
-        Converter converter = TestsSetup.getConverterObject(wordDocument, SUBJECT_MATTER);
-        converter.parseCaseSections();
-        return converter.getParsedCaseSection(SUBJECT_MATTER);
+        Primo primo = TestsSetup.getConverterObject(wordDocument, SUBJECT_MATTER);
+        primo.parseCaseSections();
+        return primo.getParsedCaseSection(SUBJECT_MATTER);
     }
 
     static JsonArray getActualSubjectMatterSectionArray(int wordDocIndex) {

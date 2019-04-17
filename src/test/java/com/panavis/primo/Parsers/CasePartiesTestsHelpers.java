@@ -3,7 +3,7 @@ package com.panavis.primo.Parsers;
 import static com.panavis.primo.Constants.Keywords.*;
 import static org.junit.Assert.*;
 
-import com.panavis.primo.Converter;
+import com.panavis.primo.Primo;
 import com.panavis.primo.ResultTypes.SectionResult;
 import com.panavis.primo.TestsSetup;
 import com.panavis.primo.Wrappers.*;
@@ -40,9 +40,9 @@ class CasePartiesTestsHelpers {
 
     static SectionResult parseOneCaseAndReturnPartiesSection(int i) {
         XWPFDocument wordDocument = TestsSetup.wordDocxData.get(i);
-        Converter converter = TestsSetup.getConverterObject(wordDocument, PARTIES);
-        converter.parseCaseSections();
-        return converter.getParsedCaseSection(PARTIES);
+        Primo primo = TestsSetup.getConverterObject(wordDocument, PARTIES);
+        primo.parseCaseSections();
+        return primo.getParsedCaseSection(PARTIES);
     }
 
     private static void setUpExpectedJsons() {

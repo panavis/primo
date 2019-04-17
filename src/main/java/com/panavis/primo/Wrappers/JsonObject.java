@@ -50,12 +50,16 @@ public class JsonObject {
         org.json.simple.JSONObject parties = getParties(parsedCase.get(PARTIES).getSectionContent());
         org.json.simple.JSONObject subjectMatter = getSubjectMatter(parsedCase.get(SUBJECT_MATTER).getSectionContent());
         org.json.simple.JSONObject body = getBody(parsedCase.get(CASE_BODY).getSectionContent());
+        org.json.simple.JSONObject closing = getCaseClosing(parsedCase.get(CASE_CLOSING).getSectionContent());
+        org.json.simple.JSONObject panel = getCasePanel(parsedCase.get(INTEKO).getSectionContent());
         org.json.simple.JSONObject wholeCase = new org.json.simple.JSONObject();
         JSONArray caseArray = new JSONArray();
         caseArray.add(title);
         caseArray.add(parties);
         caseArray.add(subjectMatter);
         caseArray.add(body);
+        caseArray.add(closing);
+        caseArray.add(panel);
         wholeCase.put(CASE, caseArray);
         return wholeCase;
     }
@@ -79,7 +83,15 @@ public class JsonObject {
         return JsonObject.getGsonObject(body);
     }
 
-    static org.json.simple.JSONObject getGsonObject(JsonObject json) {
+    private static org.json.simple.JSONObject getCaseClosing(JsonObject closing) {
+        return JsonObject.getGsonObject(closing);
+    }
+
+    private static org.json.simple.JSONObject getCasePanel(JsonObject panel) {
+        return JsonObject.getGsonObject(panel);
+    }
+
+    private static org.json.simple.JSONObject getGsonObject(JsonObject json) {
         org.json.simple.JSONObject gson = new  org.json.simple.JSONObject();
         String jsonKey = (String) json.getKeys().toArray()[0];
 

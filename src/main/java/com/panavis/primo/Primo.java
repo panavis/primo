@@ -4,7 +4,7 @@ import static com.panavis.primo.Constants.Keywords.*;
 import com.panavis.primo.Parsers.*;
 import com.panavis.primo.ResultTypes.SectionResult;
 
-public class Converter {
+public class Primo {
 
     private ParsedCase parsedCase;
     private int nextParagraph;
@@ -15,9 +15,9 @@ public class Converter {
     private ICaseSectionParser caseClosingParser;
     private ICaseSectionParser casePanelParser;
 
-    Converter(ICaseSectionParser titleParser, ICaseSectionParser partiesParser,
-              ICaseSectionParser subjectMatterParser, ICaseSectionParser caseBodyParser,
-              ICaseSectionParser caseClosingParser, ICaseSectionParser casePanelParser) {
+    Primo(ICaseSectionParser titleParser, ICaseSectionParser partiesParser,
+          ICaseSectionParser subjectMatterParser, ICaseSectionParser caseBodyParser,
+          ICaseSectionParser caseClosingParser, ICaseSectionParser casePanelParser) {
         this.parsedCase = new ParsedCase();
         this.titleParser = titleParser;
         this.partiesParser = partiesParser;

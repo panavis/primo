@@ -5,8 +5,6 @@ import com.panavis.primo.Parsers.*;
 import com.panavis.primo.ResultTypes.SectionResult;
 import com.panavis.primo.Style.WordParagraph;
 import com.panavis.primo.Wrappers.*;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.openxml4j.opc.OPCPackage;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import java.io.*;
 import java.util.*;
@@ -34,7 +32,7 @@ public class TestsSetup {
 
         for (String wordPath : wordFilePaths) {
             if (isWordDocument(wordPath)) {
-                XWPFDocument wordDoc = createWordDocumentObject(wordPath);
+                XWPFDocument wordDoc = PrimoRunner.createWordDocumentObject(wordPath);
                 wordDocxData.add(wordDoc);
             }
         }
@@ -48,7 +46,7 @@ public class TestsSetup {
         return filePath.endsWith(".json");
     }
 
-    private static ArrayList<String> getSortedFilePaths(File[] FilesInFolder) {
+    static ArrayList<String> getSortedFilePaths(File[] FilesInFolder) {
         ArrayList<String> filePaths = new ArrayList<>();
         Arrays.stream(FilesInFolder).
                 forEach(wordFile -> filePaths.add(wordFile.getPath()));
@@ -56,21 +54,11 @@ public class TestsSetup {
         return filePaths;
     }
 
-    static XWPFDocument createWordDocumentObject(String wordPath) {
-        XWPFDocument wordDoc = null;
-        try {
-            wordDoc = new XWPFDocument(OPCPackage.open(wordPath));
-        } catch (IOException | InvalidFormatException e) {
-            e.printStackTrace();
-        }
-        return wordDoc;
-    }
-
     private static boolean isWordDocument(String wordPath) {
         return wordPath.endsWith(".docx");
     }
 
-    public static Converter getConverterObject(XWPFDocument wordDocument, String section) {
+    public static Primo getConverterObject(XWPFDocument wordDocument, String section) {
         WordParagraph wordParagraph = new WordParagraph(wordDocument);
         CaseTitleParser titleParser = new CaseTitleParser(wordParagraph);
         ICaseSectionParser partiesParser = isSectionBeyondTitle(section) ?
@@ -88,7 +76,7 @@ public class TestsSetup {
         ICaseSectionParser casePanelParser = isSectionBeyondClosing(section) ?
                 new CasePanelParser(wordParagraph) :
                 new MockSectionParser();
-        return new Converter(titleParser, partiesParser, subjectMatterParser,
+        return new Primo(titleParser, partiesParser, subjectMatterParser,
                             caseBodyParser,caseClosingParser, casePanelParser);
     }
 

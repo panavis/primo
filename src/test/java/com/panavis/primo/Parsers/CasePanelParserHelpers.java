@@ -1,6 +1,6 @@
 package com.panavis.primo.Parsers;
 
-import com.panavis.primo.Converter;
+import com.panavis.primo.Primo;
 import com.panavis.primo.TestsSetup;
 import com.panavis.primo.Wrappers.JsonArray;
 import com.panavis.primo.Wrappers.JsonObject;
@@ -45,9 +45,9 @@ class CasePanelParserHelpers {
 
     private static JsonObject getActualCasePanelObject(int caseIndex) {
         XWPFDocument wordDocument = TestsSetup.wordDocxData.get(caseIndex);
-        Converter converter = TestsSetup.getConverterObject(wordDocument, INTEKO);
-        converter.parseCaseSections();
-        return converter.getParsedCaseSection(INTEKO).getSectionContent();
+        Primo primo = TestsSetup.getConverterObject(wordDocument, INTEKO);
+        primo.parseCaseSections();
+        return primo.getParsedCaseSection(INTEKO).getSectionContent();
     }
 
     static JsonObject getActualPanelistObject(int caseIndex, int panelistIndex) {

@@ -10,7 +10,7 @@ import java.util.Set;
 
 public class ParsingValidator extends Validator {
 
-    ParsingValidator(ParsedCase parsedCase) {
+    public ParsingValidator(ParsedCase parsedCase) {
         super(parsedCase);
     }
 
@@ -107,13 +107,13 @@ public class ParsingValidator extends Validator {
     }
 
     public boolean isCasePanelValid() {
-        boolean casePanelvalid = false;
+        boolean casePanelValid = false;
         if (parsedCase.hasSection(INTEKO)) {
             JsonObject casePanelJson = parsedCase.get(INTEKO).getSectionContent();
             JsonArray panelArray = casePanelJson.getArrayByKey(INTEKO);
-            casePanelvalid = panelArray.getSize() >= 2 && eachPanelistHasTitleAndName(panelArray);
+            casePanelValid = panelArray.getSize() >= 2 && eachPanelistHasTitleAndName(panelArray);
         }
-        return casePanelvalid;
+        return casePanelValid;
     }
 
     private boolean eachPanelistHasTitleAndName(JsonArray panelArray) {

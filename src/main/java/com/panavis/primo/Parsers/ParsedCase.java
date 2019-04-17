@@ -3,6 +3,7 @@ package com.panavis.primo.Parsers;
 import com.panavis.primo.ResultTypes.SectionResult;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class ParsedCase {
 
@@ -32,5 +33,9 @@ public class ParsedCase {
 
     public boolean didSkipParagraphs() {
         return this.missedSomeParagraphs;
+    }
+
+    public Map<String, SectionResult> getParsedCaseAsMap() {
+        return this.parsedCase;
     }
 }
