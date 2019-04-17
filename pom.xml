@@ -4,11 +4,11 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>com.nexttran.WordToJsonConverter</groupId>
-  <artifactId>WordToJsonConverter</artifactId>
+  <groupId>com.nexttran.Primo</groupId>
+  <artifactId>Primo</artifactId>
   <version>1.0-SNAPSHOT</version>
 
-  <name>WordToJsonConverter</name>
+  <name>Primo</name>
   <url>www.panavis.com</url>
 
   <properties>
