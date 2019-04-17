@@ -214,7 +214,7 @@ public class CasePanelParser implements ICaseSectionParser {
         while (namesIterator.hasNext() && titlesIterator.hasNext()) {
             String title = titlesIterator.next();
             String name = getNameFromNamesIterator(panelistsNames, namesIterator);
-            if (nameAndTitleAreAvailable(title, name)) {
+            if (nameAndTitleAreAvailable(title, name) && hasPanelistTitleKeyword(title)) {
                 JsonObject panelist = new JsonObject();
                 panelist.addNameValuePair(title, name);
                 panelArray.putValue(panelist);
