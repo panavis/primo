@@ -28,59 +28,56 @@ public class Primo {
     }
 
     public void parseCaseSections() {
-        parseTitleAndUpdateNextParagraph();
-        parsePartiesAndUpdateNextParagraph();
-        checkIfPartiesParserSkippedParagraphs();
-        parseSubjectMatterAndUpdateNextParagraph();
-        parseCaseBodyAndUpdateNextParagraph();
-        parseCaseClosingAndUpdateNextParagraph();
+        parseCaseTitle();
+        parseCaseParties();
+        parseCaseSubjectMatter();
+        parseCaseBody();
+        parseCaseClosing();
         parseCasePanel();
     }
 
-    private void parseTitleAndUpdateNextParagraph() {
-        SectionResult caseTitle = this.titleParser.parse(0);
-        this.parsedCase.set(TITLE, caseTitle);
+    private void parseCaseTitle() {
+        SectionResult caseTitle = titleParser.parse(0);
+        parsedCase.set(TITLE, caseTitle);
         nextParagraph = caseTitle.getNextParagraph();
     }
 
-    private void parsePartiesAndUpdateNextParagraph() {
-        SectionResult caseParties = this.partiesParser.parse(nextParagraph);
-        this.parsedCase.set(PARTIES, caseParties);
+    private void parseCaseParties() {
+        SectionResult caseParties = partiesParser.parse(nextParagraph);
+        parsedCase.set(PARTIES, caseParties);
         nextParagraph = caseParties.getNextParagraph();
+        parsedCase.setSkippedParagraphs(partiesParser.skippedParagraphs());
     }
 
-    private void checkIfPartiesParserSkippedParagraphs() {
-        this.parsedCase.setSkippedParagraphs(partiesParser.skippedParagraphs());
-    }
-
-    private void parseSubjectMatterAndUpdateNextParagraph() {
-        SectionResult caseSubjectMatter = this.subjectMatterParser.parse(nextParagraph);
-        this.parsedCase.set(SUBJECT_MATTER, caseSubjectMatter);
+    private void parseCaseSubjectMatter() {
+        SectionResult caseSubjectMatter = subjectMatterParser.parse(nextParagraph);
+        parsedCase.set(SUBJECT_MATTER, caseSubjectMatter);
         nextParagraph = caseSubjectMatter.getNextParagraph();
     }
 
-    private void parseCaseBodyAndUpdateNextParagraph() {
-        SectionResult caseBody = this.caseBodyParser.parse(nextParagraph);
-        this.parsedCase.set(CASE_BODY, caseBody);
+    private void parseCaseBody() {
+        SectionResult caseBody = caseBodyParser.parse(nextParagraph);
+        parsedCase.set(CASE_BODY, caseBody);
         nextParagraph = caseBody.getNextParagraph();
     }
 
-    private void parseCaseClosingAndUpdateNextParagraph() {
-        SectionResult caseClosing = this.caseClosingParser.parse(nextParagraph);
-        this.parsedCase.set(CASE_CLOSING, caseClosing);
+    private void parseCaseClosing() {
+        SectionResult caseClosing = caseClosingParser.parse(nextParagraph);
+        parsedCase.set(CASE_CLOSING, caseClosing);
         nextParagraph = caseClosing.getNextParagraph();
     }
 
     private void parseCasePanel() {
-        SectionResult casePanel = this.casePanelParser.parse(nextParagraph);
-        this.parsedCase.set(INTEKO, casePanel);
+        SectionResult casePanel = casePanelParser.parse(nextParagraph);
+        parsedCase.set(INTEKO, casePanel);
+        parsedCase.setSkippedParagraphs(casePanelParser.skippedParagraphs());
     }
 
     public SectionResult getParsedCaseSection(String section) {
-        return this.parsedCase.get(section);
+        return parsedCase.get(section);
     }
 
     ParsedCase getParsedCase() {
-        return this.parsedCase;
+        return parsedCase;
     }
 }

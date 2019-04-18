@@ -38,12 +38,14 @@ public class CasePanelParser implements ICaseSectionParser {
     private SectionClosing sectionClosing;
     private JsonArray panelArray;
     private int nextParagraph;
+    private boolean missedParagraphs;
 
     public CasePanelParser(WordParagraph wordParagraph) {
         this.wordParagraph = wordParagraph;
         this.sectionClosing = new SectionClosing(wordParagraph);
         this.panelArray = new JsonArray();
         this.nextParagraph = wordParagraph.numberOfParagraphs();
+        this.missedParagraphs = false;
     }
 
     public SectionResult parse(int startParagraph) {
@@ -57,11 +59,6 @@ public class CasePanelParser implements ICaseSectionParser {
         JsonObject casePanel = new JsonObject();
         casePanel.addNameValuePair(INTEKO, panelArray);
         return new SectionResult(casePanel, 0);
-    }
-
-    @Override
-    public boolean skippedParagraphs() {
-        return false;
     }
 
     private int getFirstParagraphOfPanelSection(int startParagraph) {
@@ -218,6 +215,8 @@ public class CasePanelParser implements ICaseSectionParser {
                 JsonObject panelist = new JsonObject();
                 panelist.addNameValuePair(title, name);
                 panelArray.putValue(panelist);
+            } else {
+                missedParagraphs = true;
             }
         }
     }
@@ -265,5 +264,10 @@ public class CasePanelParser implements ICaseSectionParser {
             paragraphIndex++;
         }
         return hasOtherTitles;
+    }
+
+    @Override
+    public boolean skippedParagraphs() {
+        return missedParagraphs;
     }
 }

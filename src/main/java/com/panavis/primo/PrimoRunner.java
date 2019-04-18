@@ -18,9 +18,7 @@ class PrimoRunner {
         boolean successfulParsing = false;
         XWPFDocument wordDoc = createWordDocumentObject(wordInputPath);
         if (wordDoc != null) {
-            Primo parser = getParser(wordDoc);
-            parser.parseCaseSections();
-            ParsedCase parsedCase = parser.getParsedCase();
+            ParsedCase parsedCase = getParsedCaseFromWordDoc(wordDoc);
             ParsingValidator validator = new ParsingValidator(parsedCase);
             if (validator.isParsedCaseValid()) {
                 JSONObject gson = JsonObject.toParsedGson(parsedCase.getParsedCaseAsMap());
@@ -41,14 +39,25 @@ class PrimoRunner {
         return wordDoc;
     }
 
+    private ParsedCase getParsedCaseFromWordDoc(XWPFDocument wordDoc) {
+        Primo parser = getParser(wordDoc);
+        parser.parseCaseSections();
+        try {
+            wordDoc.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return parser.getParsedCase();
+    }
+
     private Primo getParser(XWPFDocument wordDoc) {
         WordParagraph wordParagraph = new WordParagraph(wordDoc);
         ICaseSectionParser titleParser = new CaseTitleParser(wordParagraph);
         ICaseSectionParser partiesParser = new CasePartiesParser(wordParagraph);
         ICaseSectionParser subjectMatterParser = new CaseSubjectMatterParser(wordParagraph);
         ICaseSectionParser caseBodyParser = new CaseBodyParser(wordParagraph);
-        ICaseSectionParser caseClosingParser = new CaseBodyParser(wordParagraph);
-        ICaseSectionParser casePanelParser = new CaseBodyParser(wordParagraph);
+        ICaseSectionParser caseClosingParser = new CaseClosingParser(wordParagraph);
+        ICaseSectionParser casePanelParser = new CasePanelParser(wordParagraph);
         return new Primo(
                         titleParser,
                         partiesParser,
@@ -61,7 +70,7 @@ class PrimoRunner {
 
 
 
-    private static void createFile(String jsonOutputPath, String jsonString){
+    private void createFile(String jsonOutputPath, String jsonString){
         try (FileWriter file = new FileWriter(jsonOutputPath)) {
             file.write(jsonString);
         } catch (IOException e) {
