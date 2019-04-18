@@ -12,7 +12,7 @@ import org.json.simple.JSONObject;
 import java.io.FileWriter;
 import java.io.IOException;
 
-class PrimoRunner {
+public class PrimoRunner {
 
     public boolean run(String wordInputPath, String jsonOutputPath) {
         boolean successfulParsing = false;
@@ -29,7 +29,7 @@ class PrimoRunner {
         return successfulParsing;
     }
 
-    static XWPFDocument createWordDocumentObject(String wordPath) {
+    XWPFDocument createWordDocumentObject(String wordPath) {
         XWPFDocument wordDoc = null;
         try {
             wordDoc = new XWPFDocument(OPCPackage.open(wordPath));

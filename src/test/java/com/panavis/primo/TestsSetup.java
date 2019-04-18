@@ -32,7 +32,7 @@ public class TestsSetup {
 
         for (String wordPath : wordFilePaths) {
             if (isWordDocument(wordPath)) {
-                XWPFDocument wordDoc = PrimoRunner.createWordDocumentObject(wordPath);
+                XWPFDocument wordDoc = new PrimoRunner().createWordDocumentObject(wordPath);
                 wordDocxData.add(wordDoc);
             }
         }
@@ -46,7 +46,7 @@ public class TestsSetup {
         return filePath.endsWith(".json");
     }
 
-    static ArrayList<String> getSortedFilePaths(File[] FilesInFolder) {
+    private static ArrayList<String> getSortedFilePaths(File[] FilesInFolder) {
         ArrayList<String> filePaths = new ArrayList<>();
         Arrays.stream(FilesInFolder).
                 forEach(wordFile -> filePaths.add(wordFile.getPath()));

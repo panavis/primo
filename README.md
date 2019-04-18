@@ -7,7 +7,7 @@ Conversion of post-2009 cases (docx) to layout-aware json objects.
 
 #### Java Version
 
-Java 8
+Java 10
 
 #### Major Dependencies
 
