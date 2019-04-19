@@ -21,7 +21,8 @@ public class CaseBodyParser implements ICaseSectionParser {
 
     public SectionResult parse(int startParagraph) {
         int nextParagraph = startParagraph;
-        if (section.startsCaseBodySection(startParagraph)) {
+        if (wordParagraph.paragraphExists(nextParagraph) &&
+                section.startsCaseBodySection(startParagraph)) {
             while(wordParagraph.paragraphExists(nextParagraph) &&
                     !section.isCaseClosing(nextParagraph))
             {

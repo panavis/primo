@@ -8,16 +8,19 @@ import com.panavis.primo.Wrappers.JsonObject;
 
 public class CaseClosingParser implements ICaseSectionParser{
 
+    private WordParagraph wordParagraph;
     private SectionClosing section;
 
     public CaseClosingParser(WordParagraph wordParagraph) {
+        this.wordParagraph = wordParagraph;
         this.section = new SectionClosing(wordParagraph);
     }
 
     public SectionResult parse(int startParagraph) {
         int nextSectionStart = startParagraph;
         JsonArray closingText = new JsonArray();
-        if (section.isClosingSentence(startParagraph)) {
+        if (wordParagraph.paragraphExists(nextSectionStart) &&
+                section.isClosingSentence(startParagraph)) {
             int logicalHeadingIndex = startParagraph -1;
             section.setStartingParagraph(logicalHeadingIndex)
                    .parse();

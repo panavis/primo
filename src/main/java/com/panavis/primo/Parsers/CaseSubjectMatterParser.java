@@ -26,7 +26,7 @@ public class CaseSubjectMatterParser implements ICaseSectionParser {
     public SectionResult parse(int startParagraph) {
         subsectionStart = startParagraph;
         int nextParagraph = startParagraph;
-        while(numberOfSubsections > 0) {
+        while(wordParagraph.paragraphExists(startParagraph) && numberOfSubsections > 0) {
             String inlineParagraph = wordParagraph.getInlineHeadingFirstParagraph(subsectionStart);
             section.setStartingParagraph(subsectionStart)
                     .setInlineParagraph(inlineParagraph)
@@ -50,7 +50,7 @@ public class CaseSubjectMatterParser implements ICaseSectionParser {
     }
 
     private void updateSubsectionStartAndNumber(SectionSubjectMatter section, int paragraphIndex) {
-        if (section.hasAnotherSubsection(paragraphIndex)) {
+        if (wordParagraph.paragraphExists(paragraphIndex) && section.hasAnotherSubsection(paragraphIndex)) {
             numberOfSubsections++;
             subsectionStart = paragraphIndex;
         }

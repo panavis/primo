@@ -50,7 +50,7 @@ public class CasePartiesParser implements ICaseSectionParser {
         String firstHeading = "";
         int paragraphIndex;
         paragraphIndex = startParagraph;
-        while (paragraphIndex < this.wordParagraph.numberOfParagraphs()) {
+        while (wordParagraph.paragraphExists(paragraphIndex)) {
             firstHeading = getFirstHeading(firstHeading, paragraphIndex);
             if (!firstHeading.isEmpty())
                 break;
@@ -74,7 +74,8 @@ public class CasePartiesParser implements ICaseSectionParser {
 
     private int getPartiesSubsections(int startParagraph) {
         subsectionStart = startParagraph;
-        while (!reachedSubjectMatterSection && startParagraph < wordParagraph.numberOfParagraphs()) {
+        while (wordParagraph.paragraphExists(subsectionStart) && !reachedSubjectMatterSection &&
+                startParagraph < wordParagraph.numberOfParagraphs()) {
             if (section.startsSubjectMatterSection(subsectionStart)) {
                 reachedSubjectMatterSection = true;
                 break;
