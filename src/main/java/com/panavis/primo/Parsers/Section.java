@@ -1,14 +1,18 @@
 package com.panavis.primo.Parsers;
 
+import static com.panavis.primo.Constants.Headings.*;
 import static com.panavis.primo.Constants.Keywords.*;
+
+import com.panavis.primo.ResultTypes.Result;
 import com.panavis.primo.ResultTypes.TextParagraphIndex;
 import com.panavis.primo.Style.WordParagraph;
 import com.panavis.primo.Utils.*;
 import com.panavis.primo.Wrappers.JsonArray;
 
-abstract class Section {
+abstract class Section  {
 
     WordParagraph wordParagraph;
+    CaseClosingLogic closingLogic;
     private int startParagraph;
     private String inlineParagraph;
     private int lastParagraph;
@@ -16,6 +20,7 @@ abstract class Section {
 
     Section(WordParagraph wordParagraph) {
         this.wordParagraph = wordParagraph;
+        this.closingLogic = new CaseClosingLogic(wordParagraph);
         this.inlineParagraph = "";
         this.subsectionBody = "";
     }
@@ -53,7 +58,20 @@ abstract class Section {
                     .append(wordParagraph.getBlankLinesAfterParagraph(paragraphIndex));
     }
 
-    boolean startsCaseBodySection(int paragraphIndex) {
+    Result hasNewCaseBodyFormat(int paragraphIndex) {
+        if (isParagraphNewCaseBodyStart(paragraphIndex)) {
+            return new Result(true, paragraphIndex);
+        }
+
+        if (wordParagraph.paragraphExists(paragraphIndex + 1) &&
+                wordParagraph.isSectionHeading(paragraphIndex) &&
+                isParagraphNewCaseBodyStart(paragraphIndex + 1)) {
+            return new Result(true, paragraphIndex + 1);
+        }
+        return new Result(false);
+    }
+
+    private boolean isParagraphNewCaseBodyStart(int paragraphIndex) {
         String text = wordParagraph.getParagraphText(paragraphIndex).toLowerCase();
         return text.contains(IMITERERE) && text.contains("y") &&
                 text.contains(URUBANZA);
@@ -62,10 +80,6 @@ abstract class Section {
     Section setStartingParagraph(int startParagraph) {
         this.startParagraph = startParagraph;
         return this;
-    }
-
-    int getStartParagraph() {
-        return this.startParagraph;
     }
 
     Section setInlineParagraph(String inlineParagraph) {
@@ -80,5 +94,12 @@ abstract class Section {
 
     int getLastParagraph() {
         return lastParagraph;
+    }
+
+    boolean hasOldCaseBodyFormat(int startParagraph) {
+        if (!wordParagraph.paragraphExists(startParagraph + 1)) return false;
+        String heading = wordParagraph.getParagraphTextWithoutNumbering(startParagraph);
+        String firstBodyParagraph = wordParagraph.getParagraphTextWithoutNumbering(startParagraph + 1);
+        return heading.toUpperCase().startsWith(URUKIKO) && firstBodyParagraph.toLowerCase().contains(RUSHINGIYE);
     }
 }

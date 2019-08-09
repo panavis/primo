@@ -16,4 +16,6 @@ public class Keywords {
     public static final String RUKIJIJWE = "rukijijwe";
     public static final String RUSOMEWE = "somewe";
     public static final String HEADING = "Heading";
+    public static final String DEFAULT_PARTY_SUBHEADING = "__party__";
+    public static final String RUSHINGIYE = "rushingiye";
 }

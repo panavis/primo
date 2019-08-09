@@ -11,8 +11,8 @@ import java.util.*;
 
 public class TestsSetup {
 
-    private static File expectedJsonFolder = new File("/home/amucunguzi/Documents/cases_manually/json_expected");
-    private static File wordFolder = new File("/home/amucunguzi/Documents/cases_manually/word_sample");
+    private static File expectedJsonFolder = new File("/home/anselme/Dropbox/panavis-code/Primo/devResources/json_expected");
+    private static File wordFolder = new File("/home/anselme/Dropbox/panavis-code/Primo/devResources/word_sample");
     public static ArrayList<JsonObject> expectedJsonContent = new ArrayList<>();
     public static ArrayList<XWPFDocument> wordDocxData = new ArrayList<>();
 

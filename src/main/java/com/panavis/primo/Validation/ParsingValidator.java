@@ -1,5 +1,7 @@
 package com.panavis.primo.Validation;
 
+import static com.panavis.primo.Constants.Headings.IKIREGO;
+import static com.panavis.primo.Constants.Headings.URUKIKO;
 import  static com.panavis.primo.Constants.Keywords.*;
 
 import com.panavis.primo.Parsers.ParsedCase;
@@ -30,18 +32,32 @@ public class ParsingValidator extends Validator {
             JsonObject partiesJson = parsedCase.get(PARTIES).getSectionContent();
             Set<String> keys = partiesJson.getKeys();
             if (hasPartiesSectionHeading(keys)) {
-                validParties = hasAtLeastTwoValidSubsections(partiesJson, keys);
+                JsonArray partiesSubjections = getArrayFromJsonObject(partiesJson, keys);
+                validParties = hasAtLeastTwoValidSubsections(partiesSubjections) ||
+                                hasAtLeastOnePartyAndIkiregoKeywordInHeading(partiesSubjections);
             }
         }
         return validParties;
     }
 
-    private boolean hasAtLeastTwoValidSubsections(JsonObject partiesJson, Set<String> keys) {
-        boolean validParties;
+    private boolean hasAtLeastTwoValidSubsections(JsonArray partiesArray) {
+        return partiesArray.getSize() >= 2 && allSubsectionsHaveContent(partiesArray);
+    }
+
+    private boolean hasAtLeastOnePartyAndIkiregoKeywordInHeading(JsonArray partiesArray) {
+        return partiesArray.getSize() >= 1 && hasIkiregoKeywordInHeading(partiesArray) &&
+                allSubsectionsHaveContent(partiesArray);
+    }
+
+    private boolean hasIkiregoKeywordInHeading(JsonArray partiesArray) {
+        Set<String> headings = partiesArray.getJsonByIndex(0).getKeys();
+        String firstHeading = headings.isEmpty() ? "" : headings.iterator().next();
+        return firstHeading.toUpperCase().contains(IKIREGO);
+    }
+
+    private JsonArray getArrayFromJsonObject(JsonObject partiesJson, Set<String> keys) {
         String partiesHeading = keys.iterator().next();
-        JsonArray partiesArray = partiesJson.getArrayByKey(partiesHeading);
-        validParties = partiesArray.getSize() >= 2 && allSubsectionsHaveContent(partiesArray);
-        return validParties;
+        return partiesJson.getArrayByKey(partiesHeading);
     }
 
     private boolean hasPartiesSectionHeading(Set<String> keys) {
@@ -73,8 +89,7 @@ public class ParsingValidator extends Validator {
         boolean hasContent = false;
         Set<String> subheadings = subsectionJson.getKeys();
         if (subheadings.size() != 0) {
-            String heading = subheadings.iterator().next();
-            JsonArray subheadingContent = subsectionJson.getArrayByKey(heading);
+            JsonArray subheadingContent = getArrayFromJsonObject(subsectionJson, subheadings);
             if (arrayHasNonEmptyString(subheadingContent))
                 hasContent = true;
         }
@@ -99,11 +114,28 @@ public class ParsingValidator extends Validator {
     public boolean isCaseBodyValid(){
         boolean caseBodyValid = false;
         if (parsedCase.hasSection(CASE_BODY)) {
-            JsonObject subjectMatterJson = parsedCase.get(CASE_BODY).getSectionContent();
-            JsonArray sectionArray = subjectMatterJson.getArrayByKey(CASE_BODY);
-            caseBodyValid = sectionArray.getSize() >= 3 && allSubsectionsHaveContent(sectionArray);
+            JsonObject caseBodyJson = parsedCase.get(CASE_BODY).getSectionContent();
+            JsonArray sectionArray = caseBodyJson.getArrayByKey(CASE_BODY);
+            caseBodyValid = (sectionArray.getSize() >= 3 && allSubsectionsHaveContent(sectionArray)) ||
+                    (sectionArray.getSize() >= 2 && hasJudgeDecisionInCaseBody(sectionArray)) ||
+                    (sectionArray.getSize() >= 1 && hasOldCaseBodyFormat(sectionArray));
         }
         return caseBodyValid;
+    }
+
+    private boolean hasOldCaseBodyFormat(JsonArray caseBody) {
+        JsonObject firstSection = caseBody.getJsonByIndex(0);
+        String sectionHeading = firstSection.getKeys().size() > 0 ?
+                (String) firstSection.getKeys().toArray()[0] : "";
+        return sectionHeading.toUpperCase().contains(URUKIKO);
+
+    }
+
+    private boolean hasJudgeDecisionInCaseBody(JsonArray caseBody) {
+        JsonObject lastSection = caseBody.getJsonByIndex(caseBody.getSize() - 1);
+        String sectionHeading = lastSection.getKeys().size() > 0 ?
+                (String) lastSection.getKeys().toArray()[0] : "";
+        return sectionHeading.toUpperCase().contains("ICYEMEZO");
     }
 
     public boolean isCasePanelValid() {

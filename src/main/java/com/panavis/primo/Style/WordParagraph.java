@@ -6,7 +6,7 @@ import com.panavis.primo.Utils.StringFormatting;
 import org.apache.poi.xwpf.usermodel.*;
 import java.util.*;
 
-import static com.panavis.primo.Utils.StringFormatting.trimColons;
+import static com.panavis.primo.Utils.StringFormatting.trimColonsOrSemicolons;
 
 public class WordParagraph {
 
@@ -31,10 +31,14 @@ public class WordParagraph {
     }
 
     public String getParagraphText(int paragraphIndex) {
-        String text = getParagraph(paragraphIndex).getText().trim();
+        String text = getParagraphTextWithoutNumbering(paragraphIndex);
         if (numberedParagraphs.get(paragraphIndex))
             text = unitNumberings.get(paragraphIndex).current + text;
         return text;
+    }
+
+    public String getParagraphTextWithoutNumbering(int paragraphIndex) {
+        return getParagraph(paragraphIndex).getText().trim();
     }
 
     public UnitNumbering getUnitNumbering(int paragraphIndex) {
@@ -50,10 +54,42 @@ public class WordParagraph {
         String text = getParagraphText(paragraphIndex);
         if (!StringFormatting.isCaseSensitive(text)) return false;
 
-        return (ParagraphRun.isFirstOrSecondRunUnderlined(paragraph) ||
-                ParagraphRun.isFirstRunBoldAndSecondRunStartsWithColon(paragraph) ||
-                ParagraphRun.isFirstRunCapitalizedAndEndsWithColon(paragraph) ||
-                ParagraphRun.isFirstRunBoldAndEndsWithColon(paragraph) ||
+        String potentialHeading = getHeadingFromParagraph(paragraphIndex);
+
+        return (
+                        (ParagraphRun.isFirstOrSecondRunUnderlined(paragraph) &&
+                        StringFormatting.isFirstLetterCapitalized(text) &&
+                        !StringFormatting.hasComma(text)
+                )
+                ||
+                (
+                        ParagraphRun.isFirstRunBold(paragraph) &&
+                        ParagraphRun.isFirstRunFollowedByColon(paragraph)
+                )
+                ||
+                (
+                        ParagraphRun.isFirstRunCapitalized(paragraph) &&
+                        ParagraphRun.isFirstRunFollowedByColon(paragraph)) &&
+                        meetsMinLength(potentialHeading)
+                ||
+                (
+                        ParagraphRun.isFirstRunCapitalized(paragraph) &&
+                        StringFormatting.isFirstLetterCaseSensitive(text) &&
+                        ParagraphRun.hasOneRun(paragraph) &&
+                        meetsMinLength(potentialHeading)
+                )
+                ||
+                (
+                        ParagraphRun.isFirstRunBold(paragraph) &&
+                        ParagraphRun.hasOneRun(paragraph) &&
+                        ParagraphRun.isFirstRunCapitalized(paragraph))
+                ||
+                (
+                        ParagraphRun.isFirstRunBold(paragraph) &&
+                        ParagraphRun.hasOneRun(paragraph) &&
+                        StringFormatting.isFirstLetterCapitalized(text)
+                )
+                ||
                 hasLeftIndentationAndIsCapitalized(paragraphIndex) ||
                 isUpperCaseAndHasNumberedHeading(paragraphIndex) ||
                 hasColonAndPreColonPartHasStyle(paragraphIndex) ||
@@ -61,8 +97,12 @@ public class WordParagraph {
         );
     }
 
+    private boolean meetsMinLength(String potentialHeading) {
+        return StringFormatting.hasAtLeastNCharacters(potentialHeading, 3);
+    }
+
     private boolean hasLeftIndentationAndIsCapitalized(int paragraphIndex) {
-        XWPFRun firstRun = ParagraphRun.getRun(getParagraph(paragraphIndex), 0);
+        XWPFRun firstRun = ParagraphRun.getNthRun(getParagraph(paragraphIndex), 0);
         return hasSignificantLeftIndentation(paragraphIndex) &&
                 StringFormatting.isTextCapitalized(firstRun.text());
     }
@@ -77,7 +117,7 @@ public class WordParagraph {
 
     private boolean isUpperCaseAndHasNumberedHeading(int paragraphIndex) {
         XWPFParagraph paragraph = getParagraph(paragraphIndex);
-        XWPFRun firstRun = ParagraphRun.getRun(paragraph, 0);
+        XWPFRun firstRun = ParagraphRun.getNthRun(paragraph, 0);
         UnitNumbering unitNumbering = unitNumberings.get(paragraphIndex);
         return StringFormatting.isTextCapitalized(firstRun.text()) &&
                 (numberedParagraphs.get(paragraphIndex) &&
@@ -117,14 +157,18 @@ public class WordParagraph {
         return postParagraphBlanks.get(paragraphIndex);
     }
 
-    public String getCaseSensitiveRunText(int paragraphIndex) {
-        String runText = "";
-        List<XWPFRun> runs = getParagraph(paragraphIndex).getRuns();
-        for (XWPFRun run : runs) {
-            if (StringFormatting.isCaseSensitive(run.text()))
-                runText = run.text();
+    private String getCaseSensitiveText(String text) {
+        List<String> caseTokens = new ArrayList<>();
+        String[] tokens = text.split(" ");
+        for (String token : tokens) {
+            if ((StringFormatting.isCaseSensitive(token)) ||
+                    token.equals(".")) {
+                caseTokens.add(token);
+            }
         }
-        return StringFormatting.trimColons(runText).trim();
+
+        String newText = String.join(" ", caseTokens);
+        return StringFormatting.trimColonsOrSemicolons(newText);
     }
 
     public String getParagraphFirstWord(int paragraphIndex) {
@@ -144,7 +188,8 @@ public class WordParagraph {
 
         if (hasColonAndPreColonPartHasStyle(paragraphIndex))
             sectionHeading = currentParagraph.split(StringFormatting.COLON)[0];
-        return trimColons(sectionHeading);
+        String withoutColons = trimColonsOrSemicolons(sectionHeading);
+        return getCaseSensitiveText(withoutColons);
     }
 
     public boolean isBeginningUnderlined(int paragraphIndex) {

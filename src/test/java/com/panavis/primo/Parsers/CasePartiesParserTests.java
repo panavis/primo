@@ -20,7 +20,8 @@ public class CasePartiesParserTests {
     @Ignore("Ignore: Parties section troubleshooter.")
     @Test
     public void troubleshootOneCaseSeparately() {
-        SectionResult result = CasePartiesTestsHelpers.parseOneCaseAndReturnPartiesSection(21);
+        SectionResult result = CasePartiesTestsHelpers.parseOneCaseAndReturnPartiesSection(20);
+        System.out.println(result.getSectionContent().toString());
     }
 
     @Test
@@ -123,13 +124,43 @@ public class CasePartiesParserTests {
     }
 
     @Test
-    public void case_0202_PartiesSectionHas_HABURANA_asJsonKey() {
+    public void case_020_PartiesSectionHas_HABURANA_asJsonKey() {
         CasePartiesTestsHelpers.assertJsonContainsPartiesSection(20, HABURANA);
     }
 
     @Test
     public void case_021_PartiesSectionHas_HABURANA_asJsonKey() {
         CasePartiesTestsHelpers.assertJsonContainsPartiesSection(21, HABURANA);
+    }
+
+    @Test
+    public void case_025_PartiesSectionHas_HABURANA_asJsonKey() {
+        CasePartiesTestsHelpers.assertJsonContainsPartiesSection(25, HABURANA);
+    }
+
+    @Test
+    public void case_026_PartiesSectionHas_HABURANA_asJsonKey() {
+        CasePartiesTestsHelpers.assertJsonContainsPartiesSection(26, HABURANA);
+    }
+
+    @Test
+    public void case_027_PartiesSectionHas_ABABURANA_asJsonKey() {
+        CasePartiesTestsHelpers.assertJsonContainsPartiesSection(27, "I.\t" + ABABURANA);
+    }
+
+    @Test
+    public void case_028_PartiesSectionHas_HABURANA_asJsonKey() {
+        CasePartiesTestsHelpers.assertJsonContainsPartiesSection(28, HABURANA);
+    }
+
+    @Test
+    public void case_029_PartiesSectionHas_HABURANA_asJsonKey() {
+        CasePartiesTestsHelpers.assertJsonContainsPartiesSection(29, HABURANA);
+    }
+
+    @Test
+    public void case_031_PartiesSectionHas_HABURANA_asJsonKey() {
+        CasePartiesTestsHelpers.assertJsonContainsPartiesSection(31, HABURANA);
     }
 
     @Test
@@ -234,13 +265,43 @@ public class CasePartiesParserTests {
     }
 
     @Test
-    public void case_0202_PartiesSectionHasExpectedLength() {
-        CasePartiesTestsHelpers.assertCorrectNumberOfSubsections(20, HABURANA, 2);
+    public void case_020_PartiesSectionHasExpectedLength() {
+        CasePartiesTestsHelpers.assertCorrectNumberOfSubsections(20, HABURANA, 3);
     }
 
     @Test
     public void case_021_PartiesSectionHasExpectedLength() {
         CasePartiesTestsHelpers.assertCorrectNumberOfSubsections(21, HABURANA, 2);
+    }
+
+    @Test
+    public void case_025_PartiesSectionHasExpectedLength() {
+        CasePartiesTestsHelpers.assertCorrectNumberOfSubsections(25, HABURANA, 2);
+    }
+
+    @Test
+    public void case_026_PartiesSectionHasExpectedLength() {
+        CasePartiesTestsHelpers.assertCorrectNumberOfSubsections(26, HABURANA, 2);
+    }
+
+    @Test
+    public void case_027_PartiesSectionHasExpectedLength() {
+        CasePartiesTestsHelpers.assertCorrectNumberOfSubsections(27, "I.\t" + ABABURANA, 2);
+    }
+
+    @Test
+    public void case_028_PartiesSectionHasExpectedLength() {
+        CasePartiesTestsHelpers.assertCorrectNumberOfSubsections(28, HABURANA, 2);
+    }
+
+    @Test
+    public void case_029_PartiesSectionHasExpectedLength() {
+        CasePartiesTestsHelpers.assertCorrectNumberOfSubsections(29, HABURANA, 2);
+    }
+
+    @Test
+    public void case_031_PartiesSectionHasExpectedLength() {
+        CasePartiesTestsHelpers.assertCorrectNumberOfSubsections(31, HABURANA, 2);
     }
 
     @Test
@@ -360,19 +421,31 @@ public class CasePartiesParserTests {
     @Test
     public void case_019_PartiesSectionsHasProsecutorSubsection() {
         JsonObject actualParty = CasePartiesTestsHelpers.getActualPartiesSubsection(19, HABURANA, 0);
-        assertTrue(actualParty.hasKey(UBUSHINJACYAHA));
+        assertTrue(actualParty.hasKey(DEFAULT_PARTY_SUBHEADING));
     }
 
     @Test
     public void case_020_PartiesSectionsHasProsecutorSubsection() {
         JsonObject actualParty = CasePartiesTestsHelpers.getActualPartiesSubsection(20, HABURANA, 0);
-        assertTrue(actualParty.hasKey(UBUSHINJACYAHA));
+        assertTrue(actualParty.hasKey(DEFAULT_PARTY_SUBHEADING));
     }
 
     @Test
     public void case_021_PartiesSectionsHasProsecutorSubsection() {
         JsonObject actualParty = CasePartiesTestsHelpers.getActualPartiesSubsection(21, HABURANA, 0);
-        assertTrue(actualParty.hasKey(UBUSHINJACYAHA));
+        assertTrue(actualParty.hasKey(DEFAULT_PARTY_SUBHEADING));
+    }
+
+    @Test
+    public void case_025_PartiesSectionsHasDefaultPartySubheadingAsFirstSection() {
+        JsonObject actualParty = CasePartiesTestsHelpers.getActualPartiesSubsection(25, HABURANA, 0);
+        assertTrue(actualParty.hasKey(DEFAULT_PARTY_SUBHEADING));
+    }
+
+    @Test
+    public void case_028_PartiesSectionsHasDefaultPartySubheadingAsFirstSection() {
+        JsonObject actualParty = CasePartiesTestsHelpers.getActualPartiesSubsection(28, HABURANA, 0);
+        assertTrue(actualParty.hasKey(UWAJURIYE));
     }
 
     @Test
@@ -424,13 +497,13 @@ public class CasePartiesParserTests {
     }
 
     @Test
-    public void case_008_PartiesSectionHs_Prosecutor_subsection() {
+    public void case_008_PartiesSectionHas_Prosecutor_subsection() {
         JsonObject actualParty = CasePartiesTestsHelpers.getActualPartiesSubsection(8, HABURANA, 1);
         assertTrue(actualParty.hasKey(UBUSHINJACYAHA));
     }
 
     @Test
-    public void case_009_PartiesSectionHs_Prosecutor_subsection() {
+    public void case_009_PartiesSectionHas_Prosecutor_subsection() {
         JsonObject actualParty = CasePartiesTestsHelpers.getActualPartiesSubsection(9, HABURANA, 1);
         assertTrue(actualParty.hasKey(UWAJURIYE));
     }
@@ -505,19 +578,31 @@ public class CasePartiesParserTests {
     @Test
     public void case_019_PartiesSectionsHasUshinjwaSubsection() {
         JsonObject actualParty = CasePartiesTestsHelpers.getActualPartiesSubsection(19, HABURANA, 1);
-        assertTrue(actualParty.hasKey(USHINJWA.toLowerCase()));
+        assertTrue(actualParty.hasKey(DEFAULT_PARTY_SUBHEADING));
     }
 
     @Test
     public void case_020_PartiesSectionsHasUshinjwaSubsection() {
         JsonObject actualParty = CasePartiesTestsHelpers.getActualPartiesSubsection(20, HABURANA, 1);
-        assertTrue(actualParty.hasKey(USHINJWA.toLowerCase()));
+        assertTrue(actualParty.hasKey(DEFAULT_PARTY_SUBHEADING));
     }
 
     @Test
     public void case_021_PartiesSectionsHasUshinjwaSubsection() {
         JsonObject actualParty = CasePartiesTestsHelpers.getActualPartiesSubsection(21, HABURANA, 1);
-        assertTrue(actualParty.hasKey(USHINJWA.toLowerCase()));
+        assertTrue(actualParty.hasKey(DEFAULT_PARTY_SUBHEADING));
+    }
+
+    @Test
+    public void case_025_PartiesSectionsHasDefaultPartySubheadingAsSecondSection() {
+        JsonObject actualParty = CasePartiesTestsHelpers.getActualPartiesSubsection(25, HABURANA, 1);
+        assertTrue(actualParty.hasKey(DEFAULT_PARTY_SUBHEADING));
+    }
+
+    @Test
+    public void case_028_PartiesSectionsHasDefaultPartySubheadingAsSecondSection() {
+        JsonObject actualParty = CasePartiesTestsHelpers.getActualPartiesSubsection(28, HABURANA, 1);
+        assertTrue(actualParty.hasKey(UBUSHINJACYAHA));
     }
 
     @Test
@@ -651,19 +736,25 @@ public class CasePartiesParserTests {
 
     @Test
     public void case_019_Parties_ProsecutorSectionHasExpectedContent() {
-        ExpectedActualContent content = CasePartiesTestsHelpers.getExpectedAndActualContentForSubsection(19, 0, HABURANA, UBUSHINJACYAHA);
+        ExpectedActualContent content = CasePartiesTestsHelpers.getExpectedAndActualContentForSubsection(19, 0, HABURANA, DEFAULT_PARTY_SUBHEADING);
         CasePartiesTestsHelpers.assertExactContentEquals(content.expectedContent, content.actualContent);
     }
 
     @Test
     public void case_020_Parties_ProsecutorSectionHasExpectedContent() {
-        ExpectedActualContent content = CasePartiesTestsHelpers.getExpectedAndActualContentForSubsection(20, 0, HABURANA, UBUSHINJACYAHA);
+        ExpectedActualContent content = CasePartiesTestsHelpers.getExpectedAndActualContentForSubsection(20, 0, HABURANA, DEFAULT_PARTY_SUBHEADING);
         CasePartiesTestsHelpers.assertExactContentEquals(content.expectedContent, content.actualContent);
     }
 
     @Test
     public void case_021_Parties_ProsecutorSectionHasExpectedContent() {
-        ExpectedActualContent content = CasePartiesTestsHelpers.getExpectedAndActualContentForSubsection(21, 0, HABURANA, UBUSHINJACYAHA);
+        ExpectedActualContent content = CasePartiesTestsHelpers.getExpectedAndActualContentForSubsection(21, 0, HABURANA, DEFAULT_PARTY_SUBHEADING);
+        CasePartiesTestsHelpers.assertExactContentEquals(content.expectedContent, content.actualContent);
+    }
+
+    @Test
+    public void case_025_Parties_FirstSectionHasExpectedContent() {
+        ExpectedActualContent content = CasePartiesTestsHelpers.getExpectedAndActualContentForSubsection(25, 0, HABURANA, DEFAULT_PARTY_SUBHEADING);
         CasePartiesTestsHelpers.assertExactContentEquals(content.expectedContent, content.actualContent);
     }
 
@@ -793,19 +884,31 @@ public class CasePartiesParserTests {
 
     @Test
     public void case_019_Parties_Ushinjwa_SubsectionMatchesExpectedContent() {
-        ExpectedActualContent content = CasePartiesTestsHelpers.getExpectedAndActualContentForSubsection(19, 1, HABURANA, USHINJWA.toLowerCase());
+        ExpectedActualContent content = CasePartiesTestsHelpers.getExpectedAndActualContentForSubsection(19, 1, HABURANA, DEFAULT_PARTY_SUBHEADING);
         CasePartiesTestsHelpers.assertExactContentEquals(content.expectedContent, content.actualContent);
     }
 
     @Test
     public void case_020_Parties_Ushinjwa_SubsectionMatchesExpectedContent() {
-        ExpectedActualContent content = CasePartiesTestsHelpers.getExpectedAndActualContentForSubsection(20, 1, HABURANA, USHINJWA.toLowerCase());
+        ExpectedActualContent content = CasePartiesTestsHelpers.getExpectedAndActualContentForSubsection(20, 1, HABURANA, DEFAULT_PARTY_SUBHEADING);
         CasePartiesTestsHelpers.assertExactContentEquals(content.expectedContent, content.actualContent);
     }
 
     @Test
     public void case_021_Parties_Ushinjwa_SubsectionMatchesExpectedContent() {
-        ExpectedActualContent content = CasePartiesTestsHelpers.getExpectedAndActualContentForSubsection(21, 1, HABURANA, USHINJWA.toLowerCase());
+        ExpectedActualContent content = CasePartiesTestsHelpers.getExpectedAndActualContentForSubsection(21, 1, HABURANA, DEFAULT_PARTY_SUBHEADING);
+        CasePartiesTestsHelpers.assertExactContentEquals(content.expectedContent, content.actualContent);
+    }
+
+    @Test
+    public void case_025_Parties_SecondSectionHasExpectedContent() {
+        ExpectedActualContent content = CasePartiesTestsHelpers.getExpectedAndActualContentForSubsection(25, 1, HABURANA, DEFAULT_PARTY_SUBHEADING);
+        CasePartiesTestsHelpers.assertExactContentEquals(content.expectedContent, content.actualContent);
+    }
+
+    @Test
+    public void case_028_Parties_SecondSectionHasExpectedContent() {
+        ExpectedActualContent content = CasePartiesTestsHelpers.getExpectedAndActualContentForSubsection(28, 1, HABURANA, UBUSHINJACYAHA);
         CasePartiesTestsHelpers.assertExactContentEquals(content.expectedContent, content.actualContent);
     }
 

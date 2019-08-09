@@ -6,15 +6,12 @@ import org.apache.poi.xwpf.usermodel.*;
 import java.util.List;
 
 class ParagraphRun {
-
-    static boolean isFirstRunBoldAndSecondRunStartsWithColon(XWPFParagraph paragraph) {
-        List<XWPFRun> runs = paragraph.getRuns();
-        int numberOfRuns = runs.size();
-        String secondRunText = "";
-        if (numberOfRuns > 1)
-            secondRunText = runs.get(1).text().trim();
-        XWPFRun firstRun = runs.get(0);
-        return firstRun.isBold() && secondRunText.startsWith(StringFormatting.COLON);
+    static boolean isFirstRunFollowedByColon(XWPFParagraph paragraph) {
+        String firstRunText = ParagraphRun.getNthRunText(paragraph, 0);
+        String secondRunText = ParagraphRun.getNthRunText(paragraph, 1);
+        return firstRunText.endsWith(StringFormatting.COLON) ||
+                firstRunText.contains(StringFormatting.COLON) ||
+                secondRunText.startsWith(StringFormatting.COLON);
     }
 
     static boolean isFirstRunHighlyIndented(XWPFParagraph paragraph) {
@@ -24,27 +21,30 @@ class ParagraphRun {
         return (leftIndent == HEADING_INDENT || leftIndent > TWO_TABS_ESTIMATE);
     }
 
-    static XWPFRun getRun(XWPFParagraph paragraph, int runIndex) {
+    static XWPFRun getNthRun(XWPFParagraph paragraph, int runIndex) {
         List<XWPFRun> paragraphRuns = paragraph.getRuns();
         return paragraphRuns.get(runIndex);
     }
 
-    static boolean isFirstRunCapitalizedAndEndsWithColon(XWPFParagraph paragraph) {
-        XWPFRun firstRun = getRun(paragraph, 0);
-        return StringFormatting.isTextCapitalized(firstRun.text()) &&
-                paragraph.getText().endsWith(StringFormatting.COLON);
+    private static String getNthRunText(XWPFParagraph paragraph, int runIndex) {
+        List<XWPFRun> runs = paragraph.getRuns();
+        int numberOfRuns = runs.size();
+        String nthRunText = "";
+        if (numberOfRuns > runIndex)
+            nthRunText = ParagraphRun.getNthRun(paragraph, runIndex).text().trim();
+        return nthRunText;
     }
 
-    static boolean isFirstRunBoldAndEndsWithColon(XWPFParagraph paragraph) {
-        return ParagraphRun.isFirstRunBold(paragraph) &&
-                paragraph.getText().endsWith(StringFormatting.COLON);
+    static boolean isFirstRunCapitalized(XWPFParagraph paragraph) {
+        String firstRunText = ParagraphRun.getNthRunText(paragraph, 0);
+        return StringFormatting.isTextCapitalized(firstRunText);
     }
 
     static boolean isFirstOrSecondRunUnderlined(XWPFParagraph paragraph) {
-        XWPFRun firstRun = getRun(paragraph, 0);
+        XWPFRun firstRun = getNthRun(paragraph, 0);
         if (isRunUnderlined(firstRun)) return true;
         if (paragraph.getRuns().size() > 1) {
-            XWPFRun secondRun = getRun(paragraph, 1);
+            XWPFRun secondRun = getNthRun(paragraph, 1);
             return isRunUnderlined(secondRun);
         }
         return false;
@@ -56,12 +56,14 @@ class ParagraphRun {
     }
 
     static boolean isFirstRunBold(XWPFParagraph paragraph) {
-        List<XWPFRun> paragraphRuns = paragraph.getRuns();
-        XWPFRun firstRun = paragraphRuns.get(0);
+        XWPFRun firstRun = ParagraphRun.getNthRun(paragraph, 0);
         boolean hasHeadingStyle = false;
         if (paragraph.getStyle() != null)
             hasHeadingStyle = paragraph.getStyle().equals("Heading1");
         return firstRun.isBold() || hasHeadingStyle;
     }
 
+    static boolean hasOneRun(XWPFParagraph paragraph) {
+        return paragraph.getRuns().size() == 1;
+    }
 }

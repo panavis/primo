@@ -94,7 +94,7 @@ class CasePartiesTestsHelpers {
         return actualPlaintiff.getArrayByKey(subsectionName);
     }
 
-    private static JsonObject getExpectedSubsection(int caseIndex, int subsectionIndex, String sectionName) {
+    static JsonObject getExpectedSubsection(int caseIndex, int subsectionIndex, String sectionName) {
         JsonObject expectedPartiesSection = allExpectedPartiesSections.get(caseIndex);
         JsonArray expectedPartiesSubSections = expectedPartiesSection.getArrayByKey(sectionName);
         return  expectedPartiesSubSections.getJsonByIndex(subsectionIndex);

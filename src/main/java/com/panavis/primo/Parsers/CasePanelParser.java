@@ -8,7 +8,7 @@ import com.panavis.primo.Wrappers.JsonArray;
 import com.panavis.primo.Wrappers.JsonObject;
 
 import java.util.*;
-import java.util.regex.Pattern;
+import java.util.regex.*;
 
 class PanelSectionLine {
 
@@ -35,14 +35,17 @@ class NamesAndTitles {
 public class CasePanelParser implements ICaseSectionParser {
 
     private WordParagraph wordParagraph;
-    private SectionClosing sectionClosing;
+    private CaseClosingLogic closingLogic;
     private JsonArray panelArray;
     private int nextParagraph;
     private boolean missedParagraphs;
+    private final String UMUCAMANZA = "camanza";
+    private final String PEREZIDA = "perezida";
+    private final String UMWANDITSI = "anditsi";
 
     public CasePanelParser(WordParagraph wordParagraph) {
         this.wordParagraph = wordParagraph;
-        this.sectionClosing = new SectionClosing(wordParagraph);
+        this.closingLogic = new CaseClosingLogic(wordParagraph);
         this.panelArray = new JsonArray();
         this.nextParagraph = wordParagraph.numberOfParagraphs();
         this.missedParagraphs = false;
@@ -64,25 +67,112 @@ public class CasePanelParser implements ICaseSectionParser {
     private int getFirstParagraphOfPanelSection(int startParagraph) {
         int panelStart = wordParagraph.numberOfParagraphs();
         if (wordParagraph.paragraphExists(startParagraph))
-            panelStart = this.sectionClosing.isClosingHeading(startParagraph) ?
+            panelStart = this.closingLogic.isClosingHeading(startParagraph) ?
                     startParagraph + 1 : startParagraph;
         return panelStart;
     }
 
     private NamesAndTitles getSubsequentNamesAndTitles() {
         PanelSectionLine firstPanelLine = getPanelSectionLine(nextParagraph);
-        List<String> panelistsTitles = firstPanelLine.panelLine;
+        List<String> panelLine = firstPanelLine.panelLine;
         nextParagraph = firstPanelLine.index + 1;
-        NamesAndTitles namesAndTitles = new NamesAndTitles(new ArrayList<>(), panelistsTitles);
-        if (isNameAndTitleOnTheSameLine(panelistsTitles)) {
-            splitTheLineAndSetNewNamesAndTitles(panelistsTitles, namesAndTitles);
+        NamesAndTitles namesAndTitles = new NamesAndTitles(new ArrayList<>(), new ArrayList<>());
+
+        if (hasThreeOrMorePanelistsOnTheSameLine(panelLine.toString())) {
+            parseAndAddNameTriplet(panelLine);
+        }
+        else if (hasTwoJudgesOnTheSameLine(panelLine.toString())) {
+            parseAndAddNamePair(panelLine);
+        }
+        else if (isNameAndTitleOnTheSameLine(panelLine)) {
+            splitTheLineAndSetNewNamesAndTitles(panelLine, namesAndTitles);
         } else {
             PanelSectionLine secondPanelLine = getPanelSectionLine(nextParagraph);
             namesAndTitles.names = secondPanelLine.panelLine;
+            namesAndTitles.titles = panelLine;
             nextParagraph = secondPanelLine.index + 1;
         }
         updateOrderIfReversed(namesAndTitles);
         return namesAndTitles;
+    }
+
+    private void parseAndAddNameTriplet(List<String> panelLine) {
+        // e.g.
+        // [MUNYANGERI N.Innocent, MUGENZI Louis-Marie, KANYANGE Fidélité
+        // Umucamanza, Perezida, Umucamanza]
+
+        String oneLine = String.join("__", panelLine);
+        String[] namesAndTitles = oneLine.split(System.lineSeparator());
+
+        boolean hasTwoLines = namesAndTitles.length >= 2;
+        String[] names = hasTwoLines ? namesAndTitles[0].split("__") : new String[0];
+        String[] titles = hasTwoLines ? namesAndTitles[1].split("__") : new String[0];
+
+        if (names.length >= 3 && names.length == titles.length) {
+            String panelChair = titles[1];
+            boolean isPresidentInMiddle = hasPanelPresident(panelChair);
+            if (isPresidentInMiddle) {
+                String tempName = names[1];
+                names[1] = names[0];
+                names[0] = tempName;
+
+                String tempTitle = titles[1];
+                titles[1] = titles[0];
+                titles[0] = tempTitle;
+            }
+            addTitlesAndNamesToPanelArray(Arrays.asList(titles), Arrays.asList(names));
+            addCaseWriterIfAny(panelLine, namesAndTitles);
+        }
+    }
+
+    private void addCaseWriterIfAny(List<String> panelLine, String[] namesAndTitles) {
+        if (namesAndTitles.length > 2 && hasCaseWriter(panelLine.toString())) {
+            String writerName = "";
+            String[] thirdLineTokens = namesAndTitles[2].split(" ");
+
+            for (String thirdLineToken : thirdLineTokens) {
+                if (hasCaseWriter(thirdLineToken)) {
+                    break;
+                }
+                writerName += " " + thirdLineToken;
+            }
+           addTitlesAndNamesToPanelArray(Arrays.asList("Umwanditsi w'Urukiko"), Arrays.asList(writerName.trim()));
+        }
+    }
+
+    private boolean hasThreeOrMorePanelistsOnTheSameLine(String panelLine) {
+        return hasTwoJudgesOnTheSameLine(panelLine) && hasPanelPresident(panelLine);
+    }
+
+    private void parseAndAddNamePair(List<String> panelLine) {
+        String lastToken = panelLine.size() > 0 ? panelLine.get(panelLine.size() -1) : "";
+        String otherTitle = panelLine.size() > 1 ? panelLine.get(1) : "";
+        if (lastToken.toLowerCase().endsWith(UMUCAMANZA) &&
+                panelLine.size() == 3 &&
+                otherTitle.toLowerCase().endsWith(UMUCAMANZA)
+        ) {
+            String firstName = panelLine.get(0);
+            String[] secondNameWithTitle = panelLine.get(1).split(" ");
+            int secondNameLength = secondNameWithTitle.length;
+            int nameEnding = secondNameLength > 2 ? secondNameLength - 1 : 0;
+            String secondNameTokens[] = Arrays.copyOfRange(secondNameWithTitle, 0, nameEnding);
+            String secondName = String.join(" ", secondNameTokens);
+
+            List<String> names = Arrays.asList(firstName, secondName);
+            String umucamanza = "Umucamanza";
+            List<String> titles = Arrays.asList(umucamanza, umucamanza);
+            addTitlesAndNamesToPanelArray(titles, names);
+        }
+    }
+
+    private boolean hasTwoJudgesOnTheSameLine(String panelLine) {
+        Pattern judgeName = Pattern.compile(UMUCAMANZA, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = judgeName.matcher(panelLine);
+        int count = 0;
+        while (matcher.find()) {
+            count++;
+        }
+        return count > 1;
     }
 
     private PanelSectionLine getPanelSectionLine(int paragraphIndex) {
@@ -90,7 +180,9 @@ public class CasePanelParser implements ICaseSectionParser {
         if (isSignatureLine(paragraphIndex)) paragraphIndex++;
         if (wordParagraph.paragraphExists(paragraphIndex)) {
             String[] words = wordParagraph.getParagraphText(paragraphIndex).split("\t");
-            panelLine = Arrays.asList(words);
+            List<String> rawPanelLine = new ArrayList<>(Arrays.asList(words));
+            rawPanelLine.removeIf(token -> token.trim().equals(""));
+            panelLine = rawPanelLine;
         }
         return new PanelSectionLine(panelLine, paragraphIndex);
     }
@@ -99,7 +191,6 @@ public class CasePanelParser implements ICaseSectionParser {
         boolean signatureLine = false;
         if (wordParagraph.paragraphExists(nextParagraph)) {
             signatureLine = firstWordMatchesSignaturePattern(nextParagraph);
-
         }
         return signatureLine;
     }
@@ -136,14 +227,19 @@ public class CasePanelParser implements ICaseSectionParser {
         return hasPanelistTitleKeyword(firstWord);
     }
 
-    private boolean isJudge(String word) {
-        String w = word.toLowerCase();
-        return w.contains("camanza") || w.contains("perezida");
+    private boolean hasJudge(String text) {
+        String w = text.toLowerCase();
+        return w.contains(UMUCAMANZA) || hasPanelPresident(text);
     }
 
-    private boolean isCaseWriter(String word) {
+    private boolean hasPanelPresident(String text) {
+        String w = text.toLowerCase();
+        return w.contains(PEREZIDA);
+    }
+
+    private boolean hasCaseWriter(String word) {
         String w = word.toLowerCase();
-        return w.contains("anditsi");
+        return w.contains(UMWANDITSI);
     }
 
     private boolean listHasTitleKeyword(List<String> panelistsNames) {
@@ -157,7 +253,7 @@ public class CasePanelParser implements ICaseSectionParser {
     }
 
     private boolean hasPanelistTitleKeyword(String word) {
-        return isJudge(word) || isCaseWriter(word);
+        return hasJudge(word) || hasCaseWriter(word);
     }
 
     private void splitTheLineAndSetNewNamesAndTitles(List<String> panelistsTitles, NamesAndTitles namesAndTitles) {
@@ -173,7 +269,7 @@ public class CasePanelParser implements ICaseSectionParser {
         int titleIndex = 0;
         for (int i = 0; i < firstListElement.length; i++) {
             String word = firstListElement[i];
-            if (isCaseWriter(word) || isJudge(word)) {
+            if (hasCaseWriter(word) || hasJudge(word)) {
                 titleIndex = i;
                 break;
             }
@@ -252,14 +348,14 @@ public class CasePanelParser implements ICaseSectionParser {
 
     private boolean hasReachedCaseWriter(List<String> panelistsTitles) {
         return panelistsTitles.stream()
-                .anyMatch(this::isCaseWriter);
+                .anyMatch(this::hasCaseWriter);
     }
 
     private boolean hasNonWriterTitlesBelow(int paragraphIndex) {
         boolean hasOtherTitles = false;
         while (wordParagraph.paragraphExists(paragraphIndex)) {
             String text = wordParagraph.getParagraphText(paragraphIndex).toLowerCase();
-            if (isJudge(text))
+            if (hasJudge(text))
                 hasOtherTitles = true;
             paragraphIndex++;
         }

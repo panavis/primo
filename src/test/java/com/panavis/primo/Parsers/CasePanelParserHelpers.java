@@ -34,7 +34,7 @@ class CasePanelParserHelpers {
         }
     }
 
-    private static JsonArray parseAndReturnCasePanelArray(int caseIndex) {
+    static JsonArray parseAndReturnCasePanelArray(int caseIndex) {
         JsonObject casePanel = getActualCasePanelObject(caseIndex);
         return casePanel.getArrayByKey(INTEKO);
     }

@@ -1,8 +1,10 @@
 package com.panavis.primo;
 
-import static com.panavis.primo.Constants.Keywords.*;
-import com.panavis.primo.Parsers.*;
+import com.panavis.primo.Parsers.ICaseSectionParser;
+import com.panavis.primo.Parsers.ParsedCase;
 import com.panavis.primo.ResultTypes.SectionResult;
+
+import static com.panavis.primo.Constants.Keywords.*;
 
 public class Primo {
 
@@ -46,7 +48,6 @@ public class Primo {
         SectionResult caseParties = partiesParser.parse(nextParagraph);
         parsedCase.set(PARTIES, caseParties);
         nextParagraph = caseParties.getNextParagraph();
-        parsedCase.setSkippedParagraphs(partiesParser.skippedParagraphs());
     }
 
     private void parseCaseSubjectMatter() {
@@ -70,14 +71,16 @@ public class Primo {
     private void parseCasePanel() {
         SectionResult casePanel = casePanelParser.parse(nextParagraph);
         parsedCase.set(INTEKO, casePanel);
-        parsedCase.setSkippedParagraphs(casePanelParser.skippedParagraphs());
+        if (!parsedCase.didSkipParagraphs() && partiesParser.skippedParagraphs()) {
+            parsedCase.setSkippedParagraphs(casePanelParser.skippedParagraphs());
+        }
     }
 
     public SectionResult getParsedCaseSection(String section) {
         return parsedCase.get(section);
     }
 
-    ParsedCase getParsedCase() {
+    public ParsedCase getParsedCase() {
         return parsedCase;
     }
 }

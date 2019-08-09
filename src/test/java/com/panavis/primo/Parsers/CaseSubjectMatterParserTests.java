@@ -19,8 +19,9 @@ public class CaseSubjectMatterParserTests {
     @Ignore("Ignore: SubjectMatter section troubleshooter.")
     @Test
     public void troubleshootOneCaseSeparately() {
-        SectionResult subjectMatter = CaseSubjectMatterTestsHelpers.parseOneCaseAndReturnSubjectMatterSection(6);
+        SectionResult subjectMatter = CaseSubjectMatterTestsHelpers.parseOneCaseAndReturnSubjectMatterSection(17);
         JsonArray sectionArray = subjectMatter.getSectionContent().getArrayByKey(SUBJECT_MATTER);
+        System.out.println(sectionArray.toString());
     }
 
     @Test

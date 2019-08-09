@@ -14,6 +14,13 @@ import java.io.IOException;
 
 public class PrimoRunner {
 
+    public boolean validTitle;
+    public boolean validParties;
+    public boolean validSubjectMatter;
+    public boolean validCaseBody;
+    public boolean validPanel;
+    public boolean skippedParagraphs;
+
     public boolean run(String wordInputPath, String jsonOutputPath) {
         boolean successfulParsing = false;
         XWPFDocument wordDoc = createWordDocumentObject(wordInputPath);
@@ -25,9 +32,20 @@ public class PrimoRunner {
                 createFile(jsonOutputPath, gson.toJSONString());
                 successfulParsing = true;
             }
+            updateValidParsingStats(validator);
         }
         return successfulParsing;
     }
+
+    private void updateValidParsingStats(ParsingValidator validator) {
+        validTitle = validator.getTitleParsingStatus();
+        validParties = validator.getPartiesParsingStatus();
+        validSubjectMatter = validator.getSubjectMatterParsingStatus();
+        validCaseBody = validator.getCaseBodyParsingStatus();
+        validPanel = validator.getPanelParsingStatus();
+        skippedParagraphs = validator.getSkippedParagraphsStatus();
+    }
+
 
     XWPFDocument createWordDocumentObject(String wordPath) {
         XWPFDocument wordDoc = null;

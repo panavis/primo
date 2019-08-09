@@ -10,11 +10,13 @@ public class Headings {
     public static final String HABURANA = "HABURANA";
     public static final String ABABURANA = "ABABURANA";
     public static final String ABABURANYI = "ABABURANYI";
+    public static final String HARABURANA = "HARABURANA";
 
     public static final List<String> PARTIES_HEADINGS = new ArrayList<>(Arrays.asList(
             Headings.HABURANA,
             Headings.ABABURANA,
-            Headings.ABABURANYI));
+            Headings.ABABURANYI,
+            Headings.HARABURANA));
     // Parties Subsections Headings
     public static final String UREGA = "UREGA";
     public static final String UREGWA = "UREGWA";
@@ -48,6 +50,7 @@ public class Headings {
     public static final String ICYAHA_GIKURIKIRANYWE = "ICYAHA GIKURIKIRANYWE";
     public static final String URUBANZA_RWAJURIRIWE = "URUBANZA RWAJURIRIWE";
     public static final String ICYAHA_BACYEKWAHO = "ICYAHA BACYEKWAHO";
+//    public static final String IBISABWA = "IBISABWA"; || Causing case_017 to fail.
 
     public static final List<String> SUBJECT_MATTER_HEADINGS = new ArrayList<>(
             Arrays.asList(Headings.IKIBURANWA,

@@ -36,6 +36,14 @@ public class JsonArray {
         return this.jsonArray.toList();
     }
 
+    public void putValueAtIndex(int index, String value) {
+        this.jsonArray.put(index, value);
+    }
+
+    public void putValueAtIndex(int index, JsonObject jsonObject) {
+        this.jsonArray.put(index, jsonObject);
+    }
+
     @Override
     public String toString() {
         return this.jsonArray.toString();

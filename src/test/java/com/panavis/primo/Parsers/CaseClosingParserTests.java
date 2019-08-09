@@ -19,6 +19,7 @@ public class CaseClosingParserTests {
     @Test
     public void troubleshootOneCaseSeparately() {
         JsonArray caseArray = CaseClosingParserHelpers.getActualCaseClosingArray(0);
+        System.out.println(caseArray.toString());
     }
 
     @Test

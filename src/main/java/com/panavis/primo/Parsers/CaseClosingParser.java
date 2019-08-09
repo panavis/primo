@@ -19,14 +19,17 @@ public class CaseClosingParser implements ICaseSectionParser{
     public SectionResult parse(int startParagraph) {
         int nextSectionStart = startParagraph;
         JsonArray closingText = new JsonArray();
+
         if (wordParagraph.paragraphExists(nextSectionStart) &&
-                section.isClosingSentence(startParagraph)) {
+                section.closingLogic.isClosingSentence(startParagraph)) {
+
             int logicalHeadingIndex = startParagraph -1;
             section.setStartingParagraph(logicalHeadingIndex)
                    .parse();
            closingText = section.getBody();
            nextSectionStart = section.getLastParagraph();
-        } else {
+        }
+        else {
             closingText.putValue("");
         }
         JsonObject caseClosing = new JsonObject();

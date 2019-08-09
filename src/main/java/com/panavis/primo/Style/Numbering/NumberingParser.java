@@ -100,9 +100,9 @@ public class NumberingParser {
         this.numberingFormatNames.put(uniqueId, numFormat);
     }
 
-    private void saveNumFormatDisplay(String uniqueid, CTLvl abstractNumLvl) {
+    private void saveNumFormatDisplay(String uniqueId, CTLvl abstractNumLvl) {
         String numDisplay = abstractNumLvl.getLvlText().getVal();
-        this.numberingFormatDisplays.put(uniqueid, numDisplay);
+        this.numberingFormatDisplays.put(uniqueId, numDisplay);
     }
 
     private void addUnitNumberingAndSetPreviousRealNext(int paragraphIndex, String uniqueId, String style) {

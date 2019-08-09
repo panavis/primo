@@ -19,7 +19,7 @@ public abstract class UnitNumbering {
     public abstract UnitNumbering setLogicalNextNumbering(int number);
     public abstract UnitNumbering setNumberingStyle(String style);
 
-    static UnitNumbering builder(String format, String display) {
+    public static UnitNumbering builder(String format, String display) {
         switch (format) {
             case "decimal": return new Decimal(display);
             case "lowerLetter": return new LowerLetter(display);

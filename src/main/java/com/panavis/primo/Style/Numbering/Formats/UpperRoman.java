@@ -3,7 +3,22 @@ package com.panavis.primo.Style.Numbering.Formats;
 import com.panavis.primo.Style.Numbering.RomanNumber;
 import com.panavis.primo.Style.Numbering.UnitNumbering;
 
+import java.util.Map;
+
 public class UpperRoman extends UnitNumbering {
+
+    public static final Map<String, Integer> FIRST_ROMAN_NUMBERS = Map.ofEntries(
+            Map.entry("I", 1),
+            Map.entry("II", 2),
+            Map.entry("III", 3),
+            Map.entry("IV", 4),
+            Map.entry("V", 5),
+            Map.entry("VI", 6),
+            Map.entry("VII", 7),
+            Map.entry("VIII", 8),
+            Map.entry("IX", 9),
+            Map.entry("X", 10)
+    );
 
     public UpperRoman(String formatDisplay) {
         super(formatDisplay);

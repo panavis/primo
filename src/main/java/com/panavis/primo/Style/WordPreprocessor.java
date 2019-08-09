@@ -10,9 +10,31 @@ import java.util.stream.Collectors;
 class WordPreprocessor {
 
     static List<XWPFParagraph> getNonEmptyParagraphs(XWPFDocument wordDocument) {
-        return wordDocument.getParagraphs().stream()
+        List<XWPFParagraph> bodyElements = getRawParagraphs(wordDocument);
+        return bodyElements.stream()
                 .filter(WordPreprocessor::paragraphHasContent)
                 .collect(Collectors.toList());
+    }
+
+    private static List<XWPFParagraph> getRawParagraphs(XWPFDocument wordDocument) {
+        List<XWPFParagraph> bodyElements = new ArrayList<>();
+
+        for (int i = 0; i < wordDocument.getBodyElements().size(); i++) {
+            try {
+                XWPFParagraph paragraph = (XWPFParagraph) wordDocument.getBodyElements().get(i);
+                bodyElements.add(paragraph);
+            }
+            catch (ClassCastException e) {
+                XWPFTable table = (XWPFTable) wordDocument.getBodyElements().get(i);
+                XWPFParagraph tableTextAsParagraph = new XWPFDocument().createParagraph();
+                tableTextAsParagraph.createRun();
+                XWPFRun createdRun = tableTextAsParagraph.getRuns().get(0);
+                createdRun.setText(table.getText());
+                createdRun.setStyle("BodyText");
+                bodyElements.add(tableTextAsParagraph);
+            }
+        }
+        return bodyElements;
     }
 
     private static boolean paragraphHasContent(XWPFParagraph paragraph) {
@@ -23,7 +45,7 @@ class WordPreprocessor {
     static Map<Integer, Integer> getPostParagraphBlanks(XWPFDocument wordDocument) {
         Map<Integer, Integer> postParagraphBlanks = new HashMap<>();
         int actualParagraph = 0;
-        List<XWPFParagraph> paragraphs = wordDocument.getParagraphs();
+        List<XWPFParagraph> paragraphs = getRawParagraphs(wordDocument);
         for (XWPFParagraph paragraph : paragraphs) {
             boolean hasContent = paragraphHasContent(paragraph);
             if (hasContent) {

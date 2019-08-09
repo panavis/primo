@@ -5,25 +5,32 @@ import com.panavis.primo.Style.WordParagraph;
 import com.panavis.primo.Utils.StringFormatting;
 import static com.panavis.primo.Utils.StringFormatting.*;
 
-class SectionBody extends Section {
+class SectionBodyNewFormat extends Section {
 
     private UnitNumbering currentNumbering;
-    private SectionClosing sectionClosing;
 
-    SectionBody(WordParagraph wordParagraph) {
+    SectionBodyNewFormat(WordParagraph wordParagraph) {
         super(wordParagraph);
-        this.sectionClosing = new SectionClosing(wordParagraph);
     }
 
     @Override
     boolean isStillInOneSubsection(int paragraphIndex) {
-        if (isCaseClosing(paragraphIndex)) return false;
+        if (super.closingLogic.isCaseClosing(paragraphIndex)) return false;
+
         String text = wordParagraph.getParagraphText(paragraphIndex);
         UnitNumbering paragraphNumbering = wordParagraph.getUnitNumbering(paragraphIndex);
+
         if (!currentNumbering.realNext.equals(EMPTY_STRING) &&
                 paragraphHasNumbering(paragraphNumbering.current)) {
             return !matchesNextNumbering(text, currentNumbering.realNext);
         }
+
+        if (!currentNumbering.logicalNext.isEmpty() &&
+                (text.startsWith(currentNumbering.logicalNext + ".") ||
+                        text.startsWith(currentNumbering.logicalNext + " ."))) {
+            return false;
+        }
+
         return !hasSameBodyHeadingFormat(paragraphIndex, text);
     }
 
@@ -57,11 +64,6 @@ class SectionBody extends Section {
     private boolean isTextCapitalizedAndHasSameStyle(String text, String currentStyle) {
         return StringFormatting.isTextCapitalized(text) &&
                 currentStyle.equals(currentNumbering.style);
-    }
-
-    boolean isCaseClosing(int nextParagraph) {
-        return sectionClosing.isClosingSentence(nextParagraph) ||
-                sectionClosing.isClosingHeading(nextParagraph);
     }
 
     Section setCurrentNumbering(UnitNumbering unitNumbering) {

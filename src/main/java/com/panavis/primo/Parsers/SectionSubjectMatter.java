@@ -16,8 +16,12 @@ public class SectionSubjectMatter extends Section {
         return !startsCaseBodySection(paragraphIndex);
     }
 
+    private boolean startsCaseBodySection(int paragraphIndex) {
+        return hasNewCaseBodyFormat(paragraphIndex).value || hasOldCaseBodyFormat(paragraphIndex);
+    }
+
     boolean hasAnotherSubsection(int paragraphIndex) {
-        String text = wordParagraph.getParagraphText(paragraphIndex).toLowerCase();
+        String text = wordParagraph.getParagraphTextWithoutNumbering(paragraphIndex).toLowerCase();
         for (String heading: SUBJECT_MATTER_HEADINGS) {
             if (text.startsWith(heading.toLowerCase())) return true;
         }

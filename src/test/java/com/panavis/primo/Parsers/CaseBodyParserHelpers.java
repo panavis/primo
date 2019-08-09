@@ -37,9 +37,7 @@ class CaseBodyParserHelpers {
 
     private static void setUpActualJsons() {
         for (int i = 0; i < TestsSetup.wordDocxData.size(); i++) {
-            SectionResult caseBodyResult = getCaseBodyResult(i);
-            JsonObject caseBody = caseBodyResult.getSectionContent();
-            JsonArray caseBodyArray = caseBody.getArrayByKey(CASE_BODY);
+            JsonArray caseBodyArray = getActualCaseBody(i);
             allActualCaseBodyJsons.put(i, caseBodyArray);
         }
     }
@@ -53,7 +51,7 @@ class CaseBodyParserHelpers {
         return caseBodyArray.getJsonByIndex(subsectionIndex);
     }
 
-    private static SectionResult getCaseBodyResult(int caseIndex) {
+    static SectionResult parseOneCaseAndReturnCaseBodySection(int caseIndex) {
         XWPFDocument wordDocument = TestsSetup.wordDocxData.get(caseIndex);
         Primo primo = TestsSetup.getConverterObject(wordDocument, CASE_BODY);
         primo.parseCaseSections();
@@ -70,5 +68,11 @@ class CaseBodyParserHelpers {
         JsonArray caseBodyArray = allExpectedCaseBodyJsons.get(caseIndex);
         JsonObject caseBackground = caseBodyArray.getJsonByIndex(subsectionIndex);
         return caseBackground.getArrayByKey(heading);
+    }
+
+    static JsonArray getActualCaseBody(int caseIndex) {
+        SectionResult caseBodyResult = parseOneCaseAndReturnCaseBodySection(caseIndex);
+        JsonObject caseBody = caseBodyResult.getSectionContent();
+        return caseBody.getArrayByKey(CASE_BODY);
     }
 }

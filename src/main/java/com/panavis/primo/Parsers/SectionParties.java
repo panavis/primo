@@ -30,7 +30,7 @@ public class SectionParties extends Section {
     }
 
     boolean startsSubjectMatterSection(int paragraphIndex) {
-        String paragraphText = wordParagraph.getParagraphText(paragraphIndex);
+        String paragraphText = wordParagraph.getParagraphTextWithoutNumbering(paragraphIndex);
         boolean subjectMatterStart = false;
         for (String heading : Headings.SUBJECT_MATTER_HEADINGS) {
             if (paragraphText.toUpperCase().startsWith(heading))
