@@ -47,7 +47,7 @@ public class CasePanelParser implements ICaseSectionParser {
         this.wordParagraph = wordParagraph;
         this.closingLogic = new CaseClosingLogic(wordParagraph);
         this.panelArray = new JsonArray();
-        this.nextParagraph = wordParagraph.numberOfParagraphs();
+        this.nextParagraph = wordParagraph.getNumberOfParagraphs();
         this.missedParagraphs = false;
     }
 
@@ -65,7 +65,7 @@ public class CasePanelParser implements ICaseSectionParser {
     }
 
     private int getFirstParagraphOfPanelSection(int startParagraph) {
-        int panelStart = wordParagraph.numberOfParagraphs();
+        int panelStart = wordParagraph.getNumberOfParagraphs();
         if (wordParagraph.paragraphExists(startParagraph))
             panelStart = this.closingLogic.isClosingHeading(startParagraph) ?
                     startParagraph + 1 : startParagraph;

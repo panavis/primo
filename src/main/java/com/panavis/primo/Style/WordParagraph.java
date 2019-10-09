@@ -27,7 +27,7 @@ public class WordParagraph {
     }
 
     public boolean paragraphExists(int index) {
-        return index >= 0 && index < numberOfParagraphs();
+        return index >= 0 && index < getNumberOfParagraphs();
     }
 
     public String getParagraphText(int paragraphIndex) {
@@ -45,7 +45,7 @@ public class WordParagraph {
         return unitNumberings.get(paragraphIndex);
     }
 
-    public int numberOfParagraphs() {
+    public int getNumberOfParagraphs() {
         return paragraphs.size();
     }
 
@@ -149,11 +149,11 @@ public class WordParagraph {
     }
 
     public String getBlankLinesAfterParagraph(int paragraphIndex) {
-        int blanks = getNumberOfAfterBlanks(paragraphIndex);
+        int blanks = getNumberOfPostParagraphBlanks(paragraphIndex);
         return StringFormatting.duplicateLineSeparator(blanks);
     }
 
-    public int getNumberOfAfterBlanks(int paragraphIndex) {
+    public int getNumberOfPostParagraphBlanks(int paragraphIndex) {
         return postParagraphBlanks.get(paragraphIndex);
     }
 

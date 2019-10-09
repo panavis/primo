@@ -108,7 +108,7 @@ public class CasePartiesParser implements ICaseSectionParser {
     private int parsePartiesSubsections(int startParagraph) {
         subsectionStart = startParagraph;
         while (wordParagraph.paragraphExists(subsectionStart) && !reachedSubjectMatterSection &&
-                startParagraph < wordParagraph.numberOfParagraphs()) {
+                startParagraph < wordParagraph.getNumberOfParagraphs()) {
             if (section.startsSubjectMatterSection(subsectionStart)) {
                 reachedSubjectMatterSection = true;
                 break;

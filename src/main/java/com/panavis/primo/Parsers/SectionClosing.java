@@ -14,7 +14,7 @@ class SectionClosing extends Section {
     @Override
     boolean isStillInOneSubsection(int paragraphIndex) {
         if (endingReached) return false;
-        if (wordParagraph.getNumberOfAfterBlanks(paragraphIndex) > 1)
+        if (wordParagraph.getNumberOfPostParagraphBlanks(paragraphIndex) > 1)
             endingReached = true;
         return !super.closingLogic.isClosingHeading(paragraphIndex);
     }

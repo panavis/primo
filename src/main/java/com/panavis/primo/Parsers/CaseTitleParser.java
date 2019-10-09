@@ -19,7 +19,7 @@ public class CaseTitleParser implements ICaseSectionParser {
         String caseTitle = "";
         int paragraphIndex;
         for (paragraphIndex = startParagraph;
-             paragraphIndex < this.wordParagraph.numberOfParagraphs();
+             paragraphIndex < this.wordParagraph.getNumberOfParagraphs();
              paragraphIndex++) {
 
             String firstWord = this.wordParagraph.getParagraphFirstWord(paragraphIndex);

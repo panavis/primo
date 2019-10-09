@@ -1,8 +1,10 @@
 package com.panavis.primo;
 
 import com.panavis.primo.Parsers.*;
+import com.panavis.primo.ResultTypes.SectionResult;
 import com.panavis.primo.Style.WordParagraph;
 import com.panavis.primo.Validation.ParsingValidator;
+import com.panavis.primo.Wrappers.JsonArray;
 import com.panavis.primo.Wrappers.JsonObject;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.openxml4j.opc.OPCPackage;
@@ -11,6 +13,7 @@ import org.json.simple.JSONObject;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Map;
 
 public class PrimoRunner {
 
@@ -28,7 +31,8 @@ public class PrimoRunner {
             ParsedCase parsedCase = getParsedCaseFromWordDoc(wordDoc);
             ParsingValidator validator = new ParsingValidator(parsedCase);
             if (validator.isParsedCaseValid()) {
-                JSONObject gson = JsonObject.toParsedGson(parsedCase.getParsedCaseAsMap());
+                Map<String, SectionResult> parsedCaseAsMap = parsedCase.getParsedCaseAsMap();
+                JSONObject gson = JsonObject.toParsedGson(parsedCaseAsMap);
                 createFile(jsonOutputPath, gson.toJSONString());
                 successfulParsing = true;
             }

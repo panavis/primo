@@ -71,9 +71,7 @@ public class Primo {
     private void parseCasePanel() {
         SectionResult casePanel = casePanelParser.parse(nextParagraph);
         parsedCase.set(INTEKO, casePanel);
-        if (!parsedCase.didSkipParagraphs() && partiesParser.skippedParagraphs()) {
-            parsedCase.setSkippedParagraphs(casePanelParser.skippedParagraphs());
-        }
+        parsedCase.setSkippedParagraphs(casePanelParser.skippedParagraphs());
     }
 
     public SectionResult getParsedCaseSection(String section) {
