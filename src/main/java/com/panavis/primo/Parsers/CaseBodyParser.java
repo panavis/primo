@@ -4,35 +4,36 @@ import static com.panavis.primo.Constants.Keywords.*;
 
 import com.panavis.primo.ResultTypes.Result;
 import com.panavis.primo.ResultTypes.SectionResult;
-import com.panavis.primo.Style.Numbering.Formats.UpperRoman;
-import com.panavis.primo.Style.Numbering.UnitNumbering;
+
 import com.panavis.primo.Style.*;
 import com.panavis.primo.Utils.StringFormatting;
 import com.panavis.primo.Wrappers.*;
+import com.panavis.primo.core.Numbering.Formats.UpperRoman;
+import com.panavis.primo.core.Numbering.UnitNumbering;
 
 public class CaseBodyParser implements ICaseSectionParser {
 
-    private WordParagraph wordParagraph;
+    private CaseParagraph caseParagraph;
     private JsonArray bodySubsections;
     private SectionBodyNewFormat bodyNewFormat;
     private SectionBodyOldFormat bodyOldFormat;
 
-    public CaseBodyParser(WordParagraph wordParagraph) {
-        this.wordParagraph = wordParagraph;
-        this.bodyNewFormat = new SectionBodyNewFormat(wordParagraph);
-        this.bodyOldFormat = new SectionBodyOldFormat(wordParagraph);
+    public CaseBodyParser(CaseParagraph caseParagraph) {
+        this.caseParagraph = caseParagraph;
+        this.bodyNewFormat = new SectionBodyNewFormat(caseParagraph);
+        this.bodyOldFormat = new SectionBodyOldFormat(caseParagraph);
         this.bodySubsections = new JsonArray();
     }
 
     public SectionResult parse(int startParagraph) {
         int nextParagraph = startParagraph;
-        if (wordParagraph.paragraphExists(nextParagraph)) {
+        if (caseParagraph.paragraphExists(nextParagraph)) {
             Result hasNewFormat = bodyNewFormat.hasNewCaseBodyFormat(nextParagraph);
 
             if (hasNewFormat.value) {
                 nextParagraph = hasNewFormat.index;
 
-                while(wordParagraph.paragraphExists(nextParagraph) &&
+                while(caseParagraph.paragraphExists(nextParagraph) &&
                             !bodyNewFormat.closingLogic.isCaseClosing(nextParagraph))
                     {
                         UnitNumbering numbering = getHeadingUnitNumbering(nextParagraph);
@@ -44,7 +45,7 @@ public class CaseBodyParser implements ICaseSectionParser {
                     }
             }
             else if (bodyNewFormat.hasOldCaseBodyFormat(startParagraph)) {
-                while(wordParagraph.paragraphExists(nextParagraph) &&
+                while(caseParagraph.paragraphExists(nextParagraph) &&
                         !bodyOldFormat.closingLogic.isCaseClosing(nextParagraph))
                 {
                     bodyOldFormat
@@ -60,9 +61,9 @@ public class CaseBodyParser implements ICaseSectionParser {
     }
 
     private UnitNumbering getHeadingUnitNumbering(int nextParagraph) {
-        UnitNumbering numbering = wordParagraph.getUnitNumbering(nextParagraph);
+        UnitNumbering numbering = caseParagraph.getUnitNumbering(nextParagraph);
         if (numbering.current.isEmpty()) {
-            String paragraphText = wordParagraph.getParagraphText(nextParagraph);
+            String paragraphText = caseParagraph.getParagraphText(nextParagraph);
 
             for (String romanNumber : UpperRoman.FIRST_ROMAN_NUMBERS.keySet()) {
 
@@ -94,7 +95,7 @@ public class CaseBodyParser implements ICaseSectionParser {
     }
 
     private void addCaseBodySubsection(int startParagraph, Section section) {
-        String heading = wordParagraph.getHeadingFromParagraph(startParagraph);
+        String heading = caseParagraph.getHeadingFromParagraph(startParagraph);
         heading = StringFormatting.trimColonsOrSemicolons(heading);
         JsonObject sectionContent = new JsonObject();
         sectionContent.addNameValuePair(heading, section.getBody());

@@ -6,7 +6,7 @@ import com.panavis.primo.Primo;
 import com.panavis.primo.ResultTypes.SectionResult;
 import com.panavis.primo.TestsSetup;
 import com.panavis.primo.Wrappers.*;
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
+
 import java.util.*;
 
 class CaseSubjectMatterTestsHelpers {
@@ -30,7 +30,7 @@ class CaseSubjectMatterTestsHelpers {
     }
 
     private static void setUpActualJsons() {
-        for (int i = 0; i < TestsSetup.wordDocxData.size(); i++) {
+        for (int i = 0; i < TestsSetup.wordFilePaths.size(); i++) {
             SectionResult subjectMatterResult = parseOneCaseAndReturnSubjectMatterSection(i);
             JsonObject subjectMatterContent = subjectMatterResult.getSectionContent();
             JsonArray subjectMatterArray = subjectMatterContent.getArrayByKey(SUBJECT_MATTER);
@@ -39,8 +39,8 @@ class CaseSubjectMatterTestsHelpers {
     }
 
     static SectionResult parseOneCaseAndReturnSubjectMatterSection(int i) {
-        XWPFDocument wordDocument = TestsSetup.wordDocxData.get(i);
-        Primo primo = TestsSetup.getConverterObject(wordDocument, SUBJECT_MATTER);
+        String wordFilePath = TestsSetup.wordFilePaths.get(i);
+        Primo primo = TestsSetup.getConverterObject(wordFilePath, SUBJECT_MATTER);
         primo.parseCaseSections();
         return primo.getParsedCaseSection(SUBJECT_MATTER);
     }

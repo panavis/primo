@@ -1,24 +1,25 @@
 package com.panavis.primo.Parsers;
 
-import com.panavis.primo.Style.Numbering.UnitNumbering;
-import com.panavis.primo.Style.WordParagraph;
+import com.panavis.primo.Style.CaseParagraph;
 import com.panavis.primo.Utils.StringFormatting;
+import com.panavis.primo.core.Numbering.UnitNumbering;
+
 import static com.panavis.primo.Utils.StringFormatting.*;
 
 class SectionBodyNewFormat extends Section {
 
     private UnitNumbering currentNumbering;
 
-    SectionBodyNewFormat(WordParagraph wordParagraph) {
-        super(wordParagraph);
+    SectionBodyNewFormat(CaseParagraph caseParagraph) {
+        super(caseParagraph);
     }
 
     @Override
     boolean isStillInOneSubsection(int paragraphIndex) {
         if (super.closingLogic.isCaseClosing(paragraphIndex)) return false;
 
-        String text = wordParagraph.getParagraphText(paragraphIndex);
-        UnitNumbering paragraphNumbering = wordParagraph.getUnitNumbering(paragraphIndex);
+        String text = caseParagraph.getParagraphText(paragraphIndex);
+        UnitNumbering paragraphNumbering = caseParagraph.getUnitNumbering(paragraphIndex);
 
         if (!currentNumbering.realNext.equals(EMPTY_STRING) &&
                 paragraphHasNumbering(paragraphNumbering.current)) {
@@ -43,11 +44,11 @@ class SectionBodyNewFormat extends Section {
     }
 
     private boolean hasSameBodyHeadingFormat(int paragraphIndex, String text) {
-        String currentStyle = wordParagraph.getUnitNumbering(paragraphIndex).style;
+        String currentStyle = caseParagraph.getUnitNumbering(paragraphIndex).style;
         boolean hasSameStyle = isTextCapitalizedAndHasSameStyle(text, currentStyle);
         boolean nonDynamicNumbering = hasNonDynamicNumbering(paragraphIndex, text, hasSameStyle);
         boolean noNumbering = hasSameStyle &&
-                wordParagraph.isBeginningUnderlined(paragraphIndex);
+                caseParagraph.isBeginningUnderlined(paragraphIndex);
         return nonDynamicNumbering || noNumbering;
     }
 
@@ -57,7 +58,7 @@ class SectionBodyNewFormat extends Section {
             hasNextHeadingStart = text.startsWith(currentNumbering.logicalNext);
         String firstWord = text.split(" ")[0];
         boolean hasNextHeadingInBold = firstWord.endsWith(".") &&
-                hasSameStyle && wordParagraph.isFirstRunBold(paragraphIndex);
+                hasSameStyle && caseParagraph.isFirstRunBold(paragraphIndex);
         return hasNextHeadingStart || hasNextHeadingInBold;
     }
 

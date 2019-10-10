@@ -2,7 +2,7 @@ package com.panavis.primo.Parsers;
 
 import com.panavis.primo.ResultTypes.HeadingParagraphIndex;
 import com.panavis.primo.ResultTypes.SectionResult;
-import com.panavis.primo.Style.WordParagraph;
+import com.panavis.primo.Style.CaseParagraph;
 import com.panavis.primo.Utils.JsonCreator;
 import com.panavis.primo.Utils.StringFormatting;
 import com.panavis.primo.Wrappers.JsonArray;
@@ -14,17 +14,16 @@ import static com.panavis.primo.Constants.Keywords.UBUSHINJACYAHA;
 
 public class CasePartiesParser implements ICaseSectionParser {
 
-    private WordParagraph wordParagraph;
+    private CaseParagraph caseParagraph;
     private SectionParties section;
     private JsonArray partiesSubsections;
     private boolean reachedSubjectMatterSection;
     private int subsectionStart;
     private static final String AND_CONJUNCTION = "na";
-    private static int COUNT = 0;
 
-    public CasePartiesParser(WordParagraph wordParagraph) {
-        this.wordParagraph = wordParagraph;
-        this.section = new SectionParties(wordParagraph);
+    public CasePartiesParser(CaseParagraph caseParagraph) {
+        this.caseParagraph = caseParagraph;
+        this.section = new SectionParties(caseParagraph);
         this.partiesSubsections = new JsonArray();
         this.reachedSubjectMatterSection = false;
     }
@@ -75,7 +74,7 @@ public class CasePartiesParser implements ICaseSectionParser {
         String firstHeading = "";
         int paragraphIndex;
         paragraphIndex = startParagraph;
-        while (wordParagraph.paragraphExists(paragraphIndex)) {
+        while (caseParagraph.paragraphExists(paragraphIndex)) {
             firstHeading = getFirstHeading(firstHeading, paragraphIndex);
             if (!firstHeading.isEmpty() && !exceedsPartyHeadingLength(firstHeading))
                 break;
@@ -90,8 +89,8 @@ public class CasePartiesParser implements ICaseSectionParser {
     }
 
     private String getFirstHeading(String firstHeading, int paragraphIndex) {
-        if (this.wordParagraph.isSectionHeading(paragraphIndex)) {
-            firstHeading = this.wordParagraph.getHeadingFromParagraph(paragraphIndex);
+        if (this.caseParagraph.isSectionHeading(paragraphIndex)) {
+            firstHeading = this.caseParagraph.getHeadingFromParagraph(paragraphIndex);
         }
         return firstHeading;
     }
@@ -107,24 +106,22 @@ public class CasePartiesParser implements ICaseSectionParser {
 
     private int parsePartiesSubsections(int startParagraph) {
         subsectionStart = startParagraph;
-        while (wordParagraph.paragraphExists(subsectionStart) && !reachedSubjectMatterSection &&
-                startParagraph < wordParagraph.getNumberOfParagraphs()) {
+        while (caseParagraph.paragraphExists(subsectionStart) && !reachedSubjectMatterSection &&
+                startParagraph < caseParagraph.getNumberOfParagraphs()) {
             if (section.startsSubjectMatterSection(subsectionStart)) {
                 reachedSubjectMatterSection = true;
                 break;
             }
             addPartiesSubsection(subsectionStart);
-            COUNT += 1;
-//            if (COUNT == 2) System.exit(0);
         }
         return subsectionStart;
     }
 
     private void addPartiesSubsection(int paragraphIndex) {
-        String paragraphText = wordParagraph.getParagraphText(paragraphIndex);
+        String paragraphText = caseParagraph.getParagraphText(paragraphIndex);
         boolean isProsecutor = startsProsecutorSubsection(paragraphIndex);
-        boolean isHeading = this.wordParagraph.isSectionHeading(paragraphIndex);
-        String heading = wordParagraph.getHeadingFromParagraph(paragraphIndex);
+        boolean isHeading = this.caseParagraph.isSectionHeading(paragraphIndex);
+        String heading = caseParagraph.getHeadingFromParagraph(paragraphIndex);
 
         if (isHeading && !hasProsecutor(heading)) {
             parseAndAddNormalSubsection(paragraphIndex);
@@ -138,11 +135,11 @@ public class CasePartiesParser implements ICaseSectionParser {
     }
 
     private void parseAndAddNormalSubsection(int startParagraph) {
-        String inlineParagraph = wordParagraph.getInlineHeadingFirstParagraph(startParagraph);
+        String inlineParagraph = caseParagraph.getInlineHeadingFirstParagraph(startParagraph);
         section.setStartingParagraph(startParagraph)
                 .setInlineParagraph(inlineParagraph)
                 .parse();
-        String subsectionName = wordParagraph.getHeadingFromParagraph(startParagraph);
+        String subsectionName = caseParagraph.getHeadingFromParagraph(startParagraph);
         addSubsectionContent(subsectionName, section.getBody());
         updateSubsectionStart(section.getLastParagraph());
     }
@@ -156,7 +153,7 @@ public class CasePartiesParser implements ICaseSectionParser {
     }
 
     private boolean startsProsecutorSubsection(int paragraphIndex) {
-        String text = wordParagraph.getParagraphText(paragraphIndex);
+        String text = caseParagraph.getParagraphText(paragraphIndex);
         return hasProsecutor(text) &&
                 previousParagraphIsNotSubsectionHeading(paragraphIndex);
     }
@@ -187,21 +184,21 @@ public class CasePartiesParser implements ICaseSectionParser {
 
     private boolean hasConjunctionOnNextLine(int paragraphIndex) {
         String text = "";
-        if (wordParagraph.paragraphExists(paragraphIndex + 1))
-            text = wordParagraph.getParagraphText(paragraphIndex + 1);
+        if (caseParagraph.paragraphExists(paragraphIndex + 1))
+            text = caseParagraph.getParagraphText(paragraphIndex + 1);
         return text.toLowerCase().equals(AND_CONJUNCTION) ;
     }
 
     private boolean previousParagraphIsNotSubsectionHeading(int paragraphIndex) {
         if (paragraphIndex - 1 < 0) return true;
-        String pP = wordParagraph.getHeadingFromParagraph(paragraphIndex - 1).toUpperCase();
-        return !wordParagraph.isSectionHeading(paragraphIndex - 1) ||
+        String pP = caseParagraph.getHeadingFromParagraph(paragraphIndex - 1).toUpperCase();
+        return !caseParagraph.isSectionHeading(paragraphIndex - 1) ||
                 PARTIES_HEADINGS.contains(pP);
     }
 
     private void parseAndAddPartyWithoutExplicitHeading(int paragraphIndex) {
-        String textContent = wordParagraph.getParagraphText(paragraphIndex);
-        if (!textContent.toLowerCase().trim().equals(AND_CONJUNCTION)) {
+        String textContent = caseParagraph.getParagraphText(paragraphIndex);
+        if (!textContent.toLowerCase().equals(AND_CONJUNCTION)) {
             JsonArray partyContent = new JsonArray();
             partyContent.putValue(textContent);
             addSubsectionContent(DEFAULT_PARTY_SUBHEADING, partyContent);

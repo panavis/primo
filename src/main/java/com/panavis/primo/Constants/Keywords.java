@@ -2,7 +2,6 @@ package com.panavis.primo.Constants;
 
 public class Keywords {
 
-    public static final String LIST_PARAGRAPH = "ListParagraph";
     public static final String CASE = "case";
     public static final String TITLE = "title";
     public static final String PARTIES = "parties";
@@ -15,7 +14,6 @@ public class Keywords {
     public static final String INTEKO = "inteko";
     public static final String RUKIJIJWE = "rukijijwe";
     public static final String RUSOMEWE = "somewe";
-    public static final String HEADING = "Heading";
     public static final String DEFAULT_PARTY_SUBHEADING = "__party__";
     public static final String RUSHINGIYE = "rushingiye";
 }

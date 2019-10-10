@@ -4,7 +4,6 @@ import com.panavis.primo.Primo;
 import com.panavis.primo.TestsSetup;
 import com.panavis.primo.Wrappers.JsonArray;
 import com.panavis.primo.Wrappers.JsonObject;
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,14 +22,14 @@ class CaseClosingParserHelpers {
     }
 
     private static void setUpActualJsons() {
-        for (int i = 0; i < TestsSetup.wordDocxData.size(); i++) {
+        for (int i = 0; i < TestsSetup.wordFilePaths.size(); i++) {
             allActualCaseClosingJsons.put(i, getActualCaseClosingArray(i));
         }
     }
 
     static JsonArray getActualCaseClosingArray(int caseIndex) {
-        XWPFDocument wordDocument = TestsSetup.wordDocxData.get(caseIndex);
-        Primo primo = TestsSetup.getConverterObject(wordDocument, CASE_CLOSING);
+        String wordFilePath = TestsSetup.wordFilePaths.get(caseIndex);
+        Primo primo = TestsSetup.getConverterObject(wordFilePath, CASE_CLOSING);
         primo.parseCaseSections();
         JsonObject actualCaseClosing = primo.getParsedCaseSection(CASE_CLOSING).getSectionContent();
         return actualCaseClosing.getArrayByKey(CASE_CLOSING);

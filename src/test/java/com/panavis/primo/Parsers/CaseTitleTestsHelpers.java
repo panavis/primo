@@ -6,7 +6,6 @@ import com.panavis.primo.Primo;
 import com.panavis.primo.ResultTypes.SectionResult;
 import com.panavis.primo.TestsSetup;
 import com.panavis.primo.Wrappers.*;
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
 import java.util.*;
 
@@ -23,8 +22,8 @@ class CaseTitleTestsHelpers {
     }
 
     private static void setupActualCaseTitles() {
-        for (XWPFDocument wordDoc : TestsSetup.wordDocxData) {
-            Primo primo = TestsSetup.getConverterObject(wordDoc, TITLE);
+        for (String wordFilePath : TestsSetup.wordFilePaths) {
+            Primo primo = TestsSetup.getConverterObject(wordFilePath, TITLE);
             primo.parseCaseSections();
             SectionResult titleResult = primo.getParsedCaseSection(TITLE);
             JsonObject titleObject = titleResult.getSectionContent();

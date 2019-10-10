@@ -35,10 +35,6 @@ public class StringFormatting {
         return modifiedText;
     }
 
-    public static String duplicateLineSeparator(int numberOfLines) {
-        return new String(new char[numberOfLines]).replace("\0", LINE_SEPARATOR);
-    }
-
     public static boolean includesNumbers(String text) {
         Pattern digits = Pattern.compile("[0-9]");
         return digits.matcher(text).find();

@@ -4,27 +4,27 @@ import static com.panavis.primo.Constants.Headings.*;
 import static com.panavis.primo.Constants.Keywords.*;
 import com.panavis.primo.Utils.*;
 import com.panavis.primo.ResultTypes.SectionResult;
-import com.panavis.primo.Style.WordParagraph;
+import com.panavis.primo.Style.CaseParagraph;
 import com.panavis.primo.Wrappers.JsonObject;
 
 public class CaseTitleParser implements ICaseSectionParser {
 
-    private WordParagraph wordParagraph;
+    private CaseParagraph caseParagraph;
 
-    public CaseTitleParser(WordParagraph wordParagraph) {
-        this.wordParagraph = wordParagraph;
+    public CaseTitleParser(CaseParagraph caseParagraph) {
+        this.caseParagraph = caseParagraph;
     }
 
     public SectionResult parse(int startParagraph) {
         String caseTitle = "";
         int paragraphIndex;
         for (paragraphIndex = startParagraph;
-             paragraphIndex < this.wordParagraph.getNumberOfParagraphs();
+             paragraphIndex < this.caseParagraph.getNumberOfParagraphs();
              paragraphIndex++) {
 
-            String firstWord = this.wordParagraph.getParagraphFirstWord(paragraphIndex);
+            String firstWord = this.caseParagraph.getParagraphFirstWord(paragraphIndex);
             if (firstWord.equals(URUKIKO)) {
-                caseTitle = this.wordParagraph.getParagraphText(paragraphIndex);
+                caseTitle = this.caseParagraph.getParagraphText(paragraphIndex);
                 break;
             }
         }

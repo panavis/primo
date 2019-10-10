@@ -1,6 +1,6 @@
 package com.panavis.primo.Parsers;
 
-import com.panavis.primo.Style.WordParagraph;
+import com.panavis.primo.Style.CaseParagraph;
 import com.panavis.primo.Utils.StringFormatting;
 
 import java.util.regex.Pattern;
@@ -10,10 +10,10 @@ import static com.panavis.primo.Constants.Keywords.RUSOMEWE;
 
 class CaseClosingLogic {
 
-    private WordParagraph wordParagraph;
+    private CaseParagraph caseParagraph;
 
-    CaseClosingLogic(WordParagraph wordParagraph) {
-        this.wordParagraph = wordParagraph;
+    CaseClosingLogic(CaseParagraph caseParagraph) {
+        this.caseParagraph = caseParagraph;
     }
 
     boolean isCaseClosing(int nextParagraph) {
@@ -22,24 +22,23 @@ class CaseClosingLogic {
     }
 
     boolean isClosingHeading(int paragraphIndex) {
-        String text = wordParagraph.getParagraphText(paragraphIndex);
-        return text.toLowerCase().trim().contains(INTEKO) &&
+        String text = caseParagraph.getParagraphText(paragraphIndex);
+        return text.toLowerCase().contains(INTEKO) &&
                 (
-                        (wordParagraph.hasSignificantLeftIndentation(paragraphIndex) ||
+                        (caseParagraph.hasSignificantLeftIndentation(paragraphIndex) ||
                                 StringFormatting.isTextCapitalized(text))
                                 ||
-                                wordParagraph.isBeginningUnderlined(paragraphIndex)
+                                caseParagraph.isBeginningUnderlined(paragraphIndex)
                 );
     }
 
     boolean isClosingSentence(int paragraphIndex) {
-        String text = wordParagraph.getParagraphText(paragraphIndex);
+        String text = caseParagraph.getParagraphText(paragraphIndex);
         String firstWord = text.split(" ")[0];
-        String style = wordParagraph.getUnitNumbering(paragraphIndex).style;
         text = text.toLowerCase();
         return hasClosingKeywords(text) && sentenceHasDate(text) &&
                 StringFormatting.isCaseSensitive(firstWord) &&
-                !style.equals(LIST_PARAGRAPH);
+                !caseParagraph.isListedParagraph(paragraphIndex);
     }
 
     private boolean hasClosingKeywords(String text) {

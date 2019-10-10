@@ -4,7 +4,6 @@ import com.panavis.primo.Primo;
 import com.panavis.primo.TestsSetup;
 import com.panavis.primo.Wrappers.JsonArray;
 import com.panavis.primo.Wrappers.JsonObject;
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,7 +22,7 @@ class CasePanelParserHelpers {
     }
 
     private static void setUpActualJsons() {
-        for (int i = 0; i < TestsSetup.wordDocxData.size(); i++) {
+        for (int i = 0; i < TestsSetup.wordFilePaths.size(); i++) {
             allActualCasePanelJsons.put(i, parseAndReturnCasePanelArray(i));
         }
     }
@@ -44,8 +43,8 @@ class CasePanelParserHelpers {
     }
 
     private static JsonObject getActualCasePanelObject(int caseIndex) {
-        XWPFDocument wordDocument = TestsSetup.wordDocxData.get(caseIndex);
-        Primo primo = TestsSetup.getConverterObject(wordDocument, INTEKO);
+        String wordFilePath = TestsSetup.wordFilePaths.get(caseIndex);
+        Primo primo = TestsSetup.getConverterObject(wordFilePath, INTEKO);
         primo.parseCaseSections();
         return primo.getParsedCaseSection(INTEKO).getSectionContent();
     }

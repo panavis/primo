@@ -2,22 +2,22 @@ package com.panavis.primo.Parsers;
 
 import static com.panavis.primo.Constants.Keywords.*;
 import com.panavis.primo.ResultTypes.SectionResult;
-import com.panavis.primo.Style.WordParagraph;
+import com.panavis.primo.Style.CaseParagraph;
 import com.panavis.primo.Utils.JsonCreator;
 import com.panavis.primo.Wrappers.*;
 
 public class CaseSubjectMatterParser implements ICaseSectionParser {
 
-    private WordParagraph wordParagraph;
+    private CaseParagraph caseParagraph;
     private SectionSubjectMatter section;
     private int numberOfSubsections;
     private int subsectionStart;
     private JsonObject sectionContent;
     private JsonArray sectionArray;
 
-    public CaseSubjectMatterParser(WordParagraph wordParagraph) {
-        this.wordParagraph = wordParagraph;
-        this.section = new SectionSubjectMatter(wordParagraph);
+    public CaseSubjectMatterParser(CaseParagraph caseParagraph) {
+        this.caseParagraph = caseParagraph;
+        this.section = new SectionSubjectMatter(caseParagraph);
         this.numberOfSubsections = 1;
         this.sectionContent = new JsonObject();
         this.sectionArray = new JsonArray();
@@ -26,8 +26,8 @@ public class CaseSubjectMatterParser implements ICaseSectionParser {
     public SectionResult parse(int startParagraph) {
         subsectionStart = startParagraph;
         int nextParagraph = startParagraph;
-        while(wordParagraph.paragraphExists(startParagraph) && numberOfSubsections > 0) {
-            String inlineParagraph = wordParagraph.getInlineHeadingFirstParagraph(subsectionStart);
+        while(caseParagraph.paragraphExists(startParagraph) && numberOfSubsections > 0) {
+            String inlineParagraph = caseParagraph.getInlineHeadingFirstParagraph(subsectionStart);
             section.setStartingParagraph(subsectionStart)
                     .setInlineParagraph(inlineParagraph)
                     .parse();
@@ -46,11 +46,11 @@ public class CaseSubjectMatterParser implements ICaseSectionParser {
     }
 
     private String getSubjectMatterHeading(int startParagraph) {
-        return wordParagraph.getHeadingFromParagraph(startParagraph);
+        return caseParagraph.getHeadingFromParagraph(startParagraph);
     }
 
     private void updateSubsectionStartAndNumber(SectionSubjectMatter section, int paragraphIndex) {
-        if (wordParagraph.paragraphExists(paragraphIndex) && section.hasAnotherSubsection(paragraphIndex)) {
+        if (caseParagraph.paragraphExists(paragraphIndex) && section.hasAnotherSubsection(paragraphIndex)) {
             numberOfSubsections++;
             subsectionStart = paragraphIndex;
         }

@@ -7,7 +7,7 @@ import com.panavis.primo.Primo;
 import com.panavis.primo.ResultTypes.SectionResult;
 import com.panavis.primo.TestsSetup;
 import com.panavis.primo.Wrappers.*;
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
+
 import java.util.*;
 
 class ExpectedActualContent {
@@ -32,15 +32,15 @@ class CasePartiesTestsHelpers {
     }
 
     private static void setUpActualJsons() {
-        for (int i = 0; i < TestsSetup.wordDocxData.size(); i++) {
+        for (int i = 0; i < TestsSetup.wordFilePaths.size(); i++) {
             SectionResult partiesSectionResult = parseOneCaseAndReturnPartiesSection(i);
             allActualPartiesSections.put(i, partiesSectionResult);
         }
     }
 
     static SectionResult parseOneCaseAndReturnPartiesSection(int i) {
-        XWPFDocument wordDocument = TestsSetup.wordDocxData.get(i);
-        Primo primo = TestsSetup.getConverterObject(wordDocument, PARTIES);
+        String wordFilePath = TestsSetup.wordFilePaths.get(i);
+        Primo primo = TestsSetup.getConverterObject(wordFilePath, PARTIES);
         primo.parseCaseSections();
         return primo.getParsedCaseSection(PARTIES);
     }

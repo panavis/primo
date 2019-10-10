@@ -5,22 +5,22 @@ import static com.panavis.primo.Constants.Keywords.*;
 
 import com.panavis.primo.ResultTypes.Result;
 import com.panavis.primo.ResultTypes.TextParagraphIndex;
-import com.panavis.primo.Style.WordParagraph;
+import com.panavis.primo.Style.CaseParagraph;
 import com.panavis.primo.Utils.*;
 import com.panavis.primo.Wrappers.JsonArray;
 
 abstract class Section  {
 
-    WordParagraph wordParagraph;
+    CaseParagraph caseParagraph;
     CaseClosingLogic closingLogic;
     private int startParagraph;
     private String inlineParagraph;
     private int lastParagraph;
     private String subsectionBody;
 
-    Section(WordParagraph wordParagraph) {
-        this.wordParagraph = wordParagraph;
-        this.closingLogic = new CaseClosingLogic(wordParagraph);
+    Section(CaseParagraph caseParagraph) {
+        this.caseParagraph = caseParagraph;
+        this.closingLogic = new CaseClosingLogic(caseParagraph);
         this.inlineParagraph = "";
         this.subsectionBody = "";
     }
@@ -29,7 +29,7 @@ abstract class Section  {
 
     void parse() {
         if (inlineParagraphHasText())
-            inlineParagraph += wordParagraph.getBlankLinesAfterParagraph(startParagraph);
+            inlineParagraph += caseParagraph.getBlankLinesAfterParagraph(startParagraph);
         TextParagraphIndex remainingAndIndex = getRemainingSubsectionBody(startParagraph);
         subsectionBody = inlineParagraph.concat(remainingAndIndex.getSubsectionParagraphs()).trim();
         lastParagraph = remainingAndIndex.getParagraphIndex();
@@ -42,7 +42,7 @@ abstract class Section  {
     private TextParagraphIndex getRemainingSubsectionBody(int startParagraph) {
         StringBuilder remainingBody = new StringBuilder();
         int paragraphIndex = startParagraph + 1;
-        while(wordParagraph.paragraphExists(paragraphIndex) &&
+        while(caseParagraph.paragraphExists(paragraphIndex) &&
                 isStillInOneSubsection(paragraphIndex))
         {
             addParagraphToSubsection(remainingBody, paragraphIndex);
@@ -52,10 +52,10 @@ abstract class Section  {
     }
 
     private void addParagraphToSubsection(StringBuilder remainingBody, int paragraphIndex) {
-        String paragraphText = wordParagraph.getParagraphText(paragraphIndex);
+        String paragraphText = caseParagraph.getParagraphText(paragraphIndex);
         if (StringFormatting.isCaseSensitive(paragraphText) || StringFormatting.includesNumbers(paragraphText))
             remainingBody.append(paragraphText)
-                    .append(wordParagraph.getBlankLinesAfterParagraph(paragraphIndex));
+                    .append(caseParagraph.getBlankLinesAfterParagraph(paragraphIndex));
     }
 
     Result hasNewCaseBodyFormat(int paragraphIndex) {
@@ -63,8 +63,8 @@ abstract class Section  {
             return new Result(true, paragraphIndex);
         }
 
-        if (wordParagraph.paragraphExists(paragraphIndex + 1) &&
-                wordParagraph.isSectionHeading(paragraphIndex) &&
+        if (caseParagraph.paragraphExists(paragraphIndex + 1) &&
+                caseParagraph.isSectionHeading(paragraphIndex) &&
                 isParagraphNewCaseBodyStart(paragraphIndex + 1)) {
             return new Result(true, paragraphIndex + 1);
         }
@@ -72,7 +72,7 @@ abstract class Section  {
     }
 
     private boolean isParagraphNewCaseBodyStart(int paragraphIndex) {
-        String text = wordParagraph.getParagraphText(paragraphIndex).toLowerCase();
+        String text = caseParagraph.getParagraphText(paragraphIndex).toLowerCase();
         return text.contains(IMITERERE) && text.contains("y") &&
                 text.contains(URUBANZA);
     }
@@ -97,9 +97,9 @@ abstract class Section  {
     }
 
     boolean hasOldCaseBodyFormat(int startParagraph) {
-        if (!wordParagraph.paragraphExists(startParagraph + 1)) return false;
-        String heading = wordParagraph.getParagraphTextWithoutNumbering(startParagraph);
-        String firstBodyParagraph = wordParagraph.getParagraphTextWithoutNumbering(startParagraph + 1);
+        if (!caseParagraph.paragraphExists(startParagraph + 1)) return false;
+        String heading = caseParagraph.getParagraphTextWithoutNumbering(startParagraph);
+        String firstBodyParagraph = caseParagraph.getParagraphTextWithoutNumbering(startParagraph + 1);
         return heading.toUpperCase().startsWith(URUKIKO) && firstBodyParagraph.toLowerCase().contains(RUSHINGIYE);
     }
 }

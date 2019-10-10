@@ -2,7 +2,7 @@ package com.panavis.primo.Parsers;
 
 import static com.panavis.primo.Constants.Keywords.*;
 import com.panavis.primo.ResultTypes.SectionResult;
-import com.panavis.primo.Style.WordParagraph;
+import com.panavis.primo.Style.CaseParagraph;
 import com.panavis.primo.Utils.StringFormatting;
 import com.panavis.primo.Wrappers.JsonArray;
 import com.panavis.primo.Wrappers.JsonObject;
@@ -34,7 +34,7 @@ class NamesAndTitles {
 
 public class CasePanelParser implements ICaseSectionParser {
 
-    private WordParagraph wordParagraph;
+    private CaseParagraph caseParagraph;
     private CaseClosingLogic closingLogic;
     private JsonArray panelArray;
     private int nextParagraph;
@@ -43,18 +43,18 @@ public class CasePanelParser implements ICaseSectionParser {
     private final String PEREZIDA = "perezida";
     private final String UMWANDITSI = "anditsi";
 
-    public CasePanelParser(WordParagraph wordParagraph) {
-        this.wordParagraph = wordParagraph;
-        this.closingLogic = new CaseClosingLogic(wordParagraph);
+    public CasePanelParser(CaseParagraph caseParagraph) {
+        this.caseParagraph = caseParagraph;
+        this.closingLogic = new CaseClosingLogic(caseParagraph);
         this.panelArray = new JsonArray();
-        this.nextParagraph = wordParagraph.getNumberOfParagraphs();
+        this.nextParagraph = caseParagraph.getNumberOfParagraphs();
         this.missedParagraphs = false;
     }
 
     public SectionResult parse(int startParagraph) {
         nextParagraph = getFirstParagraphOfPanelSection(startParagraph);
         boolean hasReachedEnding = false;
-        while (wordParagraph.paragraphExists(nextParagraph) && !hasReachedEnding) {
+        while (caseParagraph.paragraphExists(nextParagraph) && !hasReachedEnding) {
             NamesAndTitles namesAndTitles = getSubsequentNamesAndTitles();
             addTitlesAndNamesToPanelArray(namesAndTitles.titles, namesAndTitles.names);
             hasReachedEnding = hasReachedCaseWriter(namesAndTitles.titles) && !hasNonWriterTitlesBelow(nextParagraph);
@@ -65,8 +65,8 @@ public class CasePanelParser implements ICaseSectionParser {
     }
 
     private int getFirstParagraphOfPanelSection(int startParagraph) {
-        int panelStart = wordParagraph.getNumberOfParagraphs();
-        if (wordParagraph.paragraphExists(startParagraph))
+        int panelStart = caseParagraph.getNumberOfParagraphs();
+        if (caseParagraph.paragraphExists(startParagraph))
             panelStart = this.closingLogic.isClosingHeading(startParagraph) ?
                     startParagraph + 1 : startParagraph;
         return panelStart;
@@ -178,8 +178,8 @@ public class CasePanelParser implements ICaseSectionParser {
     private PanelSectionLine getPanelSectionLine(int paragraphIndex) {
         List<String> panelLine = Collections.emptyList();
         if (isSignatureLine(paragraphIndex)) paragraphIndex++;
-        if (wordParagraph.paragraphExists(paragraphIndex)) {
-            String[] words = wordParagraph.getParagraphText(paragraphIndex).split("\t");
+        if (caseParagraph.paragraphExists(paragraphIndex)) {
+            String[] words = caseParagraph.getParagraphText(paragraphIndex).split("\t");
             List<String> rawPanelLine = new ArrayList<>(Arrays.asList(words));
             rawPanelLine.removeIf(token -> token.trim().equals(""));
             panelLine = rawPanelLine;
@@ -189,7 +189,7 @@ public class CasePanelParser implements ICaseSectionParser {
 
     private boolean isSignatureLine(int nextParagraph) {
         boolean signatureLine = false;
-        if (wordParagraph.paragraphExists(nextParagraph)) {
+        if (caseParagraph.paragraphExists(nextParagraph)) {
             signatureLine = firstWordMatchesSignaturePattern(nextParagraph);
         }
         return signatureLine;
@@ -197,7 +197,7 @@ public class CasePanelParser implements ICaseSectionParser {
 
     private boolean firstWordMatchesSignaturePattern(int nextParagraph) {
         boolean isMatch = false;
-        String paragraphText = wordParagraph.getParagraphText(nextParagraph);
+        String paragraphText = caseParagraph.getParagraphText(nextParagraph);
         String[] words = paragraphText.split("\t");
         String firstWord = words[0].toLowerCase();
         String firstLetter = firstWord.length() != 0 ?
@@ -353,8 +353,8 @@ public class CasePanelParser implements ICaseSectionParser {
 
     private boolean hasNonWriterTitlesBelow(int paragraphIndex) {
         boolean hasOtherTitles = false;
-        while (wordParagraph.paragraphExists(paragraphIndex)) {
-            String text = wordParagraph.getParagraphText(paragraphIndex).toLowerCase();
+        while (caseParagraph.paragraphExists(paragraphIndex)) {
+            String text = caseParagraph.getParagraphText(paragraphIndex).toLowerCase();
             if (hasJudge(text))
                 hasOtherTitles = true;
             paragraphIndex++;

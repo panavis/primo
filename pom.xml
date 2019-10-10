@@ -17,7 +17,20 @@
     <maven.compiler.target>1.8</maven.compiler.target>
   </properties>
 
+  <repositories>
+    <repository>
+      <id>in-project</id>
+      <name>In Project Repo</name>
+      <url>file://${project.basedir}/libs</url>
+    </repository>
+  </repositories>
+
   <dependencies>
+    <dependency>
+      <groupId>panavis</groupId>
+      <artifactId>primo-core</artifactId>
+      <version>0.1.0</version>
+    </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>

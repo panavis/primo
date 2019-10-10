@@ -1,18 +1,18 @@
 package com.panavis.primo.Parsers;
 
 import static com.panavis.primo.Constants.Headings.*;
-import com.panavis.primo.Style.WordParagraph;
+import com.panavis.primo.Style.CaseParagraph;
 
 public class SectionSubjectMatter extends Section {
 
-    SectionSubjectMatter(WordParagraph wordParagraph) {
-        super(wordParagraph);
+    SectionSubjectMatter(CaseParagraph caseParagraph) {
+        super(caseParagraph);
     }
 
     @Override
     public boolean isStillInOneSubsection(int paragraphIndex) {
         if (hasAnotherSubsection(paragraphIndex)) return false;
-        if (wordParagraph.isSectionHeading(paragraphIndex)) return false;
+        if (caseParagraph.isSectionHeading(paragraphIndex)) return false;
         return !startsCaseBodySection(paragraphIndex);
     }
 
@@ -21,7 +21,7 @@ public class SectionSubjectMatter extends Section {
     }
 
     boolean hasAnotherSubsection(int paragraphIndex) {
-        String text = wordParagraph.getParagraphTextWithoutNumbering(paragraphIndex).toLowerCase();
+        String text = caseParagraph.getParagraphTextWithoutNumbering(paragraphIndex).toLowerCase();
         for (String heading: SUBJECT_MATTER_HEADINGS) {
             if (text.startsWith(heading.toLowerCase())) return true;
         }
