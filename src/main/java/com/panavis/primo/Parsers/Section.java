@@ -46,14 +46,15 @@ abstract class Section  {
         while(caseParagraph.paragraphExists(paragraphIndex) &&
                 !isInNextSubsection(paragraphIndex))
         {
-            addParagraphToSubsection(remainingBody, paragraphIndex);
+            remainingBody = addParagraphToSubsection(remainingBody, paragraphIndex);
             paragraphIndex++;
         }
         return new TextParagraphIndex(remainingBody.toString(), paragraphIndex);
     }
 
-    private void addParagraphToSubsection(StringBuilder remainingBody, int paragraphIndex) {
+    private StringBuilder addParagraphToSubsection(StringBuilder previousContent, int paragraphIndex) {
         String paragraphText = caseParagraph.getParagraphText(paragraphIndex);
+        StringBuilder updatedContent = new StringBuilder();
 
         if (StringFormatting.isCaseSensitive(paragraphText) || StringFormatting.includesNumbers(paragraphText)) {
             String blankLinesAfterParagraph = caseParagraph.getBlankLinesAfterParagraph(paragraphIndex);
@@ -63,13 +64,41 @@ abstract class Section  {
                     !isRegularBodyParagraph(paragraphText)) {
                 paragraphText = "<bold/>" + paragraphText;
                 blankLinesAfterParagraph = StringFormatting.duplicateLineSeparator(2);
-                if (!remainingBody.toString().endsWith(blankLinesAfterParagraph)) {
-                    remainingBody.append(StringFormatting.duplicateLineSeparator(1));
+                if (!previousContent.toString().endsWith(blankLinesAfterParagraph)) {
+                    previousContent.append(StringFormatting.duplicateLineSeparator(1));
                 }
+                updatedContent
+                        .append(previousContent.toString())
+                        .append(paragraphText);
             }
-            remainingBody.append(paragraphText)
-                    .append(blankLinesAfterParagraph);
+            else if (!endsParagraph(previousContent) && isLowerCaseAndCaseSensitive(paragraphText)) {
+                updatedContent.append(previousContent.toString().trim())
+                            .append(" ")
+                            .append(paragraphText);
+            }
+            else {
+                updatedContent
+                        .append(previousContent.toString())
+                        .append(paragraphText);
+            }
+
+            updatedContent.append(blankLinesAfterParagraph);
         }
+        else {
+            updatedContent.append(previousContent.toString());
+        }
+        return updatedContent;
+    }
+
+    private boolean endsParagraph(StringBuilder previousContent) {
+        String text = previousContent.toString().trim();
+        return text.endsWith(".") || text.endsWith(":") || text.endsWith(";");
+    }
+
+    private boolean isLowerCaseAndCaseSensitive(String paragraphText) {
+        String firstChar = paragraphText.substring(0, 1);
+        return firstChar.equals(firstChar.toLowerCase()) && StringFormatting.isCaseSensitive(firstChar);
+
     }
 
     private boolean hasHeadingNumbering(int paragraphIndex) {

@@ -20,7 +20,7 @@ public class CaseBodyParserTests {
     @Ignore("Ignore: Body section troubleshooter.")
     @Test
     public void troubleshootOneCaseSeparately() {
-       SectionResult result = CaseBodyParserHelpers.parseOneCaseAndReturnCaseBodySection(12);
+       SectionResult result = CaseBodyParserHelpers.parseOneCaseAndReturnCaseBodySection(0);
        System.out.println(result.getSectionContent().toString());
     }
 
@@ -54,7 +54,7 @@ public class CaseBodyParserTests {
     public void case_000_SecondSubsectionHasExpectedLength() {
         JsonObject secondSubsection = CaseBodyParserHelpers.getCaseBodySubsection(0, 1);
         JsonArray subsectionArray = secondSubsection.getArrayByKey("II.ISESENGURA RY\u2019URUBANZA");
-        assertEquals(3, subsectionArray.getSize());
+        assertEquals(2, subsectionArray.getSize());
     }
 
     @Test
@@ -306,7 +306,7 @@ public class CaseBodyParserTests {
     public void case_005_SecondSubsectionHasExpectedLength() {
         JsonObject secondSubsection = CaseBodyParserHelpers.getCaseBodySubsection(5, 1);
         JsonArray subsectionArray = secondSubsection.getArrayByKey("II.\tISESENGURA RY\u2018INZITIZI");
-        assertEquals(7, subsectionArray.getSize());
+        assertEquals(6, subsectionArray.getSize());
     }
 
     @Test
@@ -432,7 +432,7 @@ public class CaseBodyParserTests {
     public void case_007_SecondSubsectionHasExpectedLength() {
         JsonObject secondSubsection = CaseBodyParserHelpers.getCaseBodySubsection(7, 1);
         JsonArray subsectionArray = secondSubsection.getArrayByKey("II.\tISESENGURA RY\u2019IKIBAZO KIRI MU RUBANZA");
-        assertEquals(13, subsectionArray.getSize());
+        assertEquals(11, subsectionArray.getSize());
     }
 
     @Test
@@ -571,7 +571,7 @@ public class CaseBodyParserTests {
     public void case_011_SecondSubsectionHasExpectedLength() {
         JsonObject secondSubsection = CaseBodyParserHelpers.getCaseBodySubsection(11, 1);
         JsonArray subsectionArray = secondSubsection.getArrayByKey("II.IKIBAZO KIGIZE URUBANZA N\u2019ISESENGURWA RYACYO");
-        assertEquals(18, subsectionArray.getSize());
+        assertEquals(16, subsectionArray.getSize());
     }
 
     @Test
@@ -614,7 +614,7 @@ public class CaseBodyParserTests {
     @Test
     public void case_013_BackgroundSectionHasExpectedLength() {
         JsonArray caseBackground = CaseBodyParserHelpers.getCaseBackgroundSection(13, "I.\tIMITERERE Y\u2019 URUBANZA");
-        assertEquals(13, caseBackground.getSize());
+        assertEquals(12, caseBackground.getSize());
     }
 
     @Test
@@ -634,7 +634,7 @@ public class CaseBodyParserTests {
     public void case_013_SecondSubsectionHasExpectedLength() {
         JsonObject secondSubsection = CaseBodyParserHelpers.getCaseBodySubsection(13, 1);
         JsonArray subsectionArray = secondSubsection.getArrayByKey("II.\tISESENGURA RY\u2019 IKIBAZO KIGIZE URUBANZA");
-        assertEquals(26, subsectionArray.getSize());
+        assertEquals(23, subsectionArray.getSize());
     }
 
     @Test
@@ -697,7 +697,7 @@ public class CaseBodyParserTests {
     public void case_014_SecondSubsectionHasExpectedLength() {
         JsonObject secondSubsection = CaseBodyParserHelpers.getCaseBodySubsection(14, 1);
         JsonArray subsectionArray = secondSubsection.getArrayByKey("II. ISESENGURA RY\u2018IBIBAZO BIGIZE URUBANZA");
-        assertEquals(13, subsectionArray.getSize());
+        assertEquals(12, subsectionArray.getSize());
     }
 
     @Test
@@ -886,7 +886,7 @@ public class CaseBodyParserTests {
     public void case_017_SecondSubsectionHasExpectedLength() {
         JsonObject secondSubsection = CaseBodyParserHelpers.getCaseBodySubsection(17, 1);
         JsonArray subsectionArray = secondSubsection.getArrayByKey("2.\tImigendekere y\u2019urubanza.");
-        assertEquals(43, subsectionArray.getSize());
+        assertEquals(41, subsectionArray.getSize());
     }
 
     @Test
@@ -971,7 +971,7 @@ public class CaseBodyParserTests {
     public void case_018_SecondSubsectionHasExpectedLength() {
         JsonObject secondSubsection = CaseBodyParserHelpers.getCaseBodySubsection(18, 1);
         JsonArray subsectionArray = secondSubsection.getArrayByKey("II.\tIBIBAZO BIGIZE URUBANZA N\u2019ISESENGURWA RYABYO");
-        assertEquals(20, subsectionArray.getSize());
+        assertEquals(18, subsectionArray.getSize());
     }
 
     @Test
@@ -1034,7 +1034,7 @@ public class CaseBodyParserTests {
     public void case_019_SecondSubsectionHasExpectedLength() {
         JsonObject secondSubsection = CaseBodyParserHelpers.getCaseBodySubsection(19, 1);
         JsonArray subsectionArray = secondSubsection.getArrayByKey("II.\tIBIBAZO BIGIZE URUBANZA N\u2019ISESENGURA RYABYO.");
-        assertEquals(26, subsectionArray.getSize());
+        assertEquals(24, subsectionArray.getSize());
     }
 
     @Test
@@ -1077,7 +1077,7 @@ public class CaseBodyParserTests {
     @Test
     public void case_020_BackgroundSectionHasExpectedLength() {
         JsonArray caseBackground = CaseBodyParserHelpers.getCaseBackgroundSection(20, "I.\tIMITERERE Y\u2019URUBANZA");
-        assertEquals(5, caseBackground.getSize());
+        assertEquals(4, caseBackground.getSize());
     }
 
     @Test
@@ -1097,7 +1097,7 @@ public class CaseBodyParserTests {
     public void case_020_SecondSubsectionHasExpectedLength() {
         JsonObject secondSubsection = CaseBodyParserHelpers.getCaseBodySubsection(20, 1);
         JsonArray subsectionArray = secondSubsection.getArrayByKey("II.\tIBIBAZO BIGIZE URUBANZA N\u2019ISESENGURWA RYABYO");
-        assertEquals(27, subsectionArray.getSize());
+        assertEquals(26, subsectionArray.getSize());
     }
 
     @Test
@@ -1140,7 +1140,7 @@ public class CaseBodyParserTests {
     @Test
     public void case_021_BackgroundSectionHasExpectedLength() {
         JsonArray caseBackground = CaseBodyParserHelpers.getCaseBackgroundSection(21, "I.\tIMITERERE Y\u2019URUBANZA.");
-        assertEquals(16, caseBackground.getSize());
+        assertEquals(13, caseBackground.getSize());
     }
 
     @Test
@@ -1160,7 +1160,7 @@ public class CaseBodyParserTests {
     public void case_021_SecondSubsectionHasExpectedLength() {
         JsonObject secondSubsection = CaseBodyParserHelpers.getCaseBodySubsection(21, 1);
         JsonArray subsectionArray = secondSubsection.getArrayByKey("II.\tIBIBAZO BIGIZE URUBANZA N\u2019ISESENGURA RYABYO.");
-        assertEquals(40, subsectionArray.getSize());
+        assertEquals(36, subsectionArray.getSize());
     }
 
     @Test
