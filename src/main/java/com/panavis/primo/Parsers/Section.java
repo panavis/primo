@@ -53,17 +53,39 @@ abstract class Section  {
     }
 
     private void addParagraphToSubsection(StringBuilder remainingBody, int paragraphIndex) {
-
         String paragraphText = caseParagraph.getParagraphText(paragraphIndex);
+
         if (StringFormatting.isCaseSensitive(paragraphText) || StringFormatting.includesNumbers(paragraphText)) {
             String blankLinesAfterParagraph = caseParagraph.getBlankLinesAfterParagraph(paragraphIndex);
-            if (caseParagraph.isSectionHeading(paragraphIndex)) {
+
+            if ((caseParagraph.isBoldOrUnderlined(paragraphIndex) ||
+                    hasHeadingNumbering(paragraphIndex)) &&
+                    !isRegularBodyParagraph(paragraphText)) {
                 paragraphText = "<bold/>" + paragraphText;
                 blankLinesAfterParagraph = StringFormatting.duplicateLineSeparator(2);
+                if (!remainingBody.toString().endsWith(blankLinesAfterParagraph)) {
+                    remainingBody.append(StringFormatting.duplicateLineSeparator(1));
+                }
             }
             remainingBody.append(paragraphText)
                     .append(blankLinesAfterParagraph);
         }
+    }
+
+    private boolean hasHeadingNumbering(int paragraphIndex) {
+        String text = caseParagraph.getParagraphText(paragraphIndex);
+        String withoutNumbering = caseParagraph.getParagraphTextWithoutNumbering(paragraphIndex);
+        boolean hasNumbering = !text.equals(withoutNumbering);
+        String firstChar = text.substring(0,1);
+        String secondChar = text.length() >= 2 ? text.substring(1,2) : "";
+        boolean isUnformattedHeading = firstChar.equals("(") || secondChar.equals(".") || secondChar.equals(")");
+        return (hasNumbering && StringFormatting.isCaseSensitive(firstChar))||
+                isUnformattedHeading;
+    }
+
+    private boolean isRegularBodyParagraph(String text) {
+        String firstChar = text.substring(0, 1);
+        return  !StringFormatting.isCaseSensitive(firstChar) && !firstChar.equals("-");
     }
 
     Result hasNewCaseBodyFormat(int paragraphIndex) {

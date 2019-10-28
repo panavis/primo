@@ -65,6 +65,13 @@ public class CaseParagraph extends WordParagraph {
         );
     }
 
+    public boolean isBoldOrUnderlined(int paragraphIndex) {
+        ParagraphWrapper paragraph = this.getParagraph(paragraphIndex);
+        String text = getParagraphText(paragraphIndex);
+        if (!StringFormatting.isCaseSensitive(text)) return false;
+        return WordParagraph.isFirstRunBold(paragraph) || isFirstOrSecondRunUnderlined(paragraph);
+    }
+
     public String getHeadingFromParagraph(int paragraphIndex) {
         String currentParagraph = getParagraphText(paragraphIndex);
         String sectionHeading = currentParagraph;
