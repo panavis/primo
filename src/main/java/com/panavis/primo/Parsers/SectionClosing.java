@@ -12,10 +12,10 @@ class SectionClosing extends Section {
     }
 
     @Override
-    boolean isStillInOneSubsection(int paragraphIndex) {
-        if (endingReached) return false;
+    boolean isInNextSubsection(int paragraphIndex) {
+        if (endingReached) return true;
         if (caseParagraph.getNumberOfPostParagraphBlanks(paragraphIndex) > 1)
             endingReached = true;
-        return !super.closingLogic.isClosingHeading(paragraphIndex);
+        return super.closingLogic.isClosingHeading(paragraphIndex);
     }
 }

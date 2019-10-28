@@ -11,9 +11,9 @@ public class SectionParties extends Section {
     }
 
     @Override
-    public boolean isStillInOneSubsection(int paragraphIndex) {
-        return !(caseParagraph.isSectionHeading(paragraphIndex)) &&
-                !startsProsecutorSubsection(paragraphIndex);
+    public boolean isInNextSubsection(int paragraphIndex) {
+        return (caseParagraph.isSectionHeading(paragraphIndex)) ||
+                startsProsecutorSubsection(paragraphIndex);
     }
 
     private boolean startsProsecutorSubsection(int paragraphIndex) {

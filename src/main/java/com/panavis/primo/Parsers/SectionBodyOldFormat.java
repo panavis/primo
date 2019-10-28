@@ -9,7 +9,7 @@ class SectionBodyOldFormat extends Section {
     }
 
     @Override
-    boolean isStillInOneSubsection(int paragraphIndex) {
-        return !caseParagraph.isSectionHeading(paragraphIndex) && !super.closingLogic.isCaseClosing(paragraphIndex);
+    boolean isInNextSubsection(int paragraphIndex) {
+        return caseParagraph.isSectionHeading(paragraphIndex) || super.closingLogic.isCaseClosing(paragraphIndex);
     }
 }

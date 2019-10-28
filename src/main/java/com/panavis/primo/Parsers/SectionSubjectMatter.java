@@ -10,10 +10,10 @@ public class SectionSubjectMatter extends Section {
     }
 
     @Override
-    public boolean isStillInOneSubsection(int paragraphIndex) {
-        if (hasAnotherSubsection(paragraphIndex)) return false;
-        if (caseParagraph.isSectionHeading(paragraphIndex)) return false;
-        return !startsCaseBodySection(paragraphIndex);
+    public boolean isInNextSubsection(int paragraphIndex) {
+        return hasAnotherSubsection(paragraphIndex) ||
+                caseParagraph.isSectionHeading(paragraphIndex) ||
+                startsCaseBodySection(paragraphIndex);
     }
 
     private boolean startsCaseBodySection(int paragraphIndex) {

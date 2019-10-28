@@ -20,8 +20,8 @@ public class CaseBodyParserTests {
     @Ignore("Ignore: Body section troubleshooter.")
     @Test
     public void troubleshootOneCaseSeparately() {
-       SectionResult result = CaseBodyParserHelpers.parseOneCaseAndReturnCaseBodySection(31);
-       System.out.println(result.getSectionContent().toString());
+       SectionResult result = CaseBodyParserHelpers.parseOneCaseAndReturnCaseBodySection(0);
+//       System.out.println(result.getSectionContent().toString());
     }
 
     @Test

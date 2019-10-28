@@ -25,7 +25,7 @@ abstract class Section  {
         this.subsectionBody = "";
     }
 
-    abstract boolean isStillInOneSubsection(int paragraphIndex);
+    abstract boolean isInNextSubsection(int paragraphIndex);
 
     void parse() {
         if (inlineParagraphHasText())
@@ -42,8 +42,9 @@ abstract class Section  {
     private TextParagraphIndex getRemainingSubsectionBody(int startParagraph) {
         StringBuilder remainingBody = new StringBuilder();
         int paragraphIndex = startParagraph + 1;
+
         while(caseParagraph.paragraphExists(paragraphIndex) &&
-                isStillInOneSubsection(paragraphIndex))
+                !isInNextSubsection(paragraphIndex))
         {
             addParagraphToSubsection(remainingBody, paragraphIndex);
             paragraphIndex++;

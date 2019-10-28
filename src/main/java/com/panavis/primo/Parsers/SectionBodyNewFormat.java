@@ -15,24 +15,22 @@ class SectionBodyNewFormat extends Section {
     }
 
     @Override
-    boolean isStillInOneSubsection(int paragraphIndex) {
-        if (super.closingLogic.isCaseClosing(paragraphIndex)) return false;
+    boolean isInNextSubsection(int paragraphIndex) {
+        if (super.closingLogic.isCaseClosing(paragraphIndex)) return true;
 
         String text = caseParagraph.getParagraphText(paragraphIndex);
         UnitNumbering paragraphNumbering = caseParagraph.getUnitNumbering(paragraphIndex);
 
-        if (!currentNumbering.realNext.equals(EMPTY_STRING) &&
+        if (hasNextRealNumbering() &&
                 paragraphHasNumbering(paragraphNumbering.current)) {
-            return !matchesNextNumbering(text, currentNumbering.realNext);
+            return matchesNextNumbering(text, currentNumbering.realNext);
         }
 
-        if (!currentNumbering.logicalNext.isEmpty() &&
-                (text.startsWith(currentNumbering.logicalNext + ".") ||
-                        text.startsWith(currentNumbering.logicalNext + " ."))) {
-            return false;
-        }
+        return hasSameBodyHeadingFormat(paragraphIndex, text);
+    }
 
-        return !hasSameBodyHeadingFormat(paragraphIndex, text);
+    private boolean hasNextRealNumbering() {
+        return !currentNumbering.realNext.equals(EMPTY_STRING);
     }
 
     private boolean paragraphHasNumbering(String currentNumbering) {
