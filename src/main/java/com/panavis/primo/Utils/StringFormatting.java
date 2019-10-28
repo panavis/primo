@@ -64,4 +64,8 @@ public class StringFormatting {
         if (isTextTrivial(text)) return false;
         return text.length() >= minLength;
     }
+
+    public static String duplicateLineSeparator(int numberOfLines) {
+        return new String(new char[numberOfLines]).replace("\0", LINE_SEPARATOR);
+    }
 }

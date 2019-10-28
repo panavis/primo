@@ -14,14 +14,14 @@ public class CaseBodyParserTests {
     @BeforeClass
     public static void setUp() {
         TestsSetup.setUp();
-        CaseBodyParserHelpers.setUpAllActualAndExpectedJsons();
+//        CaseBodyParserHelpers.setUpAllActualAndExpectedJsons();
     }
 
-    @Ignore("Ignore: Body section troubleshooter.")
+//    @Ignore("Ignore: Body section troubleshooter.")
     @Test
     public void troubleshootOneCaseSeparately() {
-       SectionResult result = CaseBodyParserHelpers.parseOneCaseAndReturnCaseBodySection(0);
-//       System.out.println(result.getSectionContent().toString());
+       SectionResult result = CaseBodyParserHelpers.parseOneCaseAndReturnCaseBodySection(7);
+       System.out.println(result.getSectionContent().toString());
     }
 
     @Test

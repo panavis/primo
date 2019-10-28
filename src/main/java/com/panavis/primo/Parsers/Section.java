@@ -53,10 +53,17 @@ abstract class Section  {
     }
 
     private void addParagraphToSubsection(StringBuilder remainingBody, int paragraphIndex) {
+
         String paragraphText = caseParagraph.getParagraphText(paragraphIndex);
-        if (StringFormatting.isCaseSensitive(paragraphText) || StringFormatting.includesNumbers(paragraphText))
+        if (StringFormatting.isCaseSensitive(paragraphText) || StringFormatting.includesNumbers(paragraphText)) {
+            String blankLinesAfterParagraph = caseParagraph.getBlankLinesAfterParagraph(paragraphIndex);
+            if (caseParagraph.isSectionHeading(paragraphIndex)) {
+                paragraphText = "<bold/>" + paragraphText;
+                blankLinesAfterParagraph = StringFormatting.duplicateLineSeparator(2);
+            }
             remainingBody.append(paragraphText)
-                    .append(caseParagraph.getBlankLinesAfterParagraph(paragraphIndex));
+                    .append(blankLinesAfterParagraph);
+        }
     }
 
     Result hasNewCaseBodyFormat(int paragraphIndex) {
