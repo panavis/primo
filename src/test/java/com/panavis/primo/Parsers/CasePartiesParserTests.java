@@ -22,7 +22,7 @@ public class CasePartiesParserTests {
     @Ignore("Ignore: Parties section troubleshooter.")
     @Test
     public void troubleshootOneCaseSeparately() {
-        SectionResult result = CasePartiesTestsHelpers.parseOneCaseAndReturnPartiesSection(27);
+        SectionResult result = CasePartiesTestsHelpers.parseOneCaseAndReturnPartiesSection(37);
         System.out.println(result.getSectionContent().toString());
     }
 
@@ -176,6 +176,16 @@ public class CasePartiesParserTests {
     }
 
     @Test
+    public void case_036_PartiesSectionHas_HABURANA_asJsonKey() {
+        CasePartiesTestsHelpers.assertJsonContainsPartiesSection(36, HABURANA);
+    }
+
+    @Test
+    public void case_037_PartiesSectionHas_HABURANA_asJsonKey() {
+        CasePartiesTestsHelpers.assertJsonContainsPartiesSection(37, ABABURANYI);
+    }
+
+    @Test
     public void case_000_comm_court_huye_2011_PartiesSectionHasExpectedLength() {
         CasePartiesTestsHelpers.assertCorrectNumberOfSubsections(0, HABURANA, 2);
     }
@@ -324,6 +334,16 @@ public class CasePartiesParserTests {
     @Test
     public void case_033_PartiesSectionHasExpectedLength() {
         CasePartiesTestsHelpers.assertCorrectNumberOfSubsections(33, HABURANA, 2);
+    }
+
+    @Test
+    public void case_036_PartiesSectionHasExpectedLength() {
+        CasePartiesTestsHelpers.assertCorrectNumberOfSubsections(36, HABURANA, 2);
+    }
+
+    @Test
+    public void case_037_PartiesSectionHasExpectedLength() {
+        CasePartiesTestsHelpers.assertCorrectNumberOfSubsections(37, ABABURANYI, 2);
     }
 
     @Test
@@ -482,6 +502,17 @@ public class CasePartiesParserTests {
         assertTrue(actualParty.hasKey(UREGA));
     }
 
+    @Test
+    public void case_036_PartiesSectionHas_UREGA_subsection() {
+        JsonObject actualParty = CasePartiesTestsHelpers.getActualPartiesSubsection(36, HABURANA, 0);
+        assertTrue(actualParty.hasKey(UREGA));
+    }
+
+    @Test
+    public void case_037_PartiesSectionHas_UREGA_subsection() {
+        JsonObject actualParty = CasePartiesTestsHelpers.getActualPartiesSubsection(37, ABABURANYI, 0);
+        assertTrue(actualParty.hasKey(UREGA));
+    }
 
     @Test
     public void case_000_comm_court_huye_2011_PartiesSectionHas_UREGWA_subsection() {
@@ -653,6 +684,18 @@ public class CasePartiesParserTests {
     }
 
     @Test
+    public void case_036_PartiesSectionHas_UREGWA_subsection() {
+        JsonObject actualParty = CasePartiesTestsHelpers.getActualPartiesSubsection(36, HABURANA, 1);
+        assertTrue(actualParty.hasKey(UREGWA));
+    }
+
+    @Test
+    public void case_037_PartiesSectionHas_UREGWA_subsection() {
+        JsonObject actualParty = CasePartiesTestsHelpers.getActualPartiesSubsection(37, ABABURANYI, 1);
+        assertTrue(actualParty.hasKey(UREGWA));
+    }
+
+    @Test
     public void case_001_PartiesSectionHas_ABAGOBOKESHWA_subsection() {
         JsonObject actualParty = CasePartiesTestsHelpers.getActualPartiesSubsection(1, ABABURANA, 2);
         assertTrue(actualParty.hasKey(ABAGOBOKESHWA));
@@ -818,6 +861,18 @@ public class CasePartiesParserTests {
     }
 
     @Test
+    public void case_036_Parties_FirstSectionHasExpectedContent() {
+        ExpectedActualContent content = CasePartiesTestsHelpers.getExpectedAndActualContentForSubsection(36, 0, HABURANA, UREGA);
+        CasePartiesTestsHelpers.assertExactContentEquals(content.expectedContent, content.actualContent);
+    }
+
+    @Test
+    public void case_037_Parties_FirstSectionHasExpectedContent() {
+        ExpectedActualContent content = CasePartiesTestsHelpers.getExpectedAndActualContentForSubsection(37, 0, ABABURANYI, UREGA);
+        CasePartiesTestsHelpers.assertExactContentEquals(content.expectedContent, content.actualContent);
+    }
+
+    @Test
     public void case_000_comm_court_huye_2011_Parties_UREGWA_subsectionMatchesExpectedContent() {
         ExpectedActualContent content = CasePartiesTestsHelpers.getExpectedAndActualContentForSubsection(0, 1, HABURANA, UREGWA);
         CasePartiesTestsHelpers.assertExactContentEquals(content.expectedContent, content.actualContent);
@@ -968,6 +1023,18 @@ public class CasePartiesParserTests {
     @Test
     public void case_028_Parties_SecondSectionHasExpectedContent() {
         ExpectedActualContent content = CasePartiesTestsHelpers.getExpectedAndActualContentForSubsection(28, 1, HABURANA, UBUSHINJACYAHA);
+        CasePartiesTestsHelpers.assertExactContentEquals(content.expectedContent, content.actualContent);
+    }
+
+    @Test
+    public void case_036_Parties_SecondSectionHasExpectedContent() {
+        ExpectedActualContent content = CasePartiesTestsHelpers.getExpectedAndActualContentForSubsection(36, 1, HABURANA, UREGWA);
+        CasePartiesTestsHelpers.assertExactContentEquals(content.expectedContent, content.actualContent);
+    }
+
+    @Test
+    public void case_037_Parties_SecondSectionHasExpectedContent() {
+        ExpectedActualContent content = CasePartiesTestsHelpers.getExpectedAndActualContentForSubsection(37, 1, ABABURANYI, UREGWA);
         CasePartiesTestsHelpers.assertExactContentEquals(content.expectedContent, content.actualContent);
     }
 

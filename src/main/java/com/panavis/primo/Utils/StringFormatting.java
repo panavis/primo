@@ -5,9 +5,10 @@ import java.util.regex.Pattern;
 public class StringFormatting {
 
     public static final String COLON = ":";
-    public static final String SEMI_COLON = ";";
+    private static final String PERIOD = ".";
+    private static final String SEMI_COLON = ";";
     public static final String EMPTY_STRING = "";
-    private static final String LINE_SEPARATOR = "\r\n";
+    public static final String LINE_SEPARATOR = "\r\n";
     public static final String DOUBLE_BLANK = LINE_SEPARATOR.concat(LINE_SEPARATOR);
 
     public static boolean isTextCapitalized(String text) {
@@ -82,5 +83,11 @@ public class StringFormatting {
 
     public static String duplicateLineSeparator(int numberOfLines) {
         return new String(new char[numberOfLines]).replace("\0", LINE_SEPARATOR);
+    }
+
+    public static String trimPeriods(String text) {
+        if (text.endsWith(PERIOD))
+            text = text.substring(0, text.length() - 1).trim();
+        return text;
     }
 }

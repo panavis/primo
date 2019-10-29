@@ -8,9 +8,11 @@ import com.panavis.primo.Utils.StringFormatting;
 import com.panavis.primo.Wrappers.JsonArray;
 import com.panavis.primo.Wrappers.JsonObject;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.panavis.primo.Constants.Headings.*;
-import static com.panavis.primo.Constants.Keywords.DEFAULT_PARTY_SUBHEADING;
-import static com.panavis.primo.Constants.Keywords.UBUSHINJACYAHA;
+import static com.panavis.primo.Constants.Keywords.*;
 
 public class CasePartiesParser implements ICaseSectionParser {
 
@@ -20,18 +22,22 @@ public class CasePartiesParser implements ICaseSectionParser {
     private boolean reachedSubjectMatterSection;
     private int subsectionStart;
     private static final String AND_CONJUNCTION = "na";
+    private List<String> ongoingSubsectionWithoutHeading;
 
     public CasePartiesParser(CaseParagraph caseParagraph) {
         this.caseParagraph = caseParagraph;
         this.section = new SectionParties(caseParagraph);
         this.partiesSubsections = new JsonArray();
         this.reachedSubjectMatterSection = false;
+        this.ongoingSubsectionWithoutHeading = new ArrayList<>();
     }
 
     public SectionResult parse(int startParagraph) {
         HeadingParagraphIndex partiesSectionHeading = findPartiesSectionHeading(startParagraph);
         int paragraphIndex = partiesSectionHeading.getParagraphIndex();
         paragraphIndex = parsePartiesSubsections(paragraphIndex + 1);
+        addOngoingSubsectionIfAny();
+        verifySubsectionsStructure();
         sanitizePartiesSubsections();
         JsonObject parties = new JsonObject();
         String sectionHeading = partiesSectionHeading.getHeadingName().toUpperCase();
@@ -39,7 +45,74 @@ public class CasePartiesParser implements ICaseSectionParser {
         return new SectionResult(parties, paragraphIndex);
     }
 
+    private void addOngoingSubsectionIfAny() {
+        if (ongoingSubsectionWithoutHeading.size() != 0) {
+            addSubsectionContent(DEFAULT_PARTY_SUBHEADING, getOngoingSubsectionContent());
+        }
+    }
+
+    private void verifySubsectionsStructure() {
+        JsonArray copy = partiesSubsections;
+        for (int i=0; i < partiesSubsections.getSize(); i++) {
+            JsonObject subsection = partiesSubsections.getJsonByIndex(i);
+            String subheading = (String) subsection.getKeys().toArray()[0];
+            String subsectionContent = getSubsectionContent(subsection, subheading);
+            subsectionContent = StringFormatting.trimPeriods(subsectionContent);
+            if (subheading.equals(DEFAULT_PARTY_SUBHEADING) &&
+                endsWithPlaintiffHeading(subsectionContent)) {
+                copy = getCopyWithHeadingReplaced(copy, i, UREGA);
+            }
+            if (subheading.equals(DEFAULT_PARTY_SUBHEADING) &&
+                endsWithDefendantHeading(subsectionContent)) {
+                copy = getCopyWithHeadingReplaced(copy, i, UREGWA);
+            }
+        }
+
+        this.partiesSubsections = copy;
+    }
+
+    private static JsonArray getCopyWithHeadingReplaced(JsonArray copy, int i, String heading) {
+        JsonArray tempCopy = new JsonArray();
+        for (int j = 0; j < copy.getSize(); j++) {
+            JsonObject nestedSubsection = copy.getJsonByIndex(j);
+            String subsectionHeading = (String) nestedSubsection.getKeys().toArray()[0];
+            JsonArray nestedContent = nestedSubsection.getArrayByKey(subsectionHeading);
+            if (i == j) {
+                subsectionHeading = heading;
+            }
+            JsonObject replacementSubsection = new JsonObject();
+            replacementSubsection.addNameValuePair(subsectionHeading, nestedContent);
+            tempCopy.putValue(replacementSubsection);
+        }
+        return tempCopy;
+    }
+
+    private static String getSubsectionContent(JsonObject subsection, String subheading) {
+        JsonArray textSegments = subsection.getArrayByKey(subheading);
+        List<String> subsectionContentRaw = new ArrayList<>();
+        for (int j=0; j < textSegments.getSize(); j++) {
+            subsectionContentRaw.add(textSegments.getStringByIndex(j));
+        }
+        return String.join(StringFormatting.LINE_SEPARATOR, subsectionContentRaw);
+    }
+
+    private static boolean endsWithPlaintiffHeading(String text) {
+        text = text.toLowerCase();
+        return text.endsWith("(urega)");
+    }
+
+    private static boolean endsWithDefendantHeading(String text) {
+        text = text.toLowerCase();
+        return text.endsWith("(uregwa)") || text.endsWith("(abaregwa)");
+    }
+
+
     private void sanitizePartiesSubsections() {
+        placeProsecutorInContentIfNoContent();
+        combineDuplicatedHeadings();
+    }
+
+    private void placeProsecutorInContentIfNoContent() {
         for (int i = 0; i < this.partiesSubsections.getSize(); i++) {
             JsonObject subsection = this.partiesSubsections.getJsonByIndex(i);
             String subsectionHeading = (String) subsection.getKeys().toArray()[0];
@@ -57,6 +130,63 @@ public class CasePartiesParser implements ICaseSectionParser {
                 this.partiesSubsections.putValueAtIndex(i, newSubsection);
             }
         }
+    }
+
+    private  void combineDuplicatedHeadings() {
+        List<String> seenHeadings = new ArrayList<>();
+        JsonArray copy = new JsonArray();
+        for (int i=0; i < this.partiesSubsections.getSize(); i++) {
+            JsonObject nestedSubsection = this.partiesSubsections.getJsonByIndex(i);
+            String subsectionHeading = (String) nestedSubsection.getKeys().toArray()[0];
+            if (!seenHeadings.contains(subsectionHeading) || subsectionHeading.equals(DEFAULT_PARTY_SUBHEADING)) {
+                copy.putValue(nestedSubsection);
+                seenHeadings.add(subsectionHeading);
+            }
+            else {
+                JsonArray existingSubsectionContent = getContentForSubsectionHeading(copy, subsectionHeading);
+                JsonArray currentSubsectionContent = nestedSubsection.getArrayByKey(subsectionHeading);
+                JsonArray combinedSubsectionContent = mergeBothContent(existingSubsectionContent, currentSubsectionContent);
+                JsonObject newSubsection = new JsonObject();
+                newSubsection.addNameValuePair(subsectionHeading, combinedSubsectionContent);
+                JsonArray copyWithoutSection = getCopyWithoutSubsection(copy, subsectionHeading);
+                copyWithoutSection.putValue(newSubsection);
+                copy = copyWithoutSection;
+            }
+        }
+        this.partiesSubsections = copy;
+    }
+
+    private JsonArray getContentForSubsectionHeading(JsonArray subsections, String heading) {
+        JsonArray content = new JsonArray();
+        for (int i = 0; i < subsections.getSize(); i++) {
+            JsonObject nestedSubsection = subsections.getJsonByIndex(i);
+            String subsectionHeading = (String) nestedSubsection.getKeys().toArray()[0];
+            if (subsectionHeading.equals(heading)) {
+                content = nestedSubsection.getArrayByKey(subsectionHeading);
+                break;
+            }
+        }
+        return content;
+    }
+
+    private JsonArray mergeBothContent(JsonArray existingSubsectionContent, JsonArray currentSubsectionContent) {
+        for (int i=0; i < currentSubsectionContent.getSize(); i++) {
+            String subsectionParagraph = currentSubsectionContent.getStringByIndex(i);
+            existingSubsectionContent.putValue(subsectionParagraph);
+        }
+        return existingSubsectionContent;
+    }
+
+    private JsonArray getCopyWithoutSubsection(JsonArray subsections, String heading) {
+        JsonArray copy = new JsonArray();
+        for (int i = 0; i < subsections.getSize(); i++) {
+            JsonObject nestedSubsection = subsections.getJsonByIndex(i);
+            String subsectionHeading = (String) nestedSubsection.getKeys().toArray()[0];
+            if (!subsectionHeading.equals(heading)) {
+                copy.putValue(nestedSubsection);
+            }
+        }
+        return copy;
     }
 
     private HeadingParagraphIndex findPartiesSectionHeading(int startParagraph) {
@@ -198,12 +328,31 @@ public class CasePartiesParser implements ICaseSectionParser {
 
     private void parseAndAddPartyWithoutExplicitHeading(int paragraphIndex) {
         String textContent = caseParagraph.getParagraphText(paragraphIndex);
-        if (!textContent.toLowerCase().equals(AND_CONJUNCTION)) {
-            JsonArray partyContent = new JsonArray();
-            partyContent.putValue(textContent);
-            addSubsectionContent(DEFAULT_PARTY_SUBHEADING, partyContent);
+        boolean isConjunction = textContent.toLowerCase().equals(AND_CONJUNCTION);
+        int blanksAfter = caseParagraph.getNumberOfPostParagraphBlanks(paragraphIndex);
+
+        if (isConjunction && ongoingSubsectionWithoutHeading.size() != 0) {
+            addSubsectionContent(DEFAULT_PARTY_SUBHEADING, getOngoingSubsectionContent());
+            ongoingSubsectionWithoutHeading = new ArrayList<>();
+        }
+        else if (!isConjunction) {
+            if (blanksAfter >= 2) {
+                ongoingSubsectionWithoutHeading.add(textContent);
+
+                addSubsectionContent(DEFAULT_PARTY_SUBHEADING, getOngoingSubsectionContent());
+                ongoingSubsectionWithoutHeading = new ArrayList<>();
+            } else {
+                ongoingSubsectionWithoutHeading.add(textContent);
+            }
         }
         updateSubsectionStart(paragraphIndex + 1);
+    }
+
+    private JsonArray getOngoingSubsectionContent() {
+        String content = String.join(StringFormatting.LINE_SEPARATOR, ongoingSubsectionWithoutHeading);
+        JsonArray subsectionContent = new JsonArray();
+        subsectionContent.putValue(content);
+        return subsectionContent;
     }
 
     public boolean skippedParagraphs() {
