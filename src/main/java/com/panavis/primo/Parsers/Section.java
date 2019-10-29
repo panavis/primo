@@ -157,8 +157,11 @@ abstract class Section  {
 
     private boolean isParagraphNewCaseBodyStart(int paragraphIndex) {
         String text = caseParagraph.getParagraphText(paragraphIndex).toLowerCase();
+        List<String> tokens = new ArrayList<>(Arrays.asList(text.split(" ")))
+                .stream().filter(t -> !t.isEmpty()).collect(Collectors.toList());
+
         return text.contains(IMITERERE) && text.contains("y") &&
-                text.contains(URUBANZA);
+                text.contains(URUBANZA) && tokens.size() <= 5;
     }
 
     Section setStartingParagraph(int startParagraph) {

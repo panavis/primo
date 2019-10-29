@@ -66,7 +66,10 @@ public class TestsSetup {
         ICaseSectionParser subjectMatterParser = isSectionBeyondParties(section) ?
                 new CaseSubjectMatterParser(caseParagraph) :
                 new MockSectionParser();
-        ICaseSectionParser caseBodyParser = isSectionBeyondSubjectMatter(section) ?
+        ICaseSectionParser preCaseBodyParser = isSectionBeyondSubjectMatter(section) ?
+                new PreCaseBodyParser(caseParagraph) :
+                new MockSectionParser();
+        ICaseSectionParser caseBodyParser = isSectionBeyondPreCaseBody(section) ?
                 new CaseBodyParser(caseParagraph) :
                 new MockSectionParser();
         ICaseSectionParser caseClosingParser = isSectionBeyondBody(section) ?
@@ -75,13 +78,14 @@ public class TestsSetup {
         ICaseSectionParser casePanelParser = isSectionBeyondClosing(section) ?
                 new CasePanelParser(caseParagraph) :
                 new MockSectionParser();
-        return new Primo(titleParser, partiesParser, subjectMatterParser,
-                            caseBodyParser,caseClosingParser, casePanelParser);
+        return new Primo(titleParser, partiesParser, subjectMatterParser, preCaseBodyParser,
+                caseBodyParser, caseClosingParser, casePanelParser);
     }
 
     private static boolean isSectionBeyondTitle(String section) {
         return section.equals(PARTIES) ||
                 section.equals(SUBJECT_MATTER) ||
+                section.equals(PRE_CASE_BODY) ||
                 section.equals(CASE_BODY) ||
                 section.equals(CASE_CLOSING) ||
                 section.equals(INTEKO);
@@ -89,13 +93,21 @@ public class TestsSetup {
 
     private static boolean isSectionBeyondParties(String section) {
         return section.equals(SUBJECT_MATTER) ||
+                section.equals(PRE_CASE_BODY) ||
                 section.equals(CASE_BODY) ||
                 section.equals(CASE_CLOSING) ||
                 section.equals(INTEKO);
     }
 
     private static boolean isSectionBeyondSubjectMatter(String section) {
-        return section.equals(CASE_BODY) ||
+        return section.equals(PRE_CASE_BODY) ||
+                section.equals(CASE_BODY) ||
+                section.equals(CASE_CLOSING) ||
+                section.equals(INTEKO);
+    }
+
+    private static boolean isSectionBeyondPreCaseBody(String section) {
+      return section.equals(CASE_BODY) ||
                 section.equals(CASE_CLOSING) ||
                 section.equals(INTEKO);
     }

@@ -11,18 +11,24 @@ import com.panavis.primo.Wrappers.*;
 import com.panavis.primo.core.Numbering.Formats.UpperRoman;
 import com.panavis.primo.core.Numbering.UnitNumbering;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class CaseBodyParser implements ICaseSectionParser {
 
     private CaseParagraph caseParagraph;
     private JsonArray bodySubsections;
     private SectionBodyNewFormat bodyNewFormat;
     private SectionBodyOldFormat bodyOldFormat;
+    private List<String> preCaseBody;
 
     public CaseBodyParser(CaseParagraph caseParagraph) {
         this.caseParagraph = caseParagraph;
         this.bodyNewFormat = new SectionBodyNewFormat(caseParagraph);
         this.bodyOldFormat = new SectionBodyOldFormat(caseParagraph);
         this.bodySubsections = new JsonArray();
+        this.preCaseBody = new ArrayList<>();
+
     }
 
     public SectionResult parse(int startParagraph) {
@@ -54,6 +60,7 @@ public class CaseBodyParser implements ICaseSectionParser {
                     addCaseBodySubsection(nextParagraph, bodyOldFormat);
                     nextParagraph = bodyOldFormat.getLastParagraph();
                 }
+
             }
         }
         JsonObject caseBody = getCaseBody();

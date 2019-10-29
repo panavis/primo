@@ -57,17 +57,16 @@ public class Main {
         ICaseSectionParser titleParser = new CaseTitleParser(caseParagraph);
         ICaseSectionParser partiesParser = new CasePartiesParser(caseParagraph);
         ICaseSectionParser subjectMatterParser = new CaseSubjectMatterParser(caseParagraph);
+        ICaseSectionParser preCaseBodyParser = new PreCaseBodyParser(caseParagraph);
         ICaseSectionParser caseBodyParser = new CaseBodyParser(caseParagraph);
         ICaseSectionParser caseClosingParser = new CaseClosingParser(caseParagraph);
         ICaseSectionParser casePanelParser = new CasePanelParser(caseParagraph);
         return new Primo(
                         titleParser,
                         partiesParser,
-                        subjectMatterParser,
-                        caseBodyParser,
-                        caseClosingParser,
-                        casePanelParser
-                        );
+                        subjectMatterParser, preCaseBodyParser,
+                caseBodyParser, caseClosingParser, casePanelParser
+        );
     }
 
     private void createFile(String jsonOutputPath, String jsonString){

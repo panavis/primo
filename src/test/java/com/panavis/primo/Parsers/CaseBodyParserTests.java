@@ -20,7 +20,7 @@ public class CaseBodyParserTests {
     @Ignore("Ignore: Body section troubleshooter.")
     @Test
     public void troubleshootOneCaseSeparately() {
-       SectionResult result = CaseBodyParserHelpers.parseOneCaseAndReturnCaseBodySection(31);
+       SectionResult result = CaseBodyParserHelpers.parseOneCaseAndReturnCaseBodySection(34);
        System.out.println(result.getSectionContent().toString());
     }
 
@@ -1248,4 +1248,36 @@ public class CaseBodyParserTests {
         JsonObject caseBody = CaseBodyParserHelpers.getCaseBodySubsection(31, 2);
         assertTrue(caseBody.hasKey("III .ICYEMEZO CY\u2019URUKIKO."));
     }
+
+    @Test
+    public void case_034_CaseBodyHasExpectedLength() {
+        JsonArray caseBody = CaseBodyParserHelpers.getActualCaseBody(34);
+        assertEquals(3, caseBody.getSize());
+    }
+
+    @Test
+    public void case_034_hasCaseBackgroundSection() {
+        JsonObject caseBody = CaseBodyParserHelpers.getCaseBackground(34);
+        assertTrue(caseBody.hasKey("I.\tIMITERERE Y\u2019URUBANZA"));
+    }
+
+    @Ignore("Skip: Word document missing line break after heading")
+    @Test
+    public void case_034_SecondSubsectionHasExpectedHeading() {
+        JsonObject caseBody = CaseBodyParserHelpers.getCaseBodySubsection(34, 1);
+        assertTrue(caseBody.hasKey("II.\tIKIBAZO KIGIZE URUBANZA N\u2019ISESENGURWA RYACYO"));
+    }
+
+    @Test
+    public void case_035_CaseBodyHasExpectedLength() {
+        JsonArray caseBody = CaseBodyParserHelpers.getActualCaseBody(35);
+        assertEquals(3, caseBody.getSize());
+    }
+
+    @Test
+    public void case_035_hasCaseBackgroundSection() {
+        JsonObject caseBody = CaseBodyParserHelpers.getCaseBackground(35);
+        assertTrue(caseBody.hasKey("I.\tIMITERERE Y\u2019URUBANZA"));
+    }
+
 }

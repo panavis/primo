@@ -13,17 +13,19 @@ public class Primo {
     private ICaseSectionParser titleParser;
     private ICaseSectionParser partiesParser;
     private ICaseSectionParser subjectMatterParser;
+    private ICaseSectionParser preCaseBodyParser;
     private ICaseSectionParser caseBodyParser;
     private ICaseSectionParser caseClosingParser;
     private ICaseSectionParser casePanelParser;
 
     Primo(ICaseSectionParser titleParser, ICaseSectionParser partiesParser,
-          ICaseSectionParser subjectMatterParser, ICaseSectionParser caseBodyParser,
-          ICaseSectionParser caseClosingParser, ICaseSectionParser casePanelParser) {
+          ICaseSectionParser subjectMatterParser, ICaseSectionParser preCaseBodyParser,
+          ICaseSectionParser caseBodyParser, ICaseSectionParser caseClosingParser, ICaseSectionParser casePanelParser) {
         this.parsedCase = new ParsedCase();
         this.titleParser = titleParser;
         this.partiesParser = partiesParser;
         this.subjectMatterParser = subjectMatterParser;
+        this.preCaseBodyParser = preCaseBodyParser;
         this.caseBodyParser = caseBodyParser;
         this.caseClosingParser = caseClosingParser;
         this.casePanelParser = casePanelParser;
@@ -33,6 +35,7 @@ public class Primo {
         parseCaseTitle();
         parseCaseParties();
         parseCaseSubjectMatter();
+        parsePreCaseBody();
         parseCaseBody();
         parseCaseClosing();
         parseCasePanel();
@@ -54,6 +57,12 @@ public class Primo {
         SectionResult caseSubjectMatter = subjectMatterParser.parse(nextParagraph);
         parsedCase.set(SUBJECT_MATTER, caseSubjectMatter);
         nextParagraph = caseSubjectMatter.getNextParagraph();
+    }
+
+    private void parsePreCaseBody() {
+        SectionResult preCaseBody = preCaseBodyParser.parse(nextParagraph);
+        parsedCase.set(PRE_CASE_BODY, preCaseBody);
+        nextParagraph = preCaseBody.getNextParagraph();
     }
 
     private void parseCaseBody() {
