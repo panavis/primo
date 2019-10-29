@@ -8,8 +8,9 @@ import com.panavis.primo.core.WordParagraph;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import static com.panavis.primo.Utils.StringFormatting.trimColonsOrSemicolons;
+import static com.panavis.primo.Utils.StringFormatting.trimColonsAndSemicolons;
 
 public class CaseParagraph extends WordParagraph {
 
@@ -31,7 +32,7 @@ public class CaseParagraph extends WordParagraph {
                 )
                         ||
                         (
-                                WordParagraph.isFirstRunBold(paragraph) &&
+                                isFirstRunBold(paragraphIndex) &&
                                         isFirstRunFollowedByColon(paragraph)
                         )
                         ||
@@ -48,38 +49,84 @@ public class CaseParagraph extends WordParagraph {
                         )
                         ||
                         (
-                                WordParagraph.isFirstRunBold(paragraph) &&
+                                isFirstRunBold(paragraphIndex) &&
                                         WordParagraph.hasOneRun(paragraph) &&
                                         isFirstRunCapitalized(paragraph))
                         ||
                         (
-                                WordParagraph.isFirstRunBold(paragraph) &&
+                                isFirstRunBold(paragraphIndex) &&
                                         WordParagraph.hasOneRun(paragraph) &&
                                         StringFormatting.isFirstLetterCapitalized(text)
                         )
                         ||
-                        hasLeftIndentationAndIsCapitalized(paragraphIndex) ||
+                        (
+                                hasLeftIndentationAndIsCapitalized(paragraphIndex) &&
+                                        !hasManyLowerCaseWords(text)
+
+                        )
+                        ||
                         isUpperCaseAndHasNumberedHeading(paragraphIndex) ||
                         hasColonAndPreColonPartHasStyle(paragraphIndex) ||
                         isOneWordAndIsUpperCase(paragraphIndex)
         );
     }
 
+    public boolean isFirstRunBold(int paragraphIndex) {
+        return isRunBold(getParagraph(paragraphIndex), 0);
+    }
+
+    private boolean hasManyLowerCaseWords(String text) {
+        List<String> tokens = new ArrayList<>(Arrays.asList(text.split(" ")))
+                                    .stream().filter(t -> !t.isEmpty() && StringFormatting.isTextLowercase(t))
+                                    .collect(Collectors.toList());
+        int maxLowercaseTokensInHeading = 3;
+        return tokens.size() >= maxLowercaseTokensInHeading;
+    }
+
     public boolean isBoldOrUnderlined(int paragraphIndex) {
         ParagraphWrapper paragraph = this.getParagraph(paragraphIndex);
         String text = getParagraphText(paragraphIndex);
         if (!StringFormatting.isCaseSensitive(text)) return false;
-        return WordParagraph.isFirstRunBold(paragraph) || isFirstOrSecondRunUnderlined(paragraph);
+        return isFirstRunBold(paragraphIndex) || isFirstOrSecondRunUnderlined(paragraph);
     }
 
     public String getHeadingFromParagraph(int paragraphIndex) {
         String currentParagraph = getParagraphText(paragraphIndex);
         String sectionHeading = currentParagraph;
 
-        if (hasColonAndPreColonPartHasStyle(paragraphIndex))
+        if (hasColonAndPreColonPartHasStyle(paragraphIndex)) {
             sectionHeading = currentParagraph.split(StringFormatting.COLON)[0];
-        String withoutColons = trimColonsOrSemicolons(sectionHeading);
+        }
+
+        if (isFirstRunBold(paragraphIndex) && !hasNumbering(paragraphIndex)) {
+            String boldText = getStartingBoldedText(paragraphIndex);
+            sectionHeading = shouldBoldedTextPrevail(sectionHeading, boldText) ? boldText : sectionHeading;
+        }
+        String withoutColons = trimColonsAndSemicolons(sectionHeading);
         return getCaseSensitiveText(withoutColons);
+    }
+
+    private boolean shouldBoldedTextPrevail(String currentHeading, String boldText) {
+        int currentTokens = currentHeading.split(" ").length;
+        int boldedTokens = boldText.split(" ").length;
+        boolean boldedHeadingIsShorter = currentHeading.length() > boldText.length();
+        boolean bolderTextHasFewerWords = currentTokens > boldedTokens + 1;
+        return boldedHeadingIsShorter && bolderTextHasFewerWords &&
+                meetsMinLength(boldText);
+    }
+
+    private String getStartingBoldedText(int paragraphIndex) {
+        ParagraphWrapper paragraphWrapper = getParagraph(paragraphIndex);
+        StringBuilder boldTextBuilder = new StringBuilder(getUnitNumbering(paragraphIndex).current);
+        for (int i=0; i < paragraphWrapper.getRuns().size(); i++) {
+            if (isRunBold(paragraphWrapper, i)) {
+                boldTextBuilder.append(getNthRunText(paragraphWrapper, i));
+            }
+            else {
+                break;
+            }
+        }
+        return boldTextBuilder.toString().trim();
     }
 
     private String getCaseSensitiveText(String text) {
@@ -93,7 +140,7 @@ public class CaseParagraph extends WordParagraph {
         }
 
         String newText = String.join(" ", caseTokens);
-        return StringFormatting.trimColonsOrSemicolons(newText);
+        return StringFormatting.trimColonsAndSemicolons(newText);
     }
 
     private static boolean isFirstRunFollowedByColon(ParagraphWrapper paragraphWrapper) {
@@ -127,7 +174,8 @@ public class CaseParagraph extends WordParagraph {
     }
 
     private boolean meetsMinLength(String potentialHeading) {
-        return StringFormatting.hasAtLeastNCharacters(potentialHeading, 3);
+        String shortestHeading = "UREGA";
+        return StringFormatting.hasAtLeastNCharacters(potentialHeading, shortestHeading.length());
     }
 
     private boolean hasLeftIndentationAndIsCapitalized(int paragraphIndex) {
@@ -157,16 +205,16 @@ public class CaseParagraph extends WordParagraph {
         int numberOfParts = textParts.length;
         String firstPart = textParts[0];
 
-        boolean colonAndCapitalized = false;
+        boolean colonAndCapitalizedOrBold = false;
         if (preColonPartHasStyle(paragraphIndex, numberOfParts, firstPart))
-            colonAndCapitalized = true;
-        return colonAndCapitalized ;
+            colonAndCapitalizedOrBold = true;
+        return colonAndCapitalizedOrBold ;
     }
 
     private boolean preColonPartHasStyle(int paragraphIndex, int numberOfParts, String firstPart) {
-        return numberOfParts == 2 && firstPart.length() > 3 &&
+        return numberOfParts >= 2 && firstPart.length() > 3 &&
                 (StringFormatting.isTextCapitalized(firstPart) ||
-                        WordParagraph.isFirstRunBold(getParagraph(paragraphIndex)));
+                        isFirstRunBold(paragraphIndex));
     }
 
     private boolean isOneWordAndIsUpperCase(int paragraphIndex) {
@@ -176,9 +224,17 @@ public class CaseParagraph extends WordParagraph {
     }
 
     public String getInlineHeadingFirstParagraph(int paragraphIndex) {
-        String[] bodyArray = getParagraphText(paragraphIndex).split(":");
+        String paragraphText = getParagraphText(paragraphIndex);
+        String[] bodyArray = paragraphText.split(":");
         String[] bodyNoHeading = Arrays.copyOfRange(bodyArray, 1, bodyArray.length);
-        return String.join(" ", bodyNoHeading).trim();
+        String inlineText = String.join(" ", bodyNoHeading).trim();
+
+        if (isFirstRunBold(paragraphIndex)) {
+           String boldText = getStartingBoldedText(paragraphIndex);
+           String afterBoldText = paragraphText.substring(boldText.length()).trim();
+           inlineText = inlineText.length() > afterBoldText.length() ? inlineText : afterBoldText;
+        }
+        return StringFormatting.trimColons(inlineText);
     }
 
     public boolean isBeginningUnderlined(int paragraphIndex) {

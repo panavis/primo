@@ -96,7 +96,7 @@ public class CaseBodyParser implements ICaseSectionParser {
 
     private void addCaseBodySubsection(int startParagraph, Section section) {
         String heading = caseParagraph.getHeadingFromParagraph(startParagraph);
-        heading = StringFormatting.trimColonsOrSemicolons(heading);
+        heading = StringFormatting.trimColonsAndSemicolons(heading);
         JsonObject sectionContent = new JsonObject();
         sectionContent.addNameValuePair(heading, section.getBody());
         bodySubsections.putValue(sectionContent);

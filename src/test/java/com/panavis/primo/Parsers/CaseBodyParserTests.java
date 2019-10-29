@@ -20,7 +20,7 @@ public class CaseBodyParserTests {
     @Ignore("Ignore: Body section troubleshooter.")
     @Test
     public void troubleshootOneCaseSeparately() {
-       SectionResult result = CaseBodyParserHelpers.parseOneCaseAndReturnCaseBodySection(0);
+       SectionResult result = CaseBodyParserHelpers.parseOneCaseAndReturnCaseBodySection(31);
        System.out.println(result.getSectionContent().toString());
     }
 
@@ -475,7 +475,7 @@ public class CaseBodyParserTests {
     @Test
     public void case_008_BackgroundSectionHasExpectedLength() {
         JsonArray caseBackground = CaseBodyParserHelpers.getCaseBackgroundSection(8, "I.\tIMITERERE Y\u2019URUBANZA");
-        assertEquals(4, caseBackground.getSize());
+        assertEquals(3, caseBackground.getSize());
     }
 
     @Test
@@ -740,7 +740,7 @@ public class CaseBodyParserTests {
     @Test
     public void case_015_BackgroundSectionHasLengthThreeArray() {
         JsonArray caseBackground = CaseBodyParserHelpers.getCaseBackgroundSection(15, "I.\tIMITERERE Y\u2019URUBANZA");
-        assertEquals(3, caseBackground.getSize());
+        assertEquals(2, caseBackground.getSize());
     }
 
     @Test
@@ -760,7 +760,7 @@ public class CaseBodyParserTests {
     public void case_015_SecondSubsectionHasExpectedLength() {
         JsonObject secondSubsection = CaseBodyParserHelpers.getCaseBodySubsection(15, 1);
         JsonArray subsectionArray = secondSubsection.getArrayByKey("II.\tISESENGURA RY\u2019IBIBAZO BIGIZE URUBANZA");
-        assertEquals(7, subsectionArray.getSize());
+        assertEquals(6, subsectionArray.getSize());
     }
 
     @Test

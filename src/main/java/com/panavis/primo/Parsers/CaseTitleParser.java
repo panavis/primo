@@ -28,7 +28,7 @@ public class CaseTitleParser implements ICaseSectionParser {
                 break;
             }
         }
-        caseTitle = StringFormatting.trimColonsOrSemicolons(caseTitle);
+        caseTitle = StringFormatting.trimColonsAndSemicolons(caseTitle);
         JsonObject titleObject = JsonCreator.getJsonObject(TITLE, caseTitle);
         return new SectionResult(titleObject, paragraphIndex + 1);
     }

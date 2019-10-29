@@ -11,28 +11,43 @@ public class StringFormatting {
     public static final String DOUBLE_BLANK = LINE_SEPARATOR.concat(LINE_SEPARATOR);
 
     public static boolean isTextCapitalized(String text) {
-        return !text.equals(StringFormatting.EMPTY_STRING) && text.equals(text.toUpperCase());
+        return !text.equals(StringFormatting.EMPTY_STRING) &&
+                StringFormatting.isCaseSensitive(text) &&
+                text.equals(text.toUpperCase());
+    }
+
+    public static boolean isTextLowercase(String text) {
+        return !text.equals(StringFormatting.EMPTY_STRING) &&
+                StringFormatting.isCaseSensitive(text) &&
+                text.equals(text.toLowerCase());
     }
 
     public static boolean isCaseSensitive(String text) {
         return !(text.toUpperCase().equals(text.toLowerCase()));
     }
 
-    public static String trimColonsOrSemicolons(String text) {
+    public static String trimColonsAndSemicolons(String text) {
         if (text == null || text.equals(EMPTY_STRING)) return EMPTY_STRING;
 
         text = text.trim();
-        String modifiedText = text;
-        if (text.endsWith(COLON))
-            modifiedText = text.substring(0, text.length() - 1).trim();
-
-        if (modifiedText.startsWith(COLON))
-            modifiedText = modifiedText.substring(1).trim();
-
-        if (modifiedText.endsWith(SEMI_COLON))
-            modifiedText = modifiedText.substring(0, text.length() - 1).trim();
-
+        String modifiedText = trimColons(text);
+        modifiedText = trimSemicolons(modifiedText);
         return modifiedText;
+    }
+
+    public static String trimColons(String text) {
+        if (text.endsWith(COLON))
+            text = text.substring(0, text.length() - 1).trim();
+
+        if (text.startsWith(COLON))
+            text = text.substring(1).trim();
+        return text;
+    }
+
+    private static String trimSemicolons(String text) {
+        if (text.endsWith(SEMI_COLON))
+            text = text.substring(0, text.length() - 1).trim();
+        return text;
     }
 
     public static boolean includesNumbers(String text) {

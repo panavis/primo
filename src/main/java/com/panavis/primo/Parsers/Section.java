@@ -9,6 +9,11 @@ import com.panavis.primo.Style.CaseParagraph;
 import com.panavis.primo.Utils.*;
 import com.panavis.primo.Wrappers.JsonArray;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 abstract class Section  {
 
     CaseParagraph caseParagraph;
@@ -56,7 +61,7 @@ abstract class Section  {
         String paragraphText = caseParagraph.getParagraphText(paragraphIndex);
         StringBuilder updatedContent = new StringBuilder();
 
-        if (StringFormatting.isCaseSensitive(paragraphText) || StringFormatting.includesNumbers(paragraphText)) {
+        if (isEligibleParagraph(paragraphText)) {
             String blankLinesAfterParagraph = caseParagraph.getBlankLinesAfterParagraph(paragraphIndex);
 
             if ((caseParagraph.isBoldOrUnderlined(paragraphIndex) ||
@@ -88,6 +93,26 @@ abstract class Section  {
             updatedContent.append(previousContent.toString());
         }
         return updatedContent;
+    }
+
+    private boolean isEligibleParagraph(String paragraphText) {
+        return (StringFormatting.isCaseSensitive(paragraphText) || StringFormatting.includesNumbers(paragraphText)) &&
+                !isPageNumberParagraph(paragraphText);
+    }
+
+    private boolean isPageNumberParagraph(String paragraphText) {
+        List<String> rawTokens = new ArrayList<>(Arrays.asList(paragraphText.split(" ")));
+        List<String> tokens = rawTokens.stream()
+                                .filter(t -> !t.isEmpty())
+                                .collect(Collectors.toList());
+
+        int minimumPhraseLength = "Urupapuro rwa <number>".split(" ").length;
+        if (tokens.size() < minimumPhraseLength) {
+            return false;
+        }
+        List<String> lastTokens = tokens.subList(tokens.size() - minimumPhraseLength, tokens.size());
+        String lastPart = String.join(" ", lastTokens).toLowerCase().trim();
+        return lastPart.contains("urupapuro rwa") && !lastPart.endsWith(".");
     }
 
     private boolean endsParagraph(StringBuilder previousContent) {
