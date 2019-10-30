@@ -3,6 +3,7 @@ package com.panavis.primo.Parsers;
 import com.panavis.primo.Constants.Headings;
 import com.panavis.primo.Constants.Keywords;
 import com.panavis.primo.Style.CaseParagraph;
+import com.panavis.primo.Utils.StringFormatting;
 
 public class SectionParties extends Section {
 
@@ -12,8 +13,16 @@ public class SectionParties extends Section {
 
     @Override
     public boolean isInNextSubsection(int paragraphIndex) {
-        return (caseParagraph.isSectionHeading(paragraphIndex)) ||
+        boolean hasLongHeading = isHeadingTooLong(paragraphIndex);
+        return (caseParagraph.isSectionHeading(paragraphIndex) && !hasLongHeading) ||
                 startsProsecutorSubsection(paragraphIndex);
+    }
+
+    @Override
+    boolean isHeadingTooLong(int paragraphIndex) {
+        int MAX_HEADING_LENGTH = 40; // ~ 30 seen in case data
+        String text = caseParagraph.getHeadingFromParagraph(paragraphIndex);
+        return !StringFormatting.isTextCapitalized(text) && text.length() >= MAX_HEADING_LENGTH;
     }
 
     private boolean startsProsecutorSubsection(int paragraphIndex) {

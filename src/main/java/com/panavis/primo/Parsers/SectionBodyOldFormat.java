@@ -12,4 +12,11 @@ class SectionBodyOldFormat extends Section {
     boolean isInNextSubsection(int paragraphIndex) {
         return caseParagraph.isSectionHeading(paragraphIndex) || super.closingLogic.isCaseClosing(paragraphIndex);
     }
+
+    @Override
+    boolean isHeadingTooLong(int paragraphIndex) {
+        int MAX_HEADING_LENGTH = 75; // ~ 55 seen in case data
+        String text = caseParagraph.getParagraphText(paragraphIndex);
+        return text.length() >= MAX_HEADING_LENGTH;
+    }
 }

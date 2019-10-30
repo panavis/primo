@@ -17,6 +17,7 @@ class SectionBodyNewFormat extends Section {
     @Override
     boolean isInNextSubsection(int paragraphIndex) {
         if (super.closingLogic.isCaseClosing(paragraphIndex)) return true;
+        if (isHeadingTooLong(paragraphIndex)) return false;
 
         String text = caseParagraph.getParagraphText(paragraphIndex);
         UnitNumbering paragraphNumbering = caseParagraph.getUnitNumbering(paragraphIndex);
@@ -27,6 +28,13 @@ class SectionBodyNewFormat extends Section {
         }
 
         return hasSameBodyHeadingFormat(paragraphIndex, text);
+    }
+
+    @Override
+    boolean isHeadingTooLong(int paragraphIndex) {
+        int MAX_HEADING_LENGTH = 75; // ~ 55 seen in case data
+        String text = caseParagraph.getParagraphText(paragraphIndex);
+        return text.length() >= MAX_HEADING_LENGTH;
     }
 
     private boolean hasNextRealNumbering() {
@@ -43,10 +51,12 @@ class SectionBodyNewFormat extends Section {
 
     private boolean hasSameBodyHeadingFormat(int paragraphIndex, String text) {
         String currentStyle = caseParagraph.getUnitNumbering(paragraphIndex).style;
+
         boolean hasSameStyle = isTextCapitalizedAndHasSameStyle(text, currentStyle);
         boolean nonDynamicNumbering = hasNonDynamicNumbering(paragraphIndex, text, hasSameStyle);
         boolean noNumbering = hasSameStyle &&
                 caseParagraph.isBeginningUnderlined(paragraphIndex);
+
         return nonDynamicNumbering || noNumbering;
     }
 
@@ -54,9 +64,11 @@ class SectionBodyNewFormat extends Section {
         boolean hasNextHeadingStart = false;
         if (!currentNumbering.logicalNext.equals(EMPTY_STRING))
             hasNextHeadingStart = text.startsWith(currentNumbering.logicalNext);
+
         String firstWord = text.split(" ")[0];
         boolean hasNextHeadingInBold = firstWord.endsWith(".") &&
                 hasSameStyle && caseParagraph.isFirstRunBold(paragraphIndex);
+
         return hasNextHeadingStart || hasNextHeadingInBold;
     }
 

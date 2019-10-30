@@ -31,6 +31,7 @@ abstract class Section  {
     }
 
     abstract boolean isInNextSubsection(int paragraphIndex);
+    abstract boolean isHeadingTooLong(int paragraphIndex);
 
     void parse() {
         if (inlineParagraphHasText())

@@ -18,4 +18,9 @@ class SectionClosing extends Section {
             endingReached = true;
         return super.closingLogic.isClosingHeading(paragraphIndex);
     }
+
+    @Override
+    boolean isHeadingTooLong(int paragraphIndex) {
+        return false;
+    }
 }

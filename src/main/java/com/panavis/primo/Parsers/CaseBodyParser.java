@@ -8,6 +8,7 @@ import com.panavis.primo.ResultTypes.SectionResult;
 import com.panavis.primo.Style.*;
 import com.panavis.primo.Utils.StringFormatting;
 import com.panavis.primo.Wrappers.*;
+import com.panavis.primo.core.Numbering.Formats.Decimal;
 import com.panavis.primo.core.Numbering.Formats.UpperRoman;
 import com.panavis.primo.core.Numbering.UnitNumbering;
 
@@ -37,29 +38,10 @@ public class CaseBodyParser implements ICaseSectionParser {
             Result hasNewFormat = bodyNewFormat.hasNewCaseBodyFormat(nextParagraph);
 
             if (hasNewFormat.value) {
-                nextParagraph = hasNewFormat.index;
-
-                while(caseParagraph.paragraphExists(nextParagraph) &&
-                            !bodyNewFormat.closingLogic.isCaseClosing(nextParagraph))
-                    {
-                        UnitNumbering numbering = getHeadingUnitNumbering(nextParagraph);
-                        bodyNewFormat.setCurrentNumbering(numbering)
-                                .setStartingParagraph(nextParagraph)
-                                .parse();
-                        addCaseBodySubsection(nextParagraph, bodyNewFormat);
-                        nextParagraph = bodyNewFormat.getLastParagraph();
-                    }
+                nextParagraph = parseBodyNewFormat(hasNewFormat);
             }
             else if (bodyNewFormat.hasOldCaseBodyFormat(startParagraph)) {
-                while(caseParagraph.paragraphExists(nextParagraph) &&
-                        !bodyOldFormat.closingLogic.isCaseClosing(nextParagraph))
-                {
-                    bodyOldFormat
-                            .setStartingParagraph(nextParagraph)
-                            .parse();
-                    addCaseBodySubsection(nextParagraph, bodyOldFormat);
-                    nextParagraph = bodyOldFormat.getLastParagraph();
-                }
+                nextParagraph = parseBodyOldFormat(nextParagraph);
 
             }
         }
@@ -67,33 +49,86 @@ public class CaseBodyParser implements ICaseSectionParser {
         return new SectionResult(caseBody, nextParagraph);
     }
 
+    private int parseBodyNewFormat(Result hasNewFormat) {
+        int nextParagraph;
+        nextParagraph = hasNewFormat.index;
+
+        while(caseParagraph.paragraphExists(nextParagraph) &&
+                    !bodyNewFormat.closingLogic.isCaseClosing(nextParagraph))
+            {
+                UnitNumbering numbering = getHeadingUnitNumbering(nextParagraph);
+                bodyNewFormat.setCurrentNumbering(numbering)
+                        .setStartingParagraph(nextParagraph)
+                        .parse();
+                addCaseBodySubsection(nextParagraph, bodyNewFormat);
+                nextParagraph = bodyNewFormat.getLastParagraph();
+            }
+        return nextParagraph;
+    }
+
+    private int parseBodyOldFormat(int nextParagraph) {
+        while(caseParagraph.paragraphExists(nextParagraph) &&
+                !bodyOldFormat.closingLogic.isCaseClosing(nextParagraph))
+        {
+            bodyOldFormat
+                    .setStartingParagraph(nextParagraph)
+                    .parse();
+            addCaseBodySubsection(nextParagraph, bodyOldFormat);
+            nextParagraph = bodyOldFormat.getLastParagraph();
+        }
+        return nextParagraph;
+    }
+
     private UnitNumbering getHeadingUnitNumbering(int nextParagraph) {
         UnitNumbering numbering = caseParagraph.getUnitNumbering(nextParagraph);
         if (numbering.current.isEmpty()) {
             String paragraphText = caseParagraph.getParagraphText(nextParagraph);
+            Object[] romanNumbers = UpperRoman.FIRST_ROMAN_NUMBERS.keySet().toArray();
+            Object[] decimalNumbers = Decimal.FIRST_DECIMAL_NUMBERS.keySet().toArray();
+            int size = romanNumbers.length > decimalNumbers.length ? decimalNumbers.length : romanNumbers.length;
 
-            for (String romanNumber : UpperRoman.FIRST_ROMAN_NUMBERS.keySet()) {
+            for (int i=0; i < size; i++) {
+                String romanNumber = (String) romanNumbers[i];
+                String decimalNumber = (String) decimalNumbers[i];
 
-                String current = "";
-                if (paragraphText.startsWith(romanNumber + ".")) {
-                    current = romanNumber + ".";
-                }
-                if (paragraphText.startsWith(romanNumber + " .")) {
-                    current = romanNumber + " .";
-                }
-                if (!current.isEmpty()) {
+                if (startsWithRomanNumber(paragraphText, romanNumber)) {
                     int number = UpperRoman.FIRST_ROMAN_NUMBERS.get(romanNumber);
 
-                    numbering = UnitNumbering.builder("upperRoman", "%" + number)
-                            .setCurrentNumbering(number)
-                            .setLogicalNextNumbering(number)
-                            .setNumberingStyle("Heading");
+                    numbering = getNumbering(number, "upperRoman");
+
+                    break;
+                }
+                else if (startsWithDecimalNumber(paragraphText, decimalNumber)) {
+                    int number = Decimal.FIRST_DECIMAL_NUMBERS.get(decimalNumber);
+
+                    numbering = getNumbering(number, "decimal");
 
                     break;
                 }
             }
         }
         return numbering;
+    }
+
+    private UnitNumbering getNumbering(int number, String upperRoman) {
+        return UnitNumbering.builder(upperRoman, "%" + number)
+                .setCurrentNumbering(number)
+                .setLogicalNextNumbering(number)
+                .setNumberingStyle("Heading");
+    }
+
+    private boolean startsWithRomanNumber(String text, String romanNumber) {
+        return startsWithNumbering(text, romanNumber);
+    }
+
+    private boolean startsWithNumbering(String text, String number) {
+        return text.startsWith(number + ".") ||
+                text.startsWith(number + " .") ||
+                text.startsWith(number + " ");
+    }
+
+    private boolean startsWithDecimalNumber(String text, String decimalNumber) {
+        return startsWithNumbering(text, decimalNumber);
     }
 
     @Override

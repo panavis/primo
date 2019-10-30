@@ -133,8 +133,11 @@ public class CaseParagraph extends WordParagraph {
         List<String> caseTokens = new ArrayList<>();
         String[] tokens = text.split(" ");
         for (String token : tokens) {
-            if ((StringFormatting.isCaseSensitive(token)) ||
-                    token.equals(".")) {
+            if (StringFormatting.isCaseSensitive(token) ||
+                    text.startsWith(token) ||
+                    token.equals(".")
+            )
+            {
                 caseTokens.add(token);
             }
         }
