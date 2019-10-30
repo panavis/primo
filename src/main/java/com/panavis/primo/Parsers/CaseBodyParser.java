@@ -12,24 +12,18 @@ import com.panavis.primo.core.Numbering.Formats.Decimal;
 import com.panavis.primo.core.Numbering.Formats.UpperRoman;
 import com.panavis.primo.core.Numbering.UnitNumbering;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class CaseBodyParser implements ICaseSectionParser {
 
     private CaseParagraph caseParagraph;
     private JsonArray bodySubsections;
     private SectionBodyNewFormat bodyNewFormat;
     private SectionBodyOldFormat bodyOldFormat;
-    private List<String> preCaseBody;
 
     public CaseBodyParser(CaseParagraph caseParagraph) {
         this.caseParagraph = caseParagraph;
         this.bodyNewFormat = new SectionBodyNewFormat(caseParagraph);
         this.bodyOldFormat = new SectionBodyOldFormat(caseParagraph);
         this.bodySubsections = new JsonArray();
-        this.preCaseBody = new ArrayList<>();
-
     }
 
     public SectionResult parse(int startParagraph) {
@@ -42,7 +36,6 @@ public class CaseBodyParser implements ICaseSectionParser {
             }
             else if (bodyNewFormat.hasOldCaseBodyFormat(startParagraph)) {
                 nextParagraph = parseBodyOldFormat(nextParagraph);
-
             }
         }
         JsonObject caseBody = getCaseBody();
@@ -52,7 +45,7 @@ public class CaseBodyParser implements ICaseSectionParser {
     private int parseBodyNewFormat(Result hasNewFormat) {
         int nextParagraph;
         nextParagraph = hasNewFormat.index;
-
+        String nestedHeading = StringFormatting.EMPTY_STRING;
         while(caseParagraph.paragraphExists(nextParagraph) &&
                     !bodyNewFormat.closingLogic.isCaseClosing(nextParagraph))
             {
@@ -60,8 +53,10 @@ public class CaseBodyParser implements ICaseSectionParser {
                 bodyNewFormat.setCurrentNumbering(numbering)
                         .setStartingParagraph(nextParagraph)
                         .parse();
-                addCaseBodySubsection(nextParagraph, bodyNewFormat);
+                addCaseBodySubsection(nextParagraph, bodyNewFormat, nestedHeading);
                 nextParagraph = bodyNewFormat.getLastParagraph();
+                nestedHeading = bodyNewFormat.getNextHeading();
+                nextParagraph = nestedHeading.isEmpty() ? nextParagraph : nextParagraph - 1;
             }
         return nextParagraph;
     }
@@ -73,7 +68,7 @@ public class CaseBodyParser implements ICaseSectionParser {
             bodyOldFormat
                     .setStartingParagraph(nextParagraph)
                     .parse();
-            addCaseBodySubsection(nextParagraph, bodyOldFormat);
+            addCaseBodySubsection(nextParagraph, bodyOldFormat, StringFormatting.EMPTY_STRING);
             nextParagraph = bodyOldFormat.getLastParagraph();
         }
         return nextParagraph;
@@ -136,9 +131,11 @@ public class CaseBodyParser implements ICaseSectionParser {
         return false;
     }
 
-    private void addCaseBodySubsection(int startParagraph, Section section) {
+    private void addCaseBodySubsection(int startParagraph, Section section, String extractedHeading) {
         String heading = caseParagraph.getHeadingFromParagraph(startParagraph);
+        heading = extractedHeading.isEmpty() ? heading : extractedHeading;
         heading = StringFormatting.trimColonsAndSemicolons(heading);
+
         JsonObject sectionContent = new JsonObject();
         sectionContent.addNameValuePair(heading, section.getBody());
         bodySubsections.putValue(sectionContent);

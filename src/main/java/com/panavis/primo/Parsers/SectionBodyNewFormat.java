@@ -26,7 +26,6 @@ class SectionBodyNewFormat extends Section {
                 paragraphHasNumbering(paragraphNumbering.current)) {
             return matchesNextNumbering(text, currentNumbering.realNext);
         }
-
         return hasSameBodyHeadingFormat(paragraphIndex, text);
     }
 
@@ -35,6 +34,11 @@ class SectionBodyNewFormat extends Section {
         int MAX_HEADING_LENGTH = 75; // ~ 55 seen in case data
         String text = caseParagraph.getParagraphText(paragraphIndex);
         return text.length() >= MAX_HEADING_LENGTH;
+    }
+
+    @Override
+    String getNextNumbering() {
+        return currentNumbering.logicalNext;
     }
 
     private boolean hasNextRealNumbering() {

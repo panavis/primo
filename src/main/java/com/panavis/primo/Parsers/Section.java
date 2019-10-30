@@ -22,16 +22,19 @@ abstract class Section  {
     private String inlineParagraph;
     private int lastParagraph;
     private String subsectionBody;
+    private String nextHeading;
 
     Section(CaseParagraph caseParagraph) {
         this.caseParagraph = caseParagraph;
         this.closingLogic = new CaseClosingLogic(caseParagraph);
         this.inlineParagraph = "";
         this.subsectionBody = "";
+        this.nextHeading = "";
     }
 
     abstract boolean isInNextSubsection(int paragraphIndex);
     abstract boolean isHeadingTooLong(int paragraphIndex);
+    abstract String getNextNumbering();
 
     void parse() {
         if (inlineParagraphHasText())
@@ -46,16 +49,76 @@ abstract class Section  {
     }
 
     private TextParagraphIndex getRemainingSubsectionBody(int startParagraph) {
-        StringBuilder remainingBody = new StringBuilder();
+        StringBuilder sectionContent = new StringBuilder();
         int paragraphIndex = startParagraph + 1;
 
+        this.resetNextHeading();
         while(caseParagraph.paragraphExists(paragraphIndex) &&
+                nextHeading.isEmpty() &&
                 !isInNextSubsection(paragraphIndex))
         {
-            remainingBody = addParagraphToSubsection(remainingBody, paragraphIndex);
+            sectionContent = getUpdatedSectionContent(sectionContent, paragraphIndex);
             paragraphIndex++;
         }
-        return new TextParagraphIndex(remainingBody.toString(), paragraphIndex);
+        return new TextParagraphIndex(sectionContent.toString(), paragraphIndex);
+    }
+
+    private StringBuilder getUpdatedSectionContent(StringBuilder sectionContent, int paragraphIndex) {
+        boolean hasNestedHeading = isNextHeadingNestedInParagraph(paragraphIndex);
+
+        if (!hasNestedHeading) {
+            sectionContent = addParagraphToSubsection(sectionContent, paragraphIndex);
+            this.resetNextHeading();
+        }
+        else {
+            String nestedHeading = getNestedHeading(paragraphIndex);
+            this.nextHeading = nestedHeading;
+            String actualContent = getContentBeforeNestedHeading(paragraphIndex, nestedHeading);
+            sectionContent.append(actualContent);
+        }
+        return sectionContent;
+    }
+
+    private void resetNextHeading() {
+        this.nextHeading = StringFormatting.EMPTY_STRING;
+    }
+
+    private String getContentBeforeNestedHeading(int paragraphIndex, String nestedHeading) {
+        String paragraphText = caseParagraph.getParagraphText(paragraphIndex);
+        int nestedPartSize = nestedHeading.length() + getNextNumbering().length();
+        int paragraphSize = paragraphText.length();
+        return paragraphText.substring(0, paragraphSize - nestedPartSize + 1).trim();
+    }
+
+    private String getNestedHeading(int paragraphIndex) {
+        String nestedHeadingRaw = getTextPartAfterCurrentNumbering(paragraphIndex);
+        return getNextNumbering().concat(nestedHeadingRaw).trim();
+    }
+
+    private boolean isNextHeadingNestedInParagraph(int paragraphIndex) {
+        boolean hasNestedHeading = false;
+
+        if (!getNextNumbering().isEmpty()) {
+            String paragraphText = caseParagraph.getParagraphText(paragraphIndex);
+            String[] parts = paragraphText.split(getNextNumbering());
+            String lastPart = parts[parts.length - 1];
+            String firstPart = parts[0];
+            int firstPartMinLength = 10;
+
+            if (lastPart.startsWith(".") &&
+                   firstPart.length() > firstPartMinLength &&
+                    StringFormatting.isTextCapitalized(lastPart))
+            {
+                hasNestedHeading = true;
+            }
+        }
+        return hasNestedHeading;
+    }
+
+    private String getTextPartAfterCurrentNumbering(int paragraphIndex) {
+        String paragraphText = caseParagraph.getParagraphText(paragraphIndex);
+        String[] parts = paragraphText.split(getNextNumbering());
+        return parts[parts.length - 1];
     }
 
     private StringBuilder addParagraphToSubsection(StringBuilder previousContent, int paragraphIndex) {
@@ -65,8 +128,8 @@ abstract class Section  {
         if (isEligibleParagraph(paragraphText)) {
             String blankLinesAfterParagraph = caseParagraph.getBlankLinesAfterParagraph(paragraphIndex);
 
-            if ((caseParagraph.isBoldOrUnderlined(paragraphIndex) ||
-                    hasHeadingNumbering(paragraphIndex)) &&
+            if ((caseParagraph.isParagraphBoldOrUnderlined(paragraphIndex) ||
+                    hasNumberedHeading(paragraphIndex)) &&
                     !isRegularBodyParagraph(paragraphText)) {
                 paragraphText = "<bold/>" + paragraphText;
                 blankLinesAfterParagraph = StringFormatting.duplicateLineSeparator(2);
@@ -127,13 +190,18 @@ abstract class Section  {
 
     }
 
-    private boolean hasHeadingNumbering(int paragraphIndex) {
+    private boolean hasNumberedHeading(int paragraphIndex) {
         String text = caseParagraph.getParagraphText(paragraphIndex);
         String withoutNumbering = caseParagraph.getParagraphTextWithoutNumbering(paragraphIndex);
         boolean hasNumbering = !text.equals(withoutNumbering);
         String firstChar = text.substring(0,1);
         String secondChar = text.length() >= 2 ? text.substring(1,2) : "";
-        boolean isUnformattedHeading = firstChar.equals("(") || secondChar.equals(".") || secondChar.equals(")");
+        String thirdCar = text.length() >= 3 ? text.substring(2,3) : "";
+
+        boolean isUnformattedHeading = firstChar.equals("(") ||
+                                        secondChar.equals(")") ||
+                        (secondChar.equals(".") && thirdCar.equals(" "));
+
         return (hasNumbering && StringFormatting.isCaseSensitive(firstChar))||
                 isUnformattedHeading;
     }
@@ -183,6 +251,7 @@ abstract class Section  {
     int getLastParagraph() {
         return lastParagraph;
     }
+    String getNextHeading() { return nextHeading; }
 
     boolean hasOldCaseBodyFormat(int startParagraph) {
         if (!caseParagraph.paragraphExists(startParagraph + 1)) return false;

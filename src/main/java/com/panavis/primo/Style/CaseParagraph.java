@@ -83,11 +83,27 @@ public class CaseParagraph extends WordParagraph {
         return tokens.size() >= maxLowercaseTokensInHeading;
     }
 
-    public boolean isBoldOrUnderlined(int paragraphIndex) {
+    public boolean isParagraphBoldOrUnderlined(int paragraphIndex) {
         ParagraphWrapper paragraph = this.getParagraph(paragraphIndex);
         String text = getParagraphText(paragraphIndex);
         if (!StringFormatting.isCaseSensitive(text)) return false;
-        return isFirstRunBold(paragraphIndex) || isFirstOrSecondRunUnderlined(paragraph);
+        return isEntireParagraphBold(paragraphIndex) || isFirstOrSecondRunUnderlined(paragraph);
+    }
+
+    private boolean isEntireParagraphBold(int paragraphIndex) {
+        String paragraphText = getParagraphText(paragraphIndex);
+        if (!StringFormatting.isCaseSensitive(paragraphText)) return false;
+
+        boolean isBold = true;
+        List<RunWrapper> runWrappers = getParagraph(paragraphIndex).getRuns();
+        for (int i=0; i < runWrappers.size(); i++) {
+            RunWrapper run = runWrappers.get(i);
+            if (!run.getText().trim().isEmpty() && !isRunBold(paragraphIndex, i)) {
+                isBold = false;
+                break;
+            }
+        }
+        return isBold;
     }
 
     public String getHeadingFromParagraph(int paragraphIndex) {

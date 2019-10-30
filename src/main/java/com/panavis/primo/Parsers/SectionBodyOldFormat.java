@@ -1,6 +1,7 @@
 package com.panavis.primo.Parsers;
 
 import com.panavis.primo.Style.CaseParagraph;
+import com.panavis.primo.Utils.StringFormatting;
 
 class SectionBodyOldFormat extends Section {
 
@@ -18,5 +19,10 @@ class SectionBodyOldFormat extends Section {
         int MAX_HEADING_LENGTH = 75; // ~ 55 seen in case data
         String text = caseParagraph.getParagraphText(paragraphIndex);
         return text.length() >= MAX_HEADING_LENGTH;
+    }
+
+    @Override
+    String getNextNumbering() {
+        return StringFormatting.EMPTY_STRING;
     }
 }

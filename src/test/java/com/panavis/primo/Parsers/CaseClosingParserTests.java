@@ -18,7 +18,7 @@ public class CaseClosingParserTests {
     @Ignore("Ignore: Closing section troubleshooter.")
     @Test
     public void troubleshootOneCaseSeparately() {
-        JsonArray caseArray = CaseClosingParserHelpers.getActualCaseClosingArray(0);
+        JsonArray caseArray = CaseClosingParserHelpers.getActualCaseClosingArray(16);
         System.out.println(caseArray.toString());
     }
 

@@ -1,6 +1,7 @@
 package com.panavis.primo.Parsers;
 
 import com.panavis.primo.Style.CaseParagraph;
+import com.panavis.primo.Utils.StringFormatting;
 
 class SectionClosing extends Section {
 
@@ -22,5 +23,10 @@ class SectionClosing extends Section {
     @Override
     boolean isHeadingTooLong(int paragraphIndex) {
         return false;
+    }
+
+    @Override
+    String getNextNumbering() {
+        return StringFormatting.EMPTY_STRING;
     }
 }

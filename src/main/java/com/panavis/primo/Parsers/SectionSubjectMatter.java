@@ -25,6 +25,12 @@ public class SectionSubjectMatter extends Section {
         String text = caseParagraph.getHeadingFromParagraph(paragraphIndex);
         return !StringFormatting.isTextCapitalized(text) && text.length() >= MAX_HEADING_LENGTH;
     }
+
+    @Override
+    String getNextNumbering() {
+        return StringFormatting.EMPTY_STRING;
+    }
+
     private boolean startsCaseBodySection(int paragraphIndex) {
         return hasNewCaseBodyFormat(paragraphIndex).value || hasOldCaseBodyFormat(paragraphIndex);
     }

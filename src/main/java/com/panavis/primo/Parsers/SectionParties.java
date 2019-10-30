@@ -25,6 +25,11 @@ public class SectionParties extends Section {
         return !StringFormatting.isTextCapitalized(text) && text.length() >= MAX_HEADING_LENGTH;
     }
 
+    @Override
+    String getNextNumbering() {
+        return StringFormatting.EMPTY_STRING;
+    }
+
     private boolean startsProsecutorSubsection(int paragraphIndex) {
         String text = caseParagraph.getParagraphText(paragraphIndex);
         return text.toLowerCase().contains(Keywords.UBUSHINJACYAHA) &&

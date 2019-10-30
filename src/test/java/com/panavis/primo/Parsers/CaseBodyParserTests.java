@@ -2,8 +2,11 @@ package com.panavis.primo.Parsers;
 
 import com.panavis.primo.ResultTypes.SectionResult;
 import com.panavis.primo.TestsSetup;
-import com.panavis.primo.Wrappers.*;
-import org.junit.*;
+import com.panavis.primo.Wrappers.JsonArray;
+import com.panavis.primo.Wrappers.JsonObject;
+import org.junit.BeforeClass;
+import org.junit.Ignore;
+import org.junit.Test;
 
 import static com.panavis.primo.Constants.Headings.URUKIKO;
 import static junit.framework.TestCase.assertEquals;
@@ -20,8 +23,9 @@ public class CaseBodyParserTests {
     @Ignore("Ignore: Body section troubleshooter.")
     @Test
     public void troubleshootOneCaseSeparately() {
-       SectionResult result = CaseBodyParserHelpers.parseOneCaseAndReturnCaseBodySection(34);
-       System.out.println(result.getSectionContent().toString());
+       SectionResult result = CaseBodyParserHelpers.parseOneCaseAndReturnCaseBodySection(15);
+        JsonObject sectionContent = result.getSectionContent();
+        System.out.println(sectionContent.toString());
     }
 
     @Test
@@ -38,8 +42,9 @@ public class CaseBodyParserTests {
 
     @Test
     public void case_000_CaseBackgroundMatchesExpectedContent() {
-        String actualContent = CaseBodyParserHelpers.getCaseBackgroundSection(0, "I . IMITERERE Y\u2019URUBANZA").toString();
-        String expectedContent = CaseBodyParserHelpers.getExpectedCaseSubsection(0, 0, "I . IMITERERE Y\u2019URUBANZA").toString();
+        String heading = "I . IMITERERE Y\u2019URUBANZA";
+        String actualContent = CaseBodyParserHelpers.getCaseBackgroundSection(0, heading).toString();
+        String expectedContent = CaseBodyParserHelpers.getExpectedCaseSubsection(0, 0, heading).toString();
 
         assertEquals(expectedContent, actualContent);
     }
@@ -60,9 +65,10 @@ public class CaseBodyParserTests {
     @Test
     public void case_000_SecondSubsectionMatchesExpectedContent() {
         JsonObject secondSubsection = CaseBodyParserHelpers.getCaseBodySubsection(0, 1);
-        String actualSubsection = secondSubsection.getArrayByKey("II.ISESENGURA RY\u2019URUBANZA").toString();
+        String heading = "II.ISESENGURA RY\u2019URUBANZA";
+        String actualSubsection = secondSubsection.getArrayByKey(heading).toString();
         String expectedSubsection = CaseBodyParserHelpers.getExpectedCaseSubsection(0,
-                1, "II.ISESENGURA RY\u2019URUBANZA").toString();
+                1, heading).toString();
         assertEquals(expectedSubsection, actualSubsection);
     }
 
@@ -82,9 +88,10 @@ public class CaseBodyParserTests {
     @Test
     public void case_000_ThirdSubsectionMatchesExpectedContent() {
         JsonObject thirdSubsection = CaseBodyParserHelpers.getCaseBodySubsection(0, 2);
-        String actualSubsection = thirdSubsection.getArrayByKey("III.\tICYEMEZO CY\u2019URUKIKO").toString();
+        String heading = "III.\tICYEMEZO CY\u2019URUKIKO";
+        String actualSubsection = thirdSubsection.getArrayByKey(heading).toString();
         String expectedSubsection = CaseBodyParserHelpers.getExpectedCaseSubsection(0,
-                2, "III.\tICYEMEZO CY\u2019URUKIKO").toString();
+                2, heading).toString();
         assertEquals(expectedSubsection, actualSubsection);
     }
 
@@ -123,9 +130,10 @@ public class CaseBodyParserTests {
     @Test
     public void case_001_SecondSubsectionMatchesExpectedContent() {
         JsonObject secondSubsection = CaseBodyParserHelpers.getCaseBodySubsection(1, 1);
-        String actualSubsection = secondSubsection.getArrayByKey("II.\tISESENGURA RY\u2019IBIBAZO BIGIZE URUBANZA").toString();
+        String heading = "II.\tISESENGURA RY\u2019IBIBAZO BIGIZE URUBANZA";
+        String actualSubsection = secondSubsection.getArrayByKey(heading).toString();
         String expectedSubsection = CaseBodyParserHelpers.getExpectedCaseSubsection(1,
-                1, "II.\tISESENGURA RY\u2019IBIBAZO BIGIZE URUBANZA").toString();
+                1, heading).toString();
         assertEquals(expectedSubsection, actualSubsection);
     }
 
@@ -145,9 +153,10 @@ public class CaseBodyParserTests {
     @Test
     public void case_001_ThirdSubsectionMatchesExpectedContent() {
         JsonObject secondSubsection = CaseBodyParserHelpers.getCaseBodySubsection(1, 2);
-        String actualSubsection = secondSubsection.getArrayByKey("III.\tICYEMEZO CY\u2019URUKIKO").toString();
+        String heading = "III.\tICYEMEZO CY\u2019URUKIKO";
+        String actualSubsection = secondSubsection.getArrayByKey(heading).toString();
         String expectedSubsection = CaseBodyParserHelpers.getExpectedCaseSubsection(1,
-                2, "III.\tICYEMEZO CY\u2019URUKIKO").toString();
+                2, heading).toString();
         assertEquals(expectedSubsection, actualSubsection);
     }
 
@@ -186,9 +195,10 @@ public class CaseBodyParserTests {
     @Test
     public void case_002_SecondSubsectionMatchesExpectedContent() {
         JsonObject secondSubsection = CaseBodyParserHelpers.getCaseBodySubsection(2, 1);
-        String actualSubsection = secondSubsection.getArrayByKey("II. ISESENGURA RY\u2019INZITIZI YATANZWE").toString();
+        String heading = "II. ISESENGURA RY\u2019INZITIZI YATANZWE";
+        String actualSubsection = secondSubsection.getArrayByKey(heading).toString();
         String expectedSubsection = CaseBodyParserHelpers.getExpectedCaseSubsection(2,
-                1, "II. ISESENGURA RY\u2019INZITIZI YATANZWE").toString();
+                1, heading).toString();
         assertEquals(expectedSubsection, actualSubsection);
     }
 
@@ -208,9 +218,10 @@ public class CaseBodyParserTests {
     @Test
     public void case_002_FourthSubsectionMatchesExpectedContent() {
         JsonObject secondSubsection = CaseBodyParserHelpers.getCaseBodySubsection(2, 2);
-        String actualSubsection = secondSubsection.getArrayByKey("III. ICYEMEZO CY\u2019URUKIKO").toString();
+        String heading = "III. ICYEMEZO CY\u2019URUKIKO";
+        String actualSubsection = secondSubsection.getArrayByKey(heading).toString();
         String expectedSubsection = CaseBodyParserHelpers.getExpectedCaseSubsection(2,
-                2, "III. ICYEMEZO CY\u2019URUKIKO").toString();
+                2, heading).toString();
         assertEquals(expectedSubsection, actualSubsection);
     }
 
@@ -228,8 +239,9 @@ public class CaseBodyParserTests {
 
     @Test
     public void case_004_CaseBackgroundMatchesExpectedContent() {
-        String actualContent = CaseBodyParserHelpers.getCaseBackgroundSection(4, "I.\tIMITERERE Y\u2019URUBANZA").toString();
-        String expectedContent = CaseBodyParserHelpers.getExpectedCaseSubsection(4, 0, "I.\tIMITERERE Y\u2019URUBANZA").toString();
+        String heading = "I.\tIMITERERE Y\u2019URUBANZA";
+        String actualContent = CaseBodyParserHelpers.getCaseBackgroundSection(4, heading).toString();
+        String expectedContent = CaseBodyParserHelpers.getExpectedCaseSubsection(4, 0, heading).toString();
         assertEquals(expectedContent, actualContent);
     }
 
@@ -249,9 +261,10 @@ public class CaseBodyParserTests {
     @Test
     public void case_004_SecondSubsectionMatchesExpectedContent() {
         JsonObject secondSubsection = CaseBodyParserHelpers.getCaseBodySubsection(4, 1);
-        String actualSubsection = secondSubsection.getArrayByKey("II.\tISESENGURA RY\u2019IBIBAZO BIGIZEURUBANZA").toString();
+        String heading = "II.\tISESENGURA RY\u2019IBIBAZO BIGIZEURUBANZA";
+        String actualSubsection = secondSubsection.getArrayByKey(heading).toString();
         String expectedSubsection = CaseBodyParserHelpers.getExpectedCaseSubsection(4,
-                1, "II.\tISESENGURA RY\u2019IBIBAZO BIGIZEURUBANZA").toString();
+                1, heading).toString();
         assertEquals(expectedSubsection, actualSubsection);
     }
 
@@ -271,9 +284,10 @@ public class CaseBodyParserTests {
     @Test
     public void case_004_ThirdSubsectionMatchesExpectedContent() {
         JsonObject thirdSubsection = CaseBodyParserHelpers.getCaseBodySubsection(4, 2);
-        String actualSubsection = thirdSubsection.getArrayByKey("III.\tICYEMEZO CY\u2019URUKIKO").toString();
+        String heading = "III.\tICYEMEZO CY\u2019URUKIKO";
+        String actualSubsection = thirdSubsection.getArrayByKey(heading).toString();
         String expectedSubsection = CaseBodyParserHelpers.getExpectedCaseSubsection(4,
-                2, "III.\tICYEMEZO CY\u2019URUKIKO").toString();
+                2, heading).toString();
         assertEquals(expectedSubsection, actualSubsection);
     }
 
@@ -291,8 +305,9 @@ public class CaseBodyParserTests {
 
     @Test
     public void case_005_CaseBackgroundMatchesExpectedContent() {
-        String actualContent = CaseBodyParserHelpers.getCaseBackgroundSection(5, "I.\tIMITERERE Y\u2019URUBANZA").toString();
-        String expectedContent = CaseBodyParserHelpers.getExpectedCaseSubsection(5, 0, "I.\tIMITERERE Y\u2019URUBANZA").toString();
+        String heading = "I.\tIMITERERE Y\u2019URUBANZA";
+        String actualContent = CaseBodyParserHelpers.getCaseBackgroundSection(5, heading).toString();
+        String expectedContent = CaseBodyParserHelpers.getExpectedCaseSubsection(5, 0, heading).toString();
         assertEquals(expectedContent, actualContent);
     }
 
@@ -312,9 +327,10 @@ public class CaseBodyParserTests {
     @Test
     public void case_005_SecondSubsectionMatchesExpectedContent() {
         JsonObject secondSubsection = CaseBodyParserHelpers.getCaseBodySubsection(5, 1);
-        String actualSubsection = secondSubsection.getArrayByKey("II.\tISESENGURA RY\u2018INZITIZI").toString();
+        String heading = "II.\tISESENGURA RY\u2018INZITIZI";
+        String actualSubsection = secondSubsection.getArrayByKey(heading).toString();
         String expectedSubsection = CaseBodyParserHelpers.getExpectedCaseSubsection(5,
-                1, "II.\tISESENGURA RY\u2018INZITIZI").toString();
+                1, heading).toString();
         assertEquals(expectedSubsection, actualSubsection);
     }
 
@@ -334,9 +350,10 @@ public class CaseBodyParserTests {
     @Test
     public void case_005_ThirdSubsectionMatchesExpectedContent() {
         JsonObject thirdSubsection = CaseBodyParserHelpers.getCaseBodySubsection(5, 2);
-        String actualSubsection = thirdSubsection.getArrayByKey("III.\tICYEMEZO CY\u2019URUKIKO").toString();
+        String heading = "III.\tICYEMEZO CY\u2019URUKIKO";
+        String actualSubsection = thirdSubsection.getArrayByKey(heading).toString();
         String expectedSubsection = CaseBodyParserHelpers.getExpectedCaseSubsection(5,
-                2, "III.\tICYEMEZO CY\u2019URUKIKO").toString();
+                2, heading).toString();
         assertEquals(expectedSubsection, actualSubsection);
     }
 
@@ -354,8 +371,9 @@ public class CaseBodyParserTests {
 
     @Test
     public void case_006_CaseBackgroundMatchesExpectedContent() {
-        String actualContent = CaseBodyParserHelpers.getCaseBackgroundSection(6, "IMITERERE Y\u2019URUBANZA").toString();
-        String expectedContent = CaseBodyParserHelpers.getExpectedCaseSubsection(6, 0, "IMITERERE Y\u2019URUBANZA").toString();
+        String heading = "IMITERERE Y\u2019URUBANZA";
+        String actualContent = CaseBodyParserHelpers.getCaseBackgroundSection(6, heading).toString();
+        String expectedContent = CaseBodyParserHelpers.getExpectedCaseSubsection(6, 0, heading).toString();
         assertEquals(expectedContent, actualContent);
     }
 
@@ -375,9 +393,10 @@ public class CaseBodyParserTests {
     @Test
     public void case_006_SecondSubsectionMatchesExpectedContent() {
         JsonObject secondSubsection = CaseBodyParserHelpers.getCaseBodySubsection(6, 1);
-        String actualSubsection = secondSubsection.getArrayByKey("ISESENGURA RY\u2019IBIBAZO BIRI MU RUBANZA").toString();
+        String heading = "ISESENGURA RY\u2019IBIBAZO BIRI MU RUBANZA";
+        String actualSubsection = secondSubsection.getArrayByKey(heading).toString();
         String expectedSubsection = CaseBodyParserHelpers.getExpectedCaseSubsection(6,
-                1, "ISESENGURA RY\u2019IBIBAZO BIRI MU RUBANZA").toString();
+                1, heading).toString();
         assertEquals(expectedSubsection, actualSubsection);
     }
 
@@ -397,9 +416,10 @@ public class CaseBodyParserTests {
     @Test
     public void case_006_ThirdSubsectionMatchesExpectedContent() {
         JsonObject thirdSubsection = CaseBodyParserHelpers.getCaseBodySubsection(6, 2);
-        String actualSubsection = thirdSubsection.getArrayByKey("ICYEMEZO CY\u2019URUKIKO").toString();
+        String heading = "ICYEMEZO CY\u2019URUKIKO";
+        String actualSubsection = thirdSubsection.getArrayByKey(heading).toString();
         String expectedSubsection = CaseBodyParserHelpers.getExpectedCaseSubsection(6,
-                2, "ICYEMEZO CY\u2019URUKIKO").toString();
+                2, heading).toString();
         assertEquals(expectedSubsection, actualSubsection);
     }
 
@@ -417,8 +437,9 @@ public class CaseBodyParserTests {
 
     @Test
     public void case_007_CaseBackgroundMatchesExpectedContent() {
-        String actualContent = CaseBodyParserHelpers.getCaseBackgroundSection(7, "I.\tIMITERERE Y\u2019URUBANZA").toString();
-        String expectedContent = CaseBodyParserHelpers.getExpectedCaseSubsection(7, 0, "I.\tIMITERERE Y\u2019URUBANZA").toString();
+        String heading = "I.\tIMITERERE Y\u2019URUBANZA";
+        String actualContent = CaseBodyParserHelpers.getCaseBackgroundSection(7, heading).toString();
+        String expectedContent = CaseBodyParserHelpers.getExpectedCaseSubsection(7, 0, heading).toString();
         assertEquals(expectedContent, actualContent);
     }
 
@@ -438,9 +459,10 @@ public class CaseBodyParserTests {
     @Test
     public void case_007_SecondSubsectionMatchesExpectedContent() {
         JsonObject secondSubsection = CaseBodyParserHelpers.getCaseBodySubsection(7, 1);
-        String actualSubsection = secondSubsection.getArrayByKey("II.\tISESENGURA RY\u2019IKIBAZO KIRI MU RUBANZA").toString();
+        String heading = "II.\tISESENGURA RY\u2019IKIBAZO KIRI MU RUBANZA";
+        String actualSubsection = secondSubsection.getArrayByKey(heading).toString();
         String expectedSubsection = CaseBodyParserHelpers.getExpectedCaseSubsection(7,
-                1, "II.\tISESENGURA RY\u2019IKIBAZO KIRI MU RUBANZA").toString();
+                1, heading).toString();
         assertEquals(expectedSubsection, actualSubsection);
     }
 
@@ -460,9 +482,10 @@ public class CaseBodyParserTests {
     @Test
     public void case_007_ThirdSubsectionMatchesExpectedContent() {
         JsonObject thirdSubsection = CaseBodyParserHelpers.getCaseBodySubsection(7, 2);
-        String actualSubsection = thirdSubsection.getArrayByKey("III. ICYEMEZO CY\u2019URUKIKO").toString();
+        String heading = "III. ICYEMEZO CY\u2019URUKIKO";
+        String actualSubsection = thirdSubsection.getArrayByKey(heading).toString();
         String expectedSubsection = CaseBodyParserHelpers.getExpectedCaseSubsection(7,
-                2, "III. ICYEMEZO CY\u2019URUKIKO").toString();
+                2, heading).toString();
         assertEquals(expectedSubsection, actualSubsection);
     }
 
@@ -480,8 +503,9 @@ public class CaseBodyParserTests {
 
     @Test
     public void case_008_CaseBackgroundMatchesExpectedContent() {
-        String actualContent = CaseBodyParserHelpers.getCaseBackgroundSection(8, "I.\tIMITERERE Y\u2019URUBANZA").toString();
-        String expectedContent = CaseBodyParserHelpers.getExpectedCaseSubsection(8, 0, "I.\tIMITERERE Y\u2019URUBANZA").toString();
+        String heading = "I.\tIMITERERE Y\u2019URUBANZA";
+        String actualContent = CaseBodyParserHelpers.getCaseBackgroundSection(8, heading).toString();
+        String expectedContent = CaseBodyParserHelpers.getExpectedCaseSubsection(8, 0, heading).toString();
         assertEquals(expectedContent, actualContent);
     }
 
@@ -501,9 +525,10 @@ public class CaseBodyParserTests {
     @Test
     public void case_008_SecondSubsectionMatchesExpectedContent() {
         JsonObject secondSubsection = CaseBodyParserHelpers.getCaseBodySubsection(8, 1);
-        String actualSubsection = secondSubsection.getArrayByKey("II.\tISESENGURA RY\u2019IBIBAZO BIGIZE URUBANZA").toString();
+        String heading = "II.\tISESENGURA RY\u2019IBIBAZO BIGIZE URUBANZA";
+        String actualSubsection = secondSubsection.getArrayByKey(heading).toString();
         String expectedSubsection = CaseBodyParserHelpers.getExpectedCaseSubsection(8,
-                1, "II.\tISESENGURA RY\u2019IBIBAZO BIGIZE URUBANZA").toString();
+                1, heading).toString();
         assertEquals(expectedSubsection, actualSubsection);
     }
 
@@ -523,9 +548,10 @@ public class CaseBodyParserTests {
     @Test
     public void case_008_ThirdSubsectionMatchesExpectedContent() {
         JsonObject thirdSubsection = CaseBodyParserHelpers.getCaseBodySubsection(8, 2);
-        String actualSubsection = thirdSubsection.getArrayByKey("III.\tICYEMEZO CY\u2019URUKIKO").toString();
+        String heading = "III.\tICYEMEZO CY\u2019URUKIKO";
+        String actualSubsection = thirdSubsection.getArrayByKey(heading).toString();
         String expectedSubsection = CaseBodyParserHelpers.getExpectedCaseSubsection(8,
-                2, "III.\tICYEMEZO CY\u2019URUKIKO").toString();
+                2, heading).toString();
         assertEquals(expectedSubsection, actualSubsection);
     }
 
@@ -556,8 +582,9 @@ public class CaseBodyParserTests {
 
     @Test
     public void case_011_CaseBackgroundMatchesExpectedContent() {
-        String actualContent = CaseBodyParserHelpers.getCaseBackgroundSection(11, "I.\t IMITERERE Y\u2019URUBANZA").toString();
-        String expectedContent = CaseBodyParserHelpers.getExpectedCaseSubsection(11, 0, "I.\tIMITERERE Y\u2019URUBANZA").toString();
+        String heading = "I.\t IMITERERE Y\u2019URUBANZA";
+        String actualContent = CaseBodyParserHelpers.getCaseBackgroundSection(11, heading).toString();
+        String expectedContent = CaseBodyParserHelpers.getExpectedCaseSubsection(11, 0, heading).toString();
         assertEquals(expectedContent, actualContent);
     }
 
@@ -577,9 +604,10 @@ public class CaseBodyParserTests {
     @Test
     public void case_011_SecondSubsectionMatchesExpectedContent() {
         JsonObject secondSubsection = CaseBodyParserHelpers.getCaseBodySubsection(11, 1);
-        String actualSubsection = secondSubsection.getArrayByKey("II.IKIBAZO KIGIZE URUBANZA N\u2019ISESENGURWA RYACYO").toString();
+        String heading = "II.IKIBAZO KIGIZE URUBANZA N\u2019ISESENGURWA RYACYO";
+        String actualSubsection = secondSubsection.getArrayByKey(heading).toString();
         String expectedSubsection = CaseBodyParserHelpers.getExpectedCaseSubsection(11,
-                1, "II.IKIBAZO KIGIZE URUBANZA N\u2019ISESENGURWA RYACYO").toString();
+                1, heading).toString();
         assertEquals(expectedSubsection, actualSubsection);
     }
 
@@ -599,9 +627,10 @@ public class CaseBodyParserTests {
     @Test
     public void case_011_ThirdSubsectionMatchesExpectedContent() {
         JsonObject thirdSubsection = CaseBodyParserHelpers.getCaseBodySubsection(11, 2);
-        String actualSubsection = thirdSubsection.getArrayByKey("III. ICYEMEZO CY\u2019URUKIKO").toString();
+        String heading = "III. ICYEMEZO CY\u2019URUKIKO";
+        String actualSubsection = thirdSubsection.getArrayByKey(heading).toString();
         String expectedSubsection = CaseBodyParserHelpers.getExpectedCaseSubsection(11,
-                2, "III. ICYEMEZO CY\u2019URUKIKO").toString();
+                2, heading).toString();
         assertEquals(expectedSubsection, actualSubsection);
     }
 
@@ -619,8 +648,9 @@ public class CaseBodyParserTests {
 
     @Test
     public void case_013_CaseBackgroundMatchesExpectedContent() {
-        String actualContent = CaseBodyParserHelpers.getCaseBackgroundSection(13, "I.\tIMITERERE Y\u2019 URUBANZA").toString();
-        String expectedContent = CaseBodyParserHelpers.getExpectedCaseSubsection(13, 0, "I.\tIMITERERE Y\u2019 URUBANZA").toString();
+        String heading = "I.\tIMITERERE Y\u2019 URUBANZA";
+        String actualContent = CaseBodyParserHelpers.getCaseBackgroundSection(13, heading).toString();
+        String expectedContent = CaseBodyParserHelpers.getExpectedCaseSubsection(13, 0, heading).toString();
         assertEquals(expectedContent, actualContent);
     }
 
@@ -640,9 +670,10 @@ public class CaseBodyParserTests {
     @Test
     public void case_013_SecondSubsectionMatchesExpectedContent() {
         JsonObject secondSubsection = CaseBodyParserHelpers.getCaseBodySubsection(13, 1);
-        String actualSubsection = secondSubsection.getArrayByKey("II.\tISESENGURA RY\u2019 IKIBAZO KIGIZE URUBANZA").toString();
+        String heading = "II.\tISESENGURA RY\u2019 IKIBAZO KIGIZE URUBANZA";
+        String actualSubsection = secondSubsection.getArrayByKey(heading).toString();
         String expectedSubsection = CaseBodyParserHelpers.getExpectedCaseSubsection(13,
-                1, "II.\tISESENGURA RY\u2019 IKIBAZO KIGIZE URUBANZA").toString();
+                1, heading).toString();
         assertEquals(expectedSubsection, actualSubsection);
     }
 
@@ -662,9 +693,10 @@ public class CaseBodyParserTests {
     @Test
     public void case_013_ThirdSubsectionMatchesExpectedContent() {
         JsonObject thirdSubsection = CaseBodyParserHelpers.getCaseBodySubsection(13, 2);
-        String actualSubsection = thirdSubsection.getArrayByKey("III.\tICYEMEZO CY\u2019 URUKIKO").toString();
+        String heading = "III.\tICYEMEZO CY\u2019 URUKIKO";
+        String actualSubsection = thirdSubsection.getArrayByKey(heading).toString();
         String expectedSubsection = CaseBodyParserHelpers.getExpectedCaseSubsection(13,
-                2, "III.\tICYEMEZO CY\u2019 URUKIKO").toString();
+                2, heading).toString();
         assertEquals(expectedSubsection, actualSubsection);
     }
 
@@ -703,9 +735,10 @@ public class CaseBodyParserTests {
     @Test
     public void case_014_SecondSubsectionMatchesExpectedContent() {
         JsonObject secondSubsection = CaseBodyParserHelpers.getCaseBodySubsection(14, 1);
-        String actualSubsection = secondSubsection.getArrayByKey("II. ISESENGURA RY\u2018IBIBAZO BIGIZE URUBANZA").toString();
+        String heading = "II. ISESENGURA RY\u2018IBIBAZO BIGIZE URUBANZA";
+        String actualSubsection = secondSubsection.getArrayByKey(heading).toString();
         String expectedSubsection = CaseBodyParserHelpers.getExpectedCaseSubsection(14,
-                1, "II. ISESENGURA RY\u2018IBIBAZO BIGIZE URUBANZA").toString();
+                1, heading).toString();
         assertEquals(expectedSubsection, actualSubsection);
     }
 
@@ -725,9 +758,10 @@ public class CaseBodyParserTests {
     @Test
     public void case_014_ThirdSubsectionMatchesExpectedContent() {
         JsonObject thirdSubsection = CaseBodyParserHelpers.getCaseBodySubsection(14, 2);
-        String actualSubsection = thirdSubsection.getArrayByKey("III. ICYEMEZO CY\u2019URUKIKO").toString();
+        String heading = "III. ICYEMEZO CY\u2019URUKIKO";
+        String actualSubsection = thirdSubsection.getArrayByKey(heading).toString();
         String expectedSubsection = CaseBodyParserHelpers.getExpectedCaseSubsection(14,
-                2, "III. ICYEMEZO CY\u2019URUKIKO").toString();
+                2, heading).toString();
         assertEquals(expectedSubsection, actualSubsection);
     }
 
@@ -766,9 +800,10 @@ public class CaseBodyParserTests {
     @Test
     public void case_015_SecondSubsectionMatchesExpectedContent() {
         JsonObject secondSubsection = CaseBodyParserHelpers.getCaseBodySubsection(15, 1);
-        String actualSubsection = secondSubsection.getArrayByKey("II.\tISESENGURA RY\u2019IBIBAZO BIGIZE URUBANZA").toString();
+        String heading = "II.\tISESENGURA RY\u2019IBIBAZO BIGIZE URUBANZA";
+        String actualSubsection = secondSubsection.getArrayByKey(heading).toString();
         String expectedSubsection = CaseBodyParserHelpers.getExpectedCaseSubsection(15,
-                1, "II.\tISESENGURA RY\u2019IBIBAZO BIGIZE URUBANZA").toString();
+                1, heading).toString();
         assertEquals(expectedSubsection, actualSubsection);
     }
 
@@ -788,9 +823,10 @@ public class CaseBodyParserTests {
     @Test
     public void case_015_ThirdSubsectionMatchesExpectedContent() {
         JsonObject thirdSubsection = CaseBodyParserHelpers.getCaseBodySubsection(15, 2);
-        String actualSubsection = thirdSubsection.getArrayByKey("III.\tICYEMEZO CY\u2019URUKIKO").toString();
+        String heading = "III.\tICYEMEZO CY\u2019URUKIKO";
+        String actualSubsection = thirdSubsection.getArrayByKey(heading).toString();
         String expectedSubsection = CaseBodyParserHelpers.getExpectedCaseSubsection(15,
-                2, "III.\tICYEMEZO CY\u2019URUKIKO").toString();
+                2, heading).toString();
         assertEquals(expectedSubsection, actualSubsection);
     }
 
@@ -808,8 +844,9 @@ public class CaseBodyParserTests {
 
     @Test
     public void case_016_CaseBackgroundMatchesExpectedContent() {
-        String actualContent = CaseBodyParserHelpers.getCaseBackgroundSection(16, "I.\tIMITERERE Y\u2019URUBANZA").toString();
-        String expectedContent = CaseBodyParserHelpers.getExpectedCaseSubsection(16, 0, "I.\tIMITERERE Y\u2019URUBANZA").toString();
+        String heading = "I.\tIMITERERE Y\u2019URUBANZA";
+        String actualContent = CaseBodyParserHelpers.getCaseBackgroundSection(16, heading).toString();
+        String expectedContent = CaseBodyParserHelpers.getExpectedCaseSubsection(16, 0, heading).toString();
         assertEquals(expectedContent, actualContent);
     }
 
@@ -829,9 +866,10 @@ public class CaseBodyParserTests {
     @Test
     public void case_016_SecondSubsectionMatchesExpectedContent() {
         JsonObject secondSubsection = CaseBodyParserHelpers.getCaseBodySubsection(16, 1);
-        String actualSubsection = secondSubsection.getArrayByKey("II.\tISESENGURA RY\u2019IBIBAZO BIGIZE URUBANZA").toString();
+        String heading = "II.\tISESENGURA RY\u2019IBIBAZO BIGIZE URUBANZA";
+        String actualSubsection = secondSubsection.getArrayByKey(heading).toString();
         String expectedSubsection = CaseBodyParserHelpers.getExpectedCaseSubsection(16,
-                1, "II.\tISESENGURA RY\u2019IBIBAZO BIGIZE URUBANZA").toString();
+                1, heading).toString();
         assertEquals(expectedSubsection, actualSubsection);
     }
 
@@ -851,9 +889,10 @@ public class CaseBodyParserTests {
     @Test
     public void case_016_ThirdSubsectionMatchesExpectedContent() {
         JsonObject thirdSubsection = CaseBodyParserHelpers.getCaseBodySubsection(16, 2);
-        String actualSubsection = thirdSubsection.getArrayByKey("III.\tICYEMEZO CY\u2019URUKIKO").toString();
+        String heading = "III.\tICYEMEZO CY\u2019URUKIKO";
+        String actualSubsection = thirdSubsection.getArrayByKey(heading).toString();
         String expectedSubsection = CaseBodyParserHelpers.getExpectedCaseSubsection(16,
-                2, "III.\tICYEMEZO CY\u2019URUKIKO").toString();
+                2, heading).toString();
         assertEquals(expectedSubsection, actualSubsection);
     }
 
@@ -871,8 +910,9 @@ public class CaseBodyParserTests {
 
     @Test
     public void case_017_CaseBackgroundMatchesExpectedContent() {
-        String actualContent = CaseBodyParserHelpers.getCaseBackgroundSection(17, "1.\tImiterere y\u2019urubanza").toString();
-        String expectedContent = CaseBodyParserHelpers.getExpectedCaseSubsection(17, 0, "1.\tImiterere y\u2019urubanza").toString();
+        String heading = "1.\tImiterere y\u2019urubanza";
+        String actualContent = CaseBodyParserHelpers.getCaseBackgroundSection(17, heading).toString();
+        String expectedContent = CaseBodyParserHelpers.getExpectedCaseSubsection(17, 0, heading).toString();
         assertEquals(expectedContent, actualContent);
     }
 
@@ -892,9 +932,10 @@ public class CaseBodyParserTests {
     @Test
     public void case_017_SecondSubsectionMatchesExpectedContent() {
         JsonObject secondSubsection = CaseBodyParserHelpers.getCaseBodySubsection(17, 1);
-        String actualSubsection = secondSubsection.getArrayByKey("2.\tImigendekere y\u2019urubanza.").toString();
+        String heading = "2.\tImigendekere y\u2019urubanza.";
+        String actualSubsection = secondSubsection.getArrayByKey(heading).toString();
         String expectedSubsection = CaseBodyParserHelpers.getExpectedCaseSubsection(17,
-                1, "2.\tImigendekere y\u2019urubanza.").toString();
+                1, heading).toString();
         assertEquals(expectedSubsection, actualSubsection);
     }
 
@@ -936,9 +977,10 @@ public class CaseBodyParserTests {
     @Test
     public void case_017_FourthSubsectionMatchesExpectedContent() {
         JsonObject thirdSubsection = CaseBodyParserHelpers.getCaseBodySubsection(17, 3);
-        String actualSubsection = thirdSubsection.getArrayByKey("4.\tIcyemezo cy\u2019Urukiko").toString();
+        String heading = "4.\tIcyemezo cy\u2019Urukiko";
+        String actualSubsection = thirdSubsection.getArrayByKey(heading).toString();
         String expectedSubsection = CaseBodyParserHelpers.getExpectedCaseSubsection(17,
-                3, "4.\tIcyemezo cy\u2019Urukiko").toString();
+                3, heading).toString();
         assertEquals(expectedSubsection, actualSubsection);
     }
 
@@ -956,8 +998,9 @@ public class CaseBodyParserTests {
 
     @Test
     public void case_018_CaseBackgroundMatchesExpectedContent() {
-        String actualContent = CaseBodyParserHelpers.getCaseBackgroundSection(18, "I.\tIMITERERE Y\u2019URUBANZA").toString();
-        String expectedContent = CaseBodyParserHelpers.getExpectedCaseSubsection(18, 0, "I.\tIMITERERE Y\u2019URUBANZA").toString();
+        String heading = "I.\tIMITERERE Y\u2019URUBANZA";
+        String actualContent = CaseBodyParserHelpers.getCaseBackgroundSection(18, heading).toString();
+        String expectedContent = CaseBodyParserHelpers.getExpectedCaseSubsection(18, 0, heading).toString();
         assertEquals(expectedContent, actualContent);
     }
 
@@ -977,9 +1020,10 @@ public class CaseBodyParserTests {
     @Test
     public void case_018_SecondSubsectionMatchesExpectedContent() {
         JsonObject secondSubsection = CaseBodyParserHelpers.getCaseBodySubsection(18, 1);
-        String actualSubsection = secondSubsection.getArrayByKey("II.\tIBIBAZO BIGIZE URUBANZA N\u2019ISESENGURWA RYABYO").toString();
+        String heading = "II.\tIBIBAZO BIGIZE URUBANZA N\u2019ISESENGURWA RYABYO";
+        String actualSubsection = secondSubsection.getArrayByKey(heading).toString();
         String expectedSubsection = CaseBodyParserHelpers.getExpectedCaseSubsection(18,
-                1, "II.\tIBIBAZO BIGIZE URUBANZA N\u2019ISESENGURWA RYABYO").toString();
+                1, heading).toString();
         assertEquals(expectedSubsection, actualSubsection);
     }
 
@@ -999,9 +1043,10 @@ public class CaseBodyParserTests {
     @Test
     public void case_018_ThirdSubsectionMatchesExpectedContent() {
         JsonObject thirdSubsection = CaseBodyParserHelpers.getCaseBodySubsection(18, 2);
-        String actualSubsection = thirdSubsection.getArrayByKey("III.\tICYEMEZO CY\u2019URUKIKO").toString();
+        String heading = "III.\tICYEMEZO CY\u2019URUKIKO";
+        String actualSubsection = thirdSubsection.getArrayByKey(heading).toString();
         String expectedSubsection = CaseBodyParserHelpers.getExpectedCaseSubsection(18,
-                2, "III.\tICYEMEZO CY\u2019URUKIKO").toString();
+                2, heading).toString();
         assertEquals(expectedSubsection, actualSubsection);
     }
 
@@ -1019,8 +1064,9 @@ public class CaseBodyParserTests {
 
     @Test
     public void case_019_CaseBackgroundMatchesExpectedContent() {
-        String actualContent = CaseBodyParserHelpers.getCaseBackgroundSection(19, "I.\tIMITERERE Y\u2019URUBANZA.").toString();
-        String expectedContent = CaseBodyParserHelpers.getExpectedCaseSubsection(19, 0, "I.\tIMITERERE Y\u2019URUBANZA.").toString();
+        String heading = "I.\tIMITERERE Y\u2019URUBANZA.";
+        String actualContent = CaseBodyParserHelpers.getCaseBackgroundSection(19, heading).toString();
+        String expectedContent = CaseBodyParserHelpers.getExpectedCaseSubsection(19, 0, heading).toString();
         assertEquals(expectedContent, actualContent);
     }
 
@@ -1040,9 +1086,10 @@ public class CaseBodyParserTests {
     @Test
     public void case_019_SecondSubsectionMatchesExpectedContent() {
         JsonObject secondSubsection = CaseBodyParserHelpers.getCaseBodySubsection(19, 1);
-        String actualSubsection = secondSubsection.getArrayByKey("II.\tIBIBAZO BIGIZE URUBANZA N\u2019ISESENGURA RYABYO.").toString();
+        String heading = "II.\tIBIBAZO BIGIZE URUBANZA N\u2019ISESENGURA RYABYO.";
+        String actualSubsection = secondSubsection.getArrayByKey(heading).toString();
         String expectedSubsection = CaseBodyParserHelpers.getExpectedCaseSubsection(19,
-                1, "II.\tIBIBAZO BIGIZE URUBANZA N\u2019ISESENGURA RYABYO.").toString();
+                1, heading).toString();
         assertEquals(expectedSubsection, actualSubsection);
     }
 
@@ -1082,8 +1129,9 @@ public class CaseBodyParserTests {
 
     @Test
     public void case_020_CaseBackgroundMatchesExpectedContent() {
-        String actualContent = CaseBodyParserHelpers.getCaseBackgroundSection(20, "I.\tIMITERERE Y\u2019URUBANZA").toString();
-        String expectedContent = CaseBodyParserHelpers.getExpectedCaseSubsection(20, 0, "I.\tIMITERERE Y\u2019URUBANZA").toString();
+        String heading = "I.\tIMITERERE Y\u2019URUBANZA";
+        String actualContent = CaseBodyParserHelpers.getCaseBackgroundSection(20, heading).toString();
+        String expectedContent = CaseBodyParserHelpers.getExpectedCaseSubsection(20, 0, heading).toString();
         assertEquals(expectedContent, actualContent);
     }
 
@@ -1103,9 +1151,10 @@ public class CaseBodyParserTests {
     @Test
     public void case_020_SecondSubsectionMatchesExpectedContent() {
         JsonObject secondSubsection = CaseBodyParserHelpers.getCaseBodySubsection(20, 1);
-        String actualSubsection = secondSubsection.getArrayByKey("II.\tIBIBAZO BIGIZE URUBANZA N\u2019ISESENGURWA RYABYO").toString();
+        String heading = "II.\tIBIBAZO BIGIZE URUBANZA N\u2019ISESENGURWA RYABYO";
+        String actualSubsection = secondSubsection.getArrayByKey(heading).toString();
         String expectedSubsection = CaseBodyParserHelpers.getExpectedCaseSubsection(20,
-                1, "II.\tIBIBAZO BIGIZE URUBANZA N\u2019ISESENGURWA RYABYO").toString();
+                1, heading).toString();
         assertEquals(expectedSubsection, actualSubsection);
     }
 
@@ -1125,9 +1174,10 @@ public class CaseBodyParserTests {
     @Test
     public void case_020_ThirdSubsectionMatchesExpectedContent() {
         JsonObject thirdSubsection = CaseBodyParserHelpers.getCaseBodySubsection(20, 2);
-        String actualSubsection = thirdSubsection.getArrayByKey("III.\tICYEMEZO CY\u2019URUKIKO").toString();
+        String heading = "III.\tICYEMEZO CY\u2019URUKIKO";
+        String actualSubsection = thirdSubsection.getArrayByKey(heading).toString();
         String expectedSubsection = CaseBodyParserHelpers.getExpectedCaseSubsection(20,
-                2, "III.\tICYEMEZO CY\u2019URUKIKO").toString();
+                2, heading).toString();
         assertEquals(expectedSubsection, actualSubsection);
     }
 
@@ -1145,8 +1195,9 @@ public class CaseBodyParserTests {
 
     @Test
     public void case_021_CaseBackgroundMatchesExpectedContent() {
-        String actualContent = CaseBodyParserHelpers.getCaseBackgroundSection(21, "I.\tIMITERERE Y\u2019URUBANZA.").toString();
-        String expectedContent = CaseBodyParserHelpers.getExpectedCaseSubsection(21, 0, "I.\tIMITERERE Y\u2019URUBANZA.").toString();
+        String heading = "I.\tIMITERERE Y\u2019URUBANZA.";
+        String actualContent = CaseBodyParserHelpers.getCaseBackgroundSection(21, heading).toString();
+        String expectedContent = CaseBodyParserHelpers.getExpectedCaseSubsection(21, 0, heading).toString();
         assertEquals(expectedContent, actualContent);
     }
 
@@ -1166,9 +1217,10 @@ public class CaseBodyParserTests {
     @Test
     public void case_021_SecondSubsectionMatchesExpectedContent() {
         JsonObject secondSubsection = CaseBodyParserHelpers.getCaseBodySubsection(21, 1);
-        String actualSubsection = secondSubsection.getArrayByKey("II.\tIBIBAZO BIGIZE URUBANZA N\u2019ISESENGURA RYABYO.").toString();
+        String heading = "II.\tIBIBAZO BIGIZE URUBANZA N\u2019ISESENGURA RYABYO.";
+        String actualSubsection = secondSubsection.getArrayByKey(heading).toString();
         String expectedSubsection = CaseBodyParserHelpers.getExpectedCaseSubsection(21,
-                1, "II.\tIBIBAZO BIGIZE URUBANZA N\u2019ISESENGURA RYABYO.").toString();
+                1, heading).toString();
         assertEquals(expectedSubsection, actualSubsection);
     }
 
@@ -1188,9 +1240,10 @@ public class CaseBodyParserTests {
     @Test
     public void case_021_ThirdSubsectionMatchesExpectedContent() {
         JsonObject thirdSubsection = CaseBodyParserHelpers.getCaseBodySubsection(21, 2);
-        String actualSubsection = thirdSubsection.getArrayByKey("III.\tICYEMEZO CY\u2019URUKIKO.").toString();
+        String heading = "III.\tICYEMEZO CY\u2019URUKIKO.";
+        String actualSubsection = thirdSubsection.getArrayByKey(heading).toString();
         String expectedSubsection = CaseBodyParserHelpers.getExpectedCaseSubsection(21,
-                2, "III.\tICYEMEZO CY\u2019URUKIKO.").toString();
+                2, heading).toString();
         assertEquals(expectedSubsection, actualSubsection);
     }
 
@@ -1303,6 +1356,58 @@ public class CaseBodyParserTests {
     public void case_036_ThirdSubsectionHasExpectedHeading() {
         JsonObject caseBody = CaseBodyParserHelpers.getCaseBodySubsection(36, 2);
         assertTrue(caseBody.hasKey("3. ICYEMEZO CY\u2019URUKIKO"));
+    }
+
+    @Test
+    public void case_038_CaseBodyHasExpectedLength() {
+        JsonArray caseBody = CaseBodyParserHelpers.getActualCaseBody(38);
+        assertEquals(3, caseBody.getSize());
+    }
+
+    @Test
+    public void case_038_hasCaseBackgroundSection() {
+        JsonObject caseBody = CaseBodyParserHelpers.getCaseBackground(38);
+        assertTrue(caseBody.hasKey("I . IMITERERE Y\u2019URUBANZA"));
+    }
+
+    @Test
+    public void case_038_SecondSubsectionHasExpectedHeading() {
+        JsonObject caseBody = CaseBodyParserHelpers.getCaseBodySubsection(38, 1);
+        assertTrue(caseBody.hasKey("II.ISESENGURA RY\u2019URUBANZA"));
+    }
+
+    @Test
+    public void case_038_ThirdSubsectionHasExpectedHeading() {
+        JsonObject caseBody = CaseBodyParserHelpers.getCaseBodySubsection(38, 2);
+        assertTrue(caseBody.hasKey("III. ICYEMEZO CY\u2019URUKIKO"));
+    }
+
+    @Test
+    public void case_038_CaseBackgroundMatchesExpectedContent() {
+        String heading = "I . IMITERERE Y\u2019URUBANZA";
+        String actualContent = CaseBodyParserHelpers.getCaseBackgroundSection(38, heading).toString();
+        String expectedContent = CaseBodyParserHelpers.getExpectedCaseSubsection(38, 0, heading).toString();
+        assertEquals(expectedContent, actualContent);
+    }
+
+    @Test
+    public void case_038_SecondSubsectionMatchesExpectedContent() {
+        String heading = "II.ISESENGURA RY\u2019URUBANZA";
+        JsonObject secondSubsection = CaseBodyParserHelpers.getCaseBodySubsection(38, 1);
+        String actualSubsection = secondSubsection.getArrayByKey(heading).toString();
+        String expectedSubsection = CaseBodyParserHelpers.getExpectedCaseSubsection(38,
+                1, heading).toString();
+        assertEquals(expectedSubsection, actualSubsection);
+    }
+
+    @Test
+    public void case_038_ThirdSubsectionMatchesExpectedContent() {
+        String heading = "III. ICYEMEZO CY\u2019URUKIKO";
+        JsonObject thirdSubsection = CaseBodyParserHelpers.getCaseBodySubsection(38, 2);
+        String actualSubsection = thirdSubsection.getArrayByKey(heading).toString();
+        String expectedSubsection = CaseBodyParserHelpers.getExpectedCaseSubsection(38,
+                2, heading).toString();
+        assertEquals(expectedSubsection, actualSubsection);
     }
 
 }
