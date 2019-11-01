@@ -7,7 +7,7 @@ import com.panavis.primo.Utils.StringFormatting;
 
 public class SectionParties extends Section {
 
-    SectionParties(CaseParagraph caseParagraph) {
+    public SectionParties(CaseParagraph caseParagraph) {
         super(caseParagraph);
     }
 
@@ -41,15 +41,5 @@ public class SectionParties extends Section {
         String pP = caseParagraph.getHeadingFromParagraph(paragraphIndex - 1).toUpperCase();
         return !caseParagraph.isSectionHeading(paragraphIndex - 1) ||
                 Headings.PARTIES_HEADINGS.contains(pP);
-    }
-
-    boolean startsSubjectMatterSection(int paragraphIndex) {
-        String paragraphText = caseParagraph.getParagraphTextWithoutNumbering(paragraphIndex);
-        boolean subjectMatterStart = false;
-        for (String heading : Headings.SUBJECT_MATTER_HEADINGS) {
-            if (paragraphText.toUpperCase().startsWith(heading))
-                subjectMatterStart = true;
-        }
-        return subjectMatterStart;
     }
 }

@@ -54,19 +54,28 @@ public class Main {
 
     private Primo getParser(String wordFilePath) {
         CaseParagraph caseParagraph = new CaseParagraph(wordFilePath);
+        CaseBodyFormat caseBodyFormat = new CaseBodyFormat(caseParagraph);
+
+        Section sectionParties = new SectionParties(caseParagraph);
+        Section sectionSubjectMatter = new SectionSubjectMatter(caseParagraph, caseBodyFormat);
+        SectionCaseBody sectionCaseBodyOldFormat = new SectionBodyOldFormat(caseParagraph, caseBodyFormat);
+        SectionCaseBody sectionCaseBodyNewFormat = new SectionBodyNewFormat(caseParagraph, caseBodyFormat);
+        Section sectionClosing = new SectionClosing(caseParagraph, caseBodyFormat);
+
+
         ICaseSectionParser titleParser = new CaseTitleParser(caseParagraph);
-        ICaseSectionParser partiesParser = new CasePartiesParser(caseParagraph);
-        ICaseSectionParser subjectMatterParser = new CaseSubjectMatterParser(caseParagraph);
-        ICaseSectionParser preCaseBodyParser = new PreCaseBodyParser(caseParagraph);
-        ICaseSectionParser caseBodyParser = new CaseBodyParser(caseParagraph);
-        ICaseSectionParser caseClosingParser = new CaseClosingParser(caseParagraph);
-        ICaseSectionParser casePanelParser = new CasePanelParser(caseParagraph);
-        return new Primo(
-                        titleParser,
-                        partiesParser,
+        ICaseSectionParser partiesParser = new CasePartiesParser(caseParagraph, sectionParties);
+        ICaseSectionParser subjectMatterParser = new CaseSubjectMatterParser(caseParagraph, sectionSubjectMatter);
+        ICaseSectionParser preCaseBodyParser = new PreCaseBodyParser(caseParagraph, caseBodyFormat);
+        ICaseSectionParser caseBodyParserOldFormat = new CaseBodyParserOldFormat(caseParagraph, caseBodyFormat, sectionCaseBodyOldFormat);
+        ICaseSectionParser caseBodyParser = new CaseBodyParserNewFormat(caseParagraph, caseBodyFormat,sectionCaseBodyNewFormat);
+        ICaseSectionParser caseClosingParser = new CaseClosingParser(caseParagraph, caseBodyFormat, sectionClosing);
+        ICaseSectionParser casePanelParser = new CasePanelParser(caseParagraph, caseBodyFormat);
+        return new Primo(caseBodyFormat,
+                        titleParser, partiesParser,
                         subjectMatterParser, preCaseBodyParser,
-                caseBodyParser, caseClosingParser, casePanelParser
-        );
+                        caseBodyParserOldFormat, caseBodyParser,
+                        caseClosingParser, casePanelParser);
     }
 
     private void createFile(String jsonOutputPath, String jsonString){

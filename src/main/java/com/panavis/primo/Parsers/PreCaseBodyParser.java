@@ -10,13 +10,13 @@ import com.panavis.primo.Wrappers.JsonObject;
 public class PreCaseBodyParser implements ICaseSectionParser {
 
     private CaseParagraph caseParagraph;
-    private SectionBodyNewFormat bodyNewFormat;
+    private CaseBodyFormat caseBodyFormat;
     private JsonArray sectionContent;
 
-    public PreCaseBodyParser(CaseParagraph caseParagraph) {
+    public PreCaseBodyParser(CaseParagraph caseParagraph, CaseBodyFormat caseBodyFormat) {
         this.caseParagraph = caseParagraph;
-        this.bodyNewFormat = new SectionBodyNewFormat(caseParagraph);
         this.sectionContent = new JsonArray();
+        this.caseBodyFormat = caseBodyFormat;
     }
 
     @Override
@@ -24,7 +24,7 @@ public class PreCaseBodyParser implements ICaseSectionParser {
         int nextParagraph = startParagraph;
         while (caseParagraph.paragraphExists(nextParagraph) &&
                 !hasNewCaseBodyFormat(nextParagraph) &&
-                !bodyNewFormat.hasOldCaseBodyFormat(nextParagraph)) {
+                !caseBodyFormat.isOldFormatCaseBody(nextParagraph).isValid) {
 
                 String paragraphText = caseParagraph.getParagraphText(nextParagraph);
                 this.sectionContent.putValue(paragraphText);
@@ -37,8 +37,8 @@ public class PreCaseBodyParser implements ICaseSectionParser {
     }
 
     private boolean hasNewCaseBodyFormat(int paragraphIndex) {
-        Result hasNewFormat = bodyNewFormat.hasNewCaseBodyFormat(paragraphIndex);
-        return hasNewFormat.value;
+        Result hasNewFormat = caseBodyFormat.isNewFormatCaseBody(paragraphIndex);
+        return hasNewFormat.isValid;
     }
 
 

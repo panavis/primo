@@ -1,7 +1,9 @@
 package com.panavis.primo;
 
+import com.panavis.primo.Parsers.CaseBodyFormat;
 import com.panavis.primo.Parsers.ICaseSectionParser;
 import com.panavis.primo.Parsers.ParsedCase;
+import com.panavis.primo.ResultTypes.Result;
 import com.panavis.primo.ResultTypes.SectionResult;
 
 import static com.panavis.primo.Constants.Keywords.*;
@@ -9,24 +11,30 @@ import static com.panavis.primo.Constants.Keywords.*;
 public class Primo {
 
     private ParsedCase parsedCase;
+    private CaseBodyFormat caseBodyFormat;
     private int nextParagraph;
     private ICaseSectionParser titleParser;
     private ICaseSectionParser partiesParser;
     private ICaseSectionParser subjectMatterParser;
     private ICaseSectionParser preCaseBodyParser;
-    private ICaseSectionParser caseBodyParser;
+    private ICaseSectionParser caseBodyParserOldFormat;
+    private ICaseSectionParser caseBodyParserNewFormat;
     private ICaseSectionParser caseClosingParser;
     private ICaseSectionParser casePanelParser;
 
-    Primo(ICaseSectionParser titleParser, ICaseSectionParser partiesParser,
+    Primo(CaseBodyFormat caseBodyFormat,
+          ICaseSectionParser titleParser, ICaseSectionParser partiesParser,
           ICaseSectionParser subjectMatterParser, ICaseSectionParser preCaseBodyParser,
-          ICaseSectionParser caseBodyParser, ICaseSectionParser caseClosingParser, ICaseSectionParser casePanelParser) {
+          ICaseSectionParser caseBodyParserOldFormat, ICaseSectionParser caseBodyParserNewFormat,
+          ICaseSectionParser caseClosingParser, ICaseSectionParser casePanelParser) {
         this.parsedCase = new ParsedCase();
+        this.caseBodyFormat = caseBodyFormat;
         this.titleParser = titleParser;
         this.partiesParser = partiesParser;
         this.subjectMatterParser = subjectMatterParser;
         this.preCaseBodyParser = preCaseBodyParser;
-        this.caseBodyParser = caseBodyParser;
+        this.caseBodyParserOldFormat = caseBodyParserOldFormat;
+        this.caseBodyParserNewFormat = caseBodyParserNewFormat;
         this.caseClosingParser = caseClosingParser;
         this.casePanelParser = casePanelParser;
     }
@@ -66,9 +74,22 @@ public class Primo {
     }
 
     private void parseCaseBody() {
-        SectionResult caseBody = caseBodyParser.parse(nextParagraph);
-        parsedCase.set(CASE_BODY, caseBody);
-        nextParagraph = caseBody.getNextParagraph();
+        Result oldFormat = caseBodyFormat.isOldFormatCaseBody(nextParagraph);
+        Result newFormat = caseBodyFormat.isNewFormatCaseBody(nextParagraph);
+        if (oldFormat.isValid) {
+            int startParagraph = oldFormat.startParagraph;
+            SectionResult caseBody = caseBodyParserOldFormat.parse(startParagraph);
+            parsedCase.set(CASE_BODY, caseBody);
+            nextParagraph = caseBody.getNextParagraph();
+        }
+        else if (newFormat.isValid) {
+            int startParagraph = newFormat.startParagraph;
+            SectionResult caseBody = caseBodyParserNewFormat.parse(startParagraph);
+            parsedCase.set(CASE_BODY, caseBody);
+            nextParagraph = caseBody.getNextParagraph();
+        } else {
+            parsedCase.setSkippedParagraphs(true);
+        }
     }
 
     private void parseCaseClosing() {

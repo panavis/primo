@@ -1,9 +1,6 @@
 package com.panavis.primo.Parsers;
 
-import static com.panavis.primo.Constants.Headings.*;
-import static com.panavis.primo.Constants.Keywords.*;
-
-import com.panavis.primo.ResultTypes.Result;
+import com.panavis.primo.Constants.Headings;
 import com.panavis.primo.ResultTypes.TextParagraphIndex;
 import com.panavis.primo.Style.CaseParagraph;
 import com.panavis.primo.Utils.*;
@@ -14,19 +11,19 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-abstract class Section  {
+import static com.panavis.primo.Constants.Headings.SUBJECT_MATTER_HEADINGS;
+
+public abstract class Section  {
 
     CaseParagraph caseParagraph;
-    CaseClosingLogic closingLogic;
     private int startParagraph;
     private String inlineParagraph;
     private int lastParagraph;
     private String subsectionBody;
     private String nextHeading;
 
-    Section(CaseParagraph caseParagraph) {
+    public Section(CaseParagraph caseParagraph) {
         this.caseParagraph = caseParagraph;
-        this.closingLogic = new CaseClosingLogic(caseParagraph);
         this.inlineParagraph = "";
         this.subsectionBody = "";
         this.nextHeading = "";
@@ -37,14 +34,14 @@ abstract class Section  {
     abstract String getNextNumbering();
 
     void parse() {
-        if (inlineParagraphHasText())
+        if (hasInlineParagraphText())
             inlineParagraph += caseParagraph.getBlankLinesAfterParagraph(startParagraph);
         TextParagraphIndex remainingAndIndex = getRemainingSubsectionBody(startParagraph);
         subsectionBody = inlineParagraph.concat(remainingAndIndex.getSubsectionParagraphs()).trim();
         lastParagraph = remainingAndIndex.getParagraphIndex();
     }
 
-    private boolean inlineParagraphHasText() {
+    private boolean hasInlineParagraphText() {
         return inlineParagraph.length() != 0;
     }
 
@@ -211,28 +208,6 @@ abstract class Section  {
         return  !StringFormatting.isCaseSensitive(firstChar) && !firstChar.equals("-");
     }
 
-    Result hasNewCaseBodyFormat(int paragraphIndex) {
-        if (isParagraphNewCaseBodyStart(paragraphIndex)) {
-            return new Result(true, paragraphIndex);
-        }
-
-        if (caseParagraph.paragraphExists(paragraphIndex + 1) &&
-                caseParagraph.isSectionHeading(paragraphIndex) &&
-                isParagraphNewCaseBodyStart(paragraphIndex + 1)) {
-            return new Result(true, paragraphIndex + 1);
-        }
-        return new Result(false);
-    }
-
-    private boolean isParagraphNewCaseBodyStart(int paragraphIndex) {
-        String text = caseParagraph.getParagraphText(paragraphIndex).toLowerCase();
-        List<String> tokens = new ArrayList<>(Arrays.asList(text.split(" ")))
-                .stream().filter(t -> !t.isEmpty()).collect(Collectors.toList());
-
-        return text.contains(IMITERERE) && text.contains("y") &&
-                text.contains(URUBANZA) && tokens.size() <= 5;
-    }
-
     Section setStartingParagraph(int startParagraph) {
         this.startParagraph = startParagraph;
         return this;
@@ -251,12 +226,24 @@ abstract class Section  {
     int getLastParagraph() {
         return lastParagraph;
     }
+
     String getNextHeading() { return nextHeading; }
 
-    boolean hasOldCaseBodyFormat(int startParagraph) {
-        if (!caseParagraph.paragraphExists(startParagraph + 1)) return false;
-        String heading = caseParagraph.getParagraphTextWithoutNumbering(startParagraph);
-        String firstBodyParagraph = caseParagraph.getParagraphTextWithoutNumbering(startParagraph + 1);
-        return heading.toUpperCase().startsWith(URUKIKO) && firstBodyParagraph.toLowerCase().contains(RUSHINGIYE);
+    boolean subjectMatterHasAnotherSubsection(int paragraphIndex) {
+        String text = caseParagraph.getParagraphTextWithoutNumbering(paragraphIndex).toLowerCase();
+        for (String heading: SUBJECT_MATTER_HEADINGS) {
+            if (text.startsWith(heading.toLowerCase())) return true;
+        }
+        return false;
+    }
+
+    boolean startsSubjectMatterSection(int paragraphIndex) {
+        String paragraphText = caseParagraph.getParagraphTextWithoutNumbering(paragraphIndex);
+        boolean subjectMatterStart = false;
+        for (String heading : Headings.SUBJECT_MATTER_HEADINGS) {
+            if (paragraphText.toUpperCase().startsWith(heading))
+                subjectMatterStart = true;
+        }
+        return subjectMatterStart;
     }
 }

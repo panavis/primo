@@ -6,17 +6,18 @@ import com.panavis.primo.core.Numbering.UnitNumbering;
 
 import static com.panavis.primo.Utils.StringFormatting.*;
 
-class SectionBodyNewFormat extends Section {
+public class SectionBodyNewFormat extends SectionCaseBody {
 
-    private UnitNumbering currentNumbering;
+    private CaseBodyFormat caseBodyFormat;
 
-    SectionBodyNewFormat(CaseParagraph caseParagraph) {
+    public SectionBodyNewFormat(CaseParagraph caseParagraph, CaseBodyFormat caseBodyFormat) {
         super(caseParagraph);
+        this.caseBodyFormat = caseBodyFormat;
     }
 
     @Override
     boolean isInNextSubsection(int paragraphIndex) {
-        if (super.closingLogic.isCaseClosing(paragraphIndex)) return true;
+        if (caseBodyFormat.isCaseClosing(paragraphIndex)) return true;
         if (isHeadingTooLong(paragraphIndex)) return false;
 
         String text = caseParagraph.getParagraphText(paragraphIndex);
@@ -24,7 +25,7 @@ class SectionBodyNewFormat extends Section {
 
         if (hasNextRealNumbering() &&
                 paragraphHasNumbering(paragraphNumbering.current)) {
-            return matchesNextNumbering(text, currentNumbering.realNext);
+            return matchesNextNumbering(text, getCurrentNumbering().realNext);
         }
         return hasSameBodyHeadingFormat(paragraphIndex, text);
     }
@@ -38,11 +39,11 @@ class SectionBodyNewFormat extends Section {
 
     @Override
     String getNextNumbering() {
-        return currentNumbering.logicalNext;
+        return getCurrentNumbering().logicalNext;
     }
 
     private boolean hasNextRealNumbering() {
-        return !currentNumbering.realNext.equals(EMPTY_STRING);
+        return !getCurrentNumbering().realNext.equals(EMPTY_STRING);
     }
 
     private boolean paragraphHasNumbering(String currentNumbering) {
@@ -66,8 +67,8 @@ class SectionBodyNewFormat extends Section {
 
     private boolean hasNonDynamicNumbering(int paragraphIndex, String text, boolean hasSameStyle) {
         boolean hasNextHeadingStart = false;
-        if (!currentNumbering.logicalNext.equals(EMPTY_STRING))
-            hasNextHeadingStart = text.startsWith(currentNumbering.logicalNext);
+        if (!getCurrentNumbering().logicalNext.equals(EMPTY_STRING))
+            hasNextHeadingStart = text.startsWith(getCurrentNumbering().logicalNext);
 
         String firstWord = text.split(" ")[0];
         boolean hasNextHeadingInBold = firstWord.endsWith(".") &&
@@ -78,11 +79,6 @@ class SectionBodyNewFormat extends Section {
 
     private boolean isTextCapitalizedAndHasSameStyle(String text, String currentStyle) {
         return StringFormatting.isTextCapitalized(text) &&
-                currentStyle.equals(currentNumbering.style);
-    }
-
-    Section setCurrentNumbering(UnitNumbering unitNumbering) {
-        this.currentNumbering = unitNumbering;
-        return this;
+                currentStyle.equals(getCurrentNumbering().style);
     }
 }

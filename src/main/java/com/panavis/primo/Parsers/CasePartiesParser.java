@@ -17,16 +17,16 @@ import static com.panavis.primo.Constants.Keywords.*;
 public class CasePartiesParser implements ICaseSectionParser {
 
     private CaseParagraph caseParagraph;
-    private SectionParties section;
+    private Section section;
     private JsonArray partiesSubsections;
     private boolean reachedSubjectMatterSection;
     private int subsectionStart;
     private static final String AND_CONJUNCTION = "na";
     private List<String> ongoingSubsectionWithoutHeading;
 
-    public CasePartiesParser(CaseParagraph caseParagraph) {
+    public CasePartiesParser(CaseParagraph caseParagraph, Section sectionParties) {
         this.caseParagraph = caseParagraph;
-        this.section = new SectionParties(caseParagraph);
+        this.section = sectionParties;
         this.partiesSubsections = new JsonArray();
         this.reachedSubjectMatterSection = false;
         this.ongoingSubsectionWithoutHeading = new ArrayList<>();

@@ -3,15 +3,18 @@ package com.panavis.primo.Parsers;
 import com.panavis.primo.Style.CaseParagraph;
 import com.panavis.primo.Utils.StringFormatting;
 
-class SectionBodyOldFormat extends Section {
+public class SectionBodyOldFormat extends SectionCaseBody {
 
-    SectionBodyOldFormat(CaseParagraph caseParagraph) {
+    private CaseBodyFormat caseBodyFormat;
+
+    public SectionBodyOldFormat(CaseParagraph caseParagraph, CaseBodyFormat caseBodyFormat) {
         super(caseParagraph);
+        this.caseBodyFormat = caseBodyFormat;
     }
 
     @Override
     boolean isInNextSubsection(int paragraphIndex) {
-        return caseParagraph.isSectionHeading(paragraphIndex) || super.closingLogic.isCaseClosing(paragraphIndex);
+        return caseParagraph.isSectionHeading(paragraphIndex) || caseBodyFormat.isCaseClosing(paragraphIndex);
     }
 
     @Override

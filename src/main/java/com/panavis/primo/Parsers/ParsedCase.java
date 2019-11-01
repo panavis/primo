@@ -28,7 +28,10 @@ public class ParsedCase {
     }
 
     public void setSkippedParagraphs(boolean skipped) {
-        this.missedSomeParagraphs = skipped;
+        boolean hasAlreadySkipped = this.missedSomeParagraphs;
+        if (!hasAlreadySkipped) {
+            this.missedSomeParagraphs = skipped;
+        }
     }
 
     public boolean didSkipParagraphs() {

@@ -59,27 +59,41 @@ public class TestsSetup {
 
     public static Primo getConverterObject(String wordFilePath, String section) {
         CaseParagraph caseParagraph = new CaseParagraph(wordFilePath);
+        CaseBodyFormat caseBodyFormat = new CaseBodyFormat(caseParagraph);
+
+        Section sectionParties = new SectionParties(caseParagraph);
+        Section sectionSubjectMatter = new SectionSubjectMatter(caseParagraph, caseBodyFormat);
+        SectionCaseBody sectionCaseBodyOldFormat = new SectionBodyOldFormat(caseParagraph, caseBodyFormat);
+        SectionCaseBody sectionCaseBodyNewFormat = new SectionBodyNewFormat(caseParagraph, caseBodyFormat);
+        Section sectionClosing = new SectionClosing(caseParagraph, caseBodyFormat);
+
         CaseTitleParser titleParser = new CaseTitleParser(caseParagraph);
         ICaseSectionParser partiesParser = isSectionBeyondTitle(section) ?
-                new CasePartiesParser(caseParagraph) :
+                new CasePartiesParser(caseParagraph, sectionParties) :
                 new MockSectionParser();
         ICaseSectionParser subjectMatterParser = isSectionBeyondParties(section) ?
-                new CaseSubjectMatterParser(caseParagraph) :
+                new CaseSubjectMatterParser(caseParagraph, sectionSubjectMatter) :
                 new MockSectionParser();
         ICaseSectionParser preCaseBodyParser = isSectionBeyondSubjectMatter(section) ?
-                new PreCaseBodyParser(caseParagraph) :
+                new PreCaseBodyParser(caseParagraph, caseBodyFormat) :
                 new MockSectionParser();
-        ICaseSectionParser caseBodyParser = isSectionBeyondPreCaseBody(section) ?
-                new CaseBodyParser(caseParagraph) :
+        ICaseSectionParser caseBodyParserOldFormat = isSectionBeyondPreCaseBody(section) ?
+                new CaseBodyParserOldFormat(caseParagraph, caseBodyFormat, sectionCaseBodyOldFormat) :
+                new MockSectionParser();
+        ICaseSectionParser caseBodyParserNewFormat = isSectionBeyondPreCaseBody(section) ?
+                new CaseBodyParserNewFormat(caseParagraph, caseBodyFormat, sectionCaseBodyNewFormat) :
                 new MockSectionParser();
         ICaseSectionParser caseClosingParser = isSectionBeyondBody(section) ?
-                new CaseClosingParser(caseParagraph) :
+                new CaseClosingParser(caseParagraph, caseBodyFormat, sectionClosing) :
                 new MockSectionParser();
         ICaseSectionParser casePanelParser = isSectionBeyondClosing(section) ?
-                new CasePanelParser(caseParagraph) :
+                new CasePanelParser(caseParagraph, caseBodyFormat) :
                 new MockSectionParser();
-        return new Primo(titleParser, partiesParser, subjectMatterParser, preCaseBodyParser,
-                caseBodyParser, caseClosingParser, casePanelParser);
+        return new Primo(caseBodyFormat,
+                    titleParser, partiesParser,
+                    subjectMatterParser, preCaseBodyParser,
+                    caseBodyParserOldFormat, caseBodyParserNewFormat,
+                    caseClosingParser, casePanelParser);
     }
 
     private static boolean isSectionBeyondTitle(String section) {

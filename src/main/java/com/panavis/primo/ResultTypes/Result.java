@@ -2,15 +2,15 @@ package com.panavis.primo.ResultTypes;
 
 public class Result {
 
-    public boolean value;
-    public int index;
+    public boolean isValid;
+    public int startParagraph;
 
-    public Result(boolean value, int index) {
-        this.value = value;
-        this.index = index;
+    public Result(boolean isValid, int startParagraph) {
+        this.isValid = isValid;
+        this.startParagraph = startParagraph;
     }
 
-    public Result(boolean value) {
-        this.value = value;
+    public Result(boolean isValid) {
+        this.isValid = isValid;
     }
 }

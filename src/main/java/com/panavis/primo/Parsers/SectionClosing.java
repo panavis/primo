@@ -3,12 +3,14 @@ package com.panavis.primo.Parsers;
 import com.panavis.primo.Style.CaseParagraph;
 import com.panavis.primo.Utils.StringFormatting;
 
-class SectionClosing extends Section {
+public class SectionClosing extends Section {
 
     private boolean endingReached;
+    private CaseBodyFormat caseBodyFormat;
 
-    SectionClosing(CaseParagraph caseParagraph) {
+    public SectionClosing(CaseParagraph caseParagraph, CaseBodyFormat caseBodyFormat) {
         super(caseParagraph);
+        this.caseBodyFormat = caseBodyFormat;
         this.endingReached = false;
     }
 
@@ -17,7 +19,7 @@ class SectionClosing extends Section {
         if (endingReached) return true;
         if (caseParagraph.getNumberOfPostParagraphBlanks(paragraphIndex) > 1)
             endingReached = true;
-        return super.closingLogic.isClosingHeading(paragraphIndex);
+        return caseBodyFormat.isClosingHeading(paragraphIndex);
     }
 
     @Override

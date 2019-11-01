@@ -10,7 +10,7 @@ import org.junit.Test;
 
 import static com.panavis.primo.Constants.Keywords.PRE_CASE_BODY;
 
-public class PreCaseBodyParserTests {
+public class PreCaseBodyParserNewFormatTests {
 
 
     @BeforeClass

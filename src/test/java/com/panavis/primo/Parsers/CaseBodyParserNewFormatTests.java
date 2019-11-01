@@ -9,10 +9,11 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import static com.panavis.primo.Constants.Headings.URUKIKO;
+import static com.panavis.primo.Constants.Keywords.RUSHINGIYE;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
 
-public class CaseBodyParserTests {
+public class CaseBodyParserNewFormatTests {
 
     @BeforeClass
     public static void setUp() {

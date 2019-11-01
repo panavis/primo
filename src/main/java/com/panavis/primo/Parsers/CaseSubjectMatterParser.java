@@ -9,15 +9,15 @@ import com.panavis.primo.Wrappers.*;
 public class CaseSubjectMatterParser implements ICaseSectionParser {
 
     private CaseParagraph caseParagraph;
-    private SectionSubjectMatter section;
+    private Section section;
     private int numberOfSubsections;
     private int subsectionStart;
     private JsonObject sectionContent;
     private JsonArray sectionArray;
 
-    public CaseSubjectMatterParser(CaseParagraph caseParagraph) {
+    public CaseSubjectMatterParser(CaseParagraph caseParagraph, Section sectionSubjectMatter) {
         this.caseParagraph = caseParagraph;
-        this.section = new SectionSubjectMatter(caseParagraph);
+        this.section = sectionSubjectMatter;
         this.numberOfSubsections = 1;
         this.sectionContent = new JsonObject();
         this.sectionArray = new JsonArray();
@@ -49,8 +49,8 @@ public class CaseSubjectMatterParser implements ICaseSectionParser {
         return caseParagraph.getHeadingFromParagraph(startParagraph);
     }
 
-    private void updateSubsectionStartAndNumber(SectionSubjectMatter section, int paragraphIndex) {
-        if (caseParagraph.paragraphExists(paragraphIndex) && section.hasAnotherSubsection(paragraphIndex)) {
+    private void updateSubsectionStartAndNumber(Section section, int paragraphIndex) {
+        if (caseParagraph.paragraphExists(paragraphIndex) && section.subjectMatterHasAnotherSubsection(paragraphIndex)) {
             numberOfSubsections++;
             subsectionStart = paragraphIndex;
         }

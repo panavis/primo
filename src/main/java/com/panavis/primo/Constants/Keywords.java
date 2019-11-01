@@ -16,5 +16,7 @@ public class Keywords {
     public static final String RUSOMEWE = "somewe";
     public static final String DEFAULT_PARTY_SUBHEADING = "__party__";
     public static final String RUSHINGIYE = "rushingiye";
+    public static final String RUMAZE = "rumaze";
+    public static final String RUSANZE = "rusanze";
     public static final String PRE_CASE_BODY = "pre_case_body";
 }

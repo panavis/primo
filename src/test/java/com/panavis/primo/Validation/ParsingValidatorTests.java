@@ -335,7 +335,7 @@ public class ParsingValidatorTests {
     @Test
     public void caseWithWithTwoTitleNamePairsInOneJsonObjectIsNottValid() {
         JsonObject panelist = createJsonWithText("title", "full name");
-        panelist.addNameValuePair("titleTwo", "full name"); // Two key/value pairs
+        panelist.addNameValuePair("titleTwo", "full name"); // Two key/isValid pairs
         JsonArray panelArray = getArrayWithSubsectionNtimes(panelist, 2);
         JsonObject casePanelJson = new JsonObject();
         casePanelJson.addNameValuePair(INTEKO, panelArray);

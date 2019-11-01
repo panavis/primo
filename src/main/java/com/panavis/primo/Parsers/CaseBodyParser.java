@@ -1,77 +1,47 @@
 package com.panavis.primo.Parsers;
 
-import static com.panavis.primo.Constants.Keywords.*;
-
-import com.panavis.primo.ResultTypes.Result;
+import com.panavis.primo.Constants.Keywords;
 import com.panavis.primo.ResultTypes.SectionResult;
-
-import com.panavis.primo.Style.*;
+import com.panavis.primo.Style.CaseParagraph;
 import com.panavis.primo.Utils.StringFormatting;
-import com.panavis.primo.Wrappers.*;
+import com.panavis.primo.Wrappers.JsonArray;
+import com.panavis.primo.Wrappers.JsonObject;
 import com.panavis.primo.core.Numbering.Formats.Decimal;
 import com.panavis.primo.core.Numbering.Formats.UpperRoman;
 import com.panavis.primo.core.Numbering.UnitNumbering;
 
-public class CaseBodyParser implements ICaseSectionParser {
+abstract class CaseBodyParser {
 
     private CaseParagraph caseParagraph;
-    private JsonArray bodySubsections;
-    private SectionBodyNewFormat bodyNewFormat;
-    private SectionBodyOldFormat bodyOldFormat;
+    private  CaseBodyFormat caseBodyFormat;
+    private SectionCaseBody section;
 
-    public CaseBodyParser(CaseParagraph caseParagraph) {
+    CaseBodyParser(CaseParagraph caseParagraph,
+                   CaseBodyFormat caseBodyFormat,
+                   SectionCaseBody sectionCaseBody) {
         this.caseParagraph = caseParagraph;
-        this.bodyNewFormat = new SectionBodyNewFormat(caseParagraph);
-        this.bodyOldFormat = new SectionBodyOldFormat(caseParagraph);
-        this.bodySubsections = new JsonArray();
+        this.caseBodyFormat = caseBodyFormat;
+        this.section = sectionCaseBody;
     }
 
-    public SectionResult parse(int startParagraph) {
-        int nextParagraph = startParagraph;
-        if (caseParagraph.paragraphExists(nextParagraph)) {
-            Result hasNewFormat = bodyNewFormat.hasNewCaseBodyFormat(nextParagraph);
 
-            if (hasNewFormat.value) {
-                nextParagraph = parseBodyNewFormat(hasNewFormat);
-            }
-            else if (bodyNewFormat.hasOldCaseBodyFormat(startParagraph)) {
-                nextParagraph = parseBodyOldFormat(nextParagraph);
-            }
+    SectionResult parseBody(int startParagraph) {
+        int nextParagraph = startParagraph;
+        String nestedNextHeading = StringFormatting.EMPTY_STRING;
+        while(caseParagraph.paragraphExists(nextParagraph) &&
+                !caseBodyFormat.isCaseClosing(nextParagraph)) {
+            UnitNumbering numbering = getHeadingUnitNumbering(nextParagraph);
+            section.setCurrentNumbering(numbering)
+                    .setStartingParagraph(nextParagraph)
+                    .parse();
+
+            addCaseBodySubsection(section, nextParagraph, nestedNextHeading);
+            nextParagraph = section.getLastParagraph();
+            nestedNextHeading = section.getNextHeading();
+            nextParagraph = nestedNextHeading.isEmpty() ? nextParagraph : nextParagraph - 1;
         }
         JsonObject caseBody = getCaseBody();
         return new SectionResult(caseBody, nextParagraph);
-    }
-
-    private int parseBodyNewFormat(Result hasNewFormat) {
-        int nextParagraph;
-        nextParagraph = hasNewFormat.index;
-        String nestedHeading = StringFormatting.EMPTY_STRING;
-        while(caseParagraph.paragraphExists(nextParagraph) &&
-                    !bodyNewFormat.closingLogic.isCaseClosing(nextParagraph))
-            {
-                UnitNumbering numbering = getHeadingUnitNumbering(nextParagraph);
-                bodyNewFormat.setCurrentNumbering(numbering)
-                        .setStartingParagraph(nextParagraph)
-                        .parse();
-                addCaseBodySubsection(nextParagraph, bodyNewFormat, nestedHeading);
-                nextParagraph = bodyNewFormat.getLastParagraph();
-                nestedHeading = bodyNewFormat.getNextHeading();
-                nextParagraph = nestedHeading.isEmpty() ? nextParagraph : nextParagraph - 1;
-            }
-        return nextParagraph;
-    }
-
-    private int parseBodyOldFormat(int nextParagraph) {
-        while(caseParagraph.paragraphExists(nextParagraph) &&
-                !bodyOldFormat.closingLogic.isCaseClosing(nextParagraph))
-        {
-            bodyOldFormat
-                    .setStartingParagraph(nextParagraph)
-                    .parse();
-            addCaseBodySubsection(nextParagraph, bodyOldFormat, StringFormatting.EMPTY_STRING);
-            nextParagraph = bodyOldFormat.getLastParagraph();
-        }
-        return nextParagraph;
     }
 
     private UnitNumbering getHeadingUnitNumbering(int nextParagraph) {
@@ -105,8 +75,8 @@ public class CaseBodyParser implements ICaseSectionParser {
         return numbering;
     }
 
-    private UnitNumbering getNumbering(int number, String upperRoman) {
-        return UnitNumbering.builder(upperRoman, "%" + number)
+    private UnitNumbering getNumbering(int number, String format) {
+        return UnitNumbering.builder(format, "%" + number)
                 .setCurrentNumbering(number)
                 .setLogicalNextNumbering(number)
                 .setNumberingStyle("Heading");
@@ -126,24 +96,17 @@ public class CaseBodyParser implements ICaseSectionParser {
         return startsWithNumbering(text, decimalNumber);
     }
 
-    @Override
-    public boolean skippedParagraphs() {
-        return false;
-    }
 
-    private void addCaseBodySubsection(int startParagraph, Section section, String extractedHeading) {
-        String heading = caseParagraph.getHeadingFromParagraph(startParagraph);
-        heading = extractedHeading.isEmpty() ? heading : extractedHeading;
-        heading = StringFormatting.trimColonsAndSemicolons(heading);
+    abstract void addCaseBodySubsection(Section section,
+                                        int startParagraph,
+                                        String extractedHeading);
 
-        JsonObject sectionContent = new JsonObject();
-        sectionContent.addNameValuePair(heading, section.getBody());
-        bodySubsections.putValue(sectionContent);
-    }
+    abstract JsonArray getBodySubsections();
 
     private JsonObject getCaseBody() {
         JsonObject caseBody = new JsonObject();
-        caseBody.addNameValuePair(CASE_BODY, bodySubsections);
+        caseBody.addNameValuePair(Keywords.CASE_BODY, getBodySubsections());
         return caseBody;
     }
+
 }

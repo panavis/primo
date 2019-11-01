@@ -9,11 +9,13 @@ import com.panavis.primo.Wrappers.JsonObject;
 public class CaseClosingParser implements ICaseSectionParser{
 
     private CaseParagraph caseParagraph;
-    private SectionClosing section;
+    private CaseBodyFormat caseBodyFormat;
+    private Section section;
 
-    public CaseClosingParser(CaseParagraph caseParagraph) {
+    public CaseClosingParser(CaseParagraph caseParagraph, CaseBodyFormat caseBodyFormat, Section sectionCaseClosing) {
         this.caseParagraph = caseParagraph;
-        this.section = new SectionClosing(caseParagraph);
+        this.caseBodyFormat = caseBodyFormat;
+        this.section = sectionCaseClosing;
     }
 
     public SectionResult parse(int startParagraph) {
@@ -21,7 +23,7 @@ public class CaseClosingParser implements ICaseSectionParser{
         JsonArray closingText = new JsonArray();
 
         if (caseParagraph.paragraphExists(nextSectionStart) &&
-                section.closingLogic.isClosingSentence(startParagraph)) {
+                caseBodyFormat.isClosingSentence(startParagraph)) {
 
             int logicalHeadingIndex = startParagraph -1;
             section.setStartingParagraph(logicalHeadingIndex)

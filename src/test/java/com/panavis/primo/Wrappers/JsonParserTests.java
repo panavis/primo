@@ -19,14 +19,14 @@ public class JsonParserTests {
 
     @Test
     public void shouldParseOneNameAndStringValuePairObject() {
-        //  { "case" : "value" }
+        //  { "case" : "isValid" }
 
         JSONObject unwrappedJsonObject = createJsonWithNameAndStringValues(
                                         new String[] {Keywords.CASE},
-                                        new String[] {"value"});
+                                        new String[] {"isValid"});
         JsonObject wrappedJsonObject = JsonParser.parseJsonObject(unwrappedJsonObject);
         JsonObject expectedJsonObject = new JsonObject();
-        expectedJsonObject.addNameValuePair(Keywords.CASE, "value");
+        expectedJsonObject.addNameValuePair(Keywords.CASE, "isValid");
 
         assertEquals(expectedJsonObject.toString(), wrappedJsonObject.toString());
     }

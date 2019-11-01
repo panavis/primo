@@ -35,7 +35,7 @@ class NamesAndTitles {
 public class CasePanelParser implements ICaseSectionParser {
 
     private CaseParagraph caseParagraph;
-    private CaseClosingLogic closingLogic;
+    private CaseBodyFormat caseBodyFormat;
     private JsonArray panelArray;
     private int nextParagraph;
     private boolean missedParagraphs;
@@ -43,9 +43,9 @@ public class CasePanelParser implements ICaseSectionParser {
     private final String PEREZIDA = "perezida";
     private final String UMWANDITSI = "anditsi";
 
-    public CasePanelParser(CaseParagraph caseParagraph) {
+    public CasePanelParser(CaseParagraph caseParagraph, CaseBodyFormat caseBodyFormat) {
         this.caseParagraph = caseParagraph;
-        this.closingLogic = new CaseClosingLogic(caseParagraph);
+        this.caseBodyFormat = caseBodyFormat;
         this.panelArray = new JsonArray();
         this.nextParagraph = caseParagraph.getNumberOfParagraphs();
         this.missedParagraphs = false;
@@ -67,7 +67,7 @@ public class CasePanelParser implements ICaseSectionParser {
     private int getFirstParagraphOfPanelSection(int startParagraph) {
         int panelStart = caseParagraph.getNumberOfParagraphs();
         if (caseParagraph.paragraphExists(startParagraph))
-            panelStart = this.closingLogic.isClosingHeading(startParagraph) ?
+            panelStart = caseBodyFormat.isClosingHeading(startParagraph) ?
                     startParagraph + 1 : startParagraph;
         return panelStart;
     }
