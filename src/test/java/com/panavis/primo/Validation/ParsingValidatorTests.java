@@ -239,13 +239,15 @@ public class ParsingValidatorTests {
         ParsingValidator validator = new ParsingValidator(parsedCase);
 
         assertFalse(validator.isCaseBodyValid());
-
     }
 
     @Test
-    public void caseWithOldFormatAndOneCaseBodySubsectionIsValid() {
-        JsonObject subsection = getSubsectionJson("Urukiko", "some content");
+    public void caseBodyNewFormatWithTwoSubsectionsIsNotValid() {
+        JsonObject subsection = getSubsectionJson("CASE_BACKGROUND", "some content");
         JsonArray bodyArray = getArrayWithSubsectionNtimes(subsection, 1);
+        JsonObject lastSubsection = getSubsectionJson("ICYEMEZO CY'URUKIKO", "some content");
+        bodyArray.putValue(lastSubsection);
+
         JsonObject caseBodyJson = new JsonObject();
         caseBodyJson.addNameValuePair(CASE_BODY, bodyArray);
         SectionResult caseBodyResult = new SectionResult(caseBodyJson, 0);
@@ -253,11 +255,11 @@ public class ParsingValidatorTests {
 
         ParsingValidator validator = new ParsingValidator(parsedCase);
 
-        assertTrue(validator.isCaseBodyValid());
+        assertFalse(validator.isCaseBodyValid());
     }
 
     @Test
-    public void caseBodySectionWithThreeSubsectionsWithActualContentIstValid() {
+    public void caseBodyNewFormatWithAtLeastThreeSubsectionsWithActualContentIsValid() {
         JsonObject subsection = getSubsectionJson("CASE_BACKGROUND", "some content");
         JsonArray bodyArray = getArrayWithSubsectionNtimes(subsection, 3);
         JsonObject caseBodyJson = new JsonObject();
@@ -271,12 +273,23 @@ public class ParsingValidatorTests {
     }
 
     @Test
-    public void caseBodySectionTwoSectionsIsValidIfJudgeDecisionIsLastSection() {
-        JsonObject subsection = getSubsectionJson("CASE_BACKGROUND", "some content");
+    public void caseWithOldFormatAndOneCaseBodySubsectionIsNotValid() {
+        JsonObject subsection = getSubsectionJson("Urukiko", "some content");
         JsonArray bodyArray = getArrayWithSubsectionNtimes(subsection, 1);
-        JsonObject lastSubsection = getSubsectionJson("ICYEMEZO CY'URUKIKO", "some content");
-        bodyArray.putValue(lastSubsection);
+        JsonObject caseBodyJson = new JsonObject();
+        caseBodyJson.addNameValuePair(CASE_BODY, bodyArray);
+        SectionResult caseBodyResult = new SectionResult(caseBodyJson, 0);
+        parsedCase.set(CASE_BODY, caseBodyResult);
 
+        ParsingValidator validator = new ParsingValidator(parsedCase);
+
+        assertFalse(validator.isCaseBodyValid());
+    }
+
+    @Test
+    public void caseWithOldFormatAndTwoCaseBodySubsectionIsValid() {
+        JsonObject subsection = getSubsectionJson("Urukiko", "some content");
+        JsonArray bodyArray = getArrayWithSubsectionNtimes(subsection, 2);
         JsonObject caseBodyJson = new JsonObject();
         caseBodyJson.addNameValuePair(CASE_BODY, bodyArray);
         SectionResult caseBodyResult = new SectionResult(caseBodyJson, 0);

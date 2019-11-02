@@ -117,8 +117,7 @@ public class ParsingValidator extends Validator {
             JsonObject caseBodyJson = parsedCase.get(CASE_BODY).getSectionContent();
             JsonArray sectionArray = caseBodyJson.getArrayByKey(CASE_BODY);
             caseBodyValid = (sectionArray.getSize() >= 3 && allSubsectionsHaveContent(sectionArray)) ||
-                    (sectionArray.getSize() >= 2 && hasJudgeDecisionInCaseBody(sectionArray)) ||
-                    (sectionArray.getSize() >= 1 && hasOldCaseBodyFormat(sectionArray));
+                    (sectionArray.getSize() >= 2 && hasOldCaseBodyFormat(sectionArray));
         }
         return caseBodyValid;
     }
@@ -129,13 +128,6 @@ public class ParsingValidator extends Validator {
                 (String) firstSection.getKeys().toArray()[0] : "";
         return sectionHeading.toUpperCase().contains(URUKIKO);
 
-    }
-
-    private boolean hasJudgeDecisionInCaseBody(JsonArray caseBody) {
-        JsonObject lastSection = caseBody.getJsonByIndex(caseBody.getSize() - 1);
-        String sectionHeading = lastSection.getKeys().size() > 0 ?
-                (String) lastSection.getKeys().toArray()[0] : "";
-        return sectionHeading.toUpperCase().contains("ICYEMEZO");
     }
 
     public boolean isCasePanelValid() {
