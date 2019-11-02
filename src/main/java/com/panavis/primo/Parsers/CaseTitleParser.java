@@ -23,7 +23,7 @@ public class CaseTitleParser implements ICaseSectionParser {
              paragraphIndex++) {
 
             String firstWord = this.caseParagraph.getParagraphFirstWord(paragraphIndex);
-            if (firstWord.equals(URUKIKO)) {
+            if (firstWord.equalsIgnoreCase(URUKIKO)) {
                 caseTitle = this.caseParagraph.getParagraphText(paragraphIndex);
                 break;
             }

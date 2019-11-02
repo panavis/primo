@@ -6,6 +6,8 @@ import com.panavis.primo.Utils.StringFormatting;
 import com.panavis.primo.Wrappers.JsonArray;
 import com.panavis.primo.Wrappers.JsonObject;
 
+import static com.panavis.primo.Constants.Keywords.*;
+
 
 public class CaseBodyParserOldFormat extends CaseBodyParser implements ICaseSectionParser {
 
@@ -27,13 +29,41 @@ public class CaseBodyParserOldFormat extends CaseBodyParser implements ICaseSect
 
     @Override
     void addCaseBodySubsection(Section section, int startParagraph, String extractedHeading) {
+        String headingLineText = caseParagraph.getParagraphText(startParagraph);
         String heading = caseParagraph.getHeadingFromParagraph(startParagraph);
         heading = extractedHeading.isEmpty() ? heading : extractedHeading;
         heading = StringFormatting.trimColonsAndSemicolons(heading);
+        JsonArray sectionBody = section.getBody();
+
+        String firstParagraph = sectionBody.getStringByIndex(0);
+        String firstWordOfParagraph = firstParagraph.split(" ")[0];
+
+
+        if (firstWordOfParagraph.equalsIgnoreCase(RUSHINGIYE)) {
+            heading = "URUKIKO RUSHINGIYE";
+        }
+        else if (heading.toLowerCase().startsWith(RUMAZE)) {
+            heading = "URUKIKO RUMAZE";
+            sectionBody = getFullSectionBody(headingLineText, sectionBody);
+        }
+        else if (heading.toLowerCase().startsWith(RUSANZE)) {
+            heading = "URUKIKO RUSANZE";
+            sectionBody = getFullSectionBody(headingLineText, sectionBody);
+        }
 
         JsonObject sectionContent = new JsonObject();
-        sectionContent.addNameValuePair(heading, section.getBody());
+        sectionContent.addNameValuePair(heading, sectionBody);
         bodySubsections.putValue(sectionContent);
+    }
+
+    private JsonArray getFullSectionBody(String heading, JsonArray sectionBody) {
+        JsonArray fullSectionBody = new JsonArray();
+        fullSectionBody.putValue(heading);
+        for (int i=0; i < sectionBody.getSize(); i++) {
+            fullSectionBody.putValue(sectionBody.getStringByIndex(i));
+        }
+        sectionBody = fullSectionBody;
+        return sectionBody;
     }
 
     @Override

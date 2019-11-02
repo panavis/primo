@@ -79,6 +79,6 @@ public class SectionBodyNewFormat extends SectionCaseBody {
 
     private boolean isTextCapitalizedAndHasSameStyle(String text, String currentStyle) {
         return StringFormatting.isTextCapitalized(text) &&
-                currentStyle.equals(getCurrentNumbering().style);
+                currentStyle.equalsIgnoreCase(getCurrentNumbering().style);
     }
 }

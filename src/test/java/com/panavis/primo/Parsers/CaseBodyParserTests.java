@@ -1,5 +1,6 @@
 package com.panavis.primo.Parsers;
 
+import com.panavis.primo.Constants.Keywords;
 import com.panavis.primo.ResultTypes.SectionResult;
 import com.panavis.primo.TestsSetup;
 import com.panavis.primo.Wrappers.JsonArray;
@@ -9,11 +10,10 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import static com.panavis.primo.Constants.Headings.URUKIKO;
-import static com.panavis.primo.Constants.Keywords.RUSHINGIYE;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
 
-public class CaseBodyParserNewFormatTests {
+public class CaseBodyParserTests {
 
     @BeforeClass
     public static void setUp() {
@@ -24,7 +24,7 @@ public class CaseBodyParserNewFormatTests {
     @Ignore("Ignore: Body section troubleshooter.")
     @Test
     public void troubleshootOneCaseSeparately() {
-       SectionResult result = CaseBodyParserHelpers.parseOneCaseAndReturnCaseBodySection(15);
+       SectionResult result = CaseBodyParserHelpers.parseOneCaseAndReturnCaseBodySection(39);
         JsonObject sectionContent = result.getSectionContent();
         System.out.println(sectionContent.toString());
     }
@@ -1251,30 +1251,57 @@ public class CaseBodyParserNewFormatTests {
     @Test
     public void case_030_CaseBodyHasExpectedLength() {
         JsonArray caseBody = CaseBodyParserHelpers.getActualCaseBody(30);
-        assertEquals(2, caseBody.getSize());
+        assertEquals(4, caseBody.getSize());
     }
 
     @Test
-    public void case_030_hasOldCaseBody() {
+    public void case_030_firstSubsectionHasExpectedHeading() {
         JsonObject caseBody = CaseBodyParserHelpers.getCaseBackground(30);
-        assertTrue(caseBody.hasKey(URUKIKO));
+        String expectedHeading = (URUKIKO + " " + Keywords.RUSHINGIYE).toUpperCase();
+        assertTrue(caseBody.hasKey(expectedHeading));
     }
 
     @Test
     public void case_030_firstCaseBodySubsectionHasExpectedLength() {
-        JsonArray caseBackground = CaseBodyParserHelpers.getCaseBackgroundSection(30, URUKIKO);
-        assertEquals(24, caseBackground.getSize());
+        JsonArray caseBackground = CaseBodyParserHelpers.getCaseBackgroundSection(30, "URUKIKO RUSHINGIYE");
+        assertEquals(4, caseBackground.getSize());
     }
 
     @Test
     public void case_030_SecondSubsectionHasExpectedHeading() {
         JsonObject caseBody = CaseBodyParserHelpers.getCaseBodySubsection(30, 1);
-        assertTrue(caseBody.hasKey("Kubera iyo mpamvu"));
+        assertTrue(caseBody.hasKey("URUKIKO RUMAZE"));
     }
 
     @Test
     public void case_030_secondCaseBodySubsectionHasExpectedLength() {
         JsonObject secondSubsection = CaseBodyParserHelpers.getCaseBodySubsection(30, 1);
+        JsonArray subsectionArray = secondSubsection.getArrayByKey("URUKIKO RUMAZE");
+        assertEquals(16, subsectionArray.getSize());
+    }
+
+    @Test
+    public void case_030_ThridSubsectionHasExpectedHeading() {
+        JsonObject caseBody = CaseBodyParserHelpers.getCaseBodySubsection(30, 2);
+        assertTrue(caseBody.hasKey("URUKIKO RUSANZE"));
+    }
+
+    @Test
+    public void case_030_ThirdCaseBodySubsectionHasExpectedLength() {
+        JsonObject secondSubsection = CaseBodyParserHelpers.getCaseBodySubsection(30, 2);
+        JsonArray subsectionArray = secondSubsection.getArrayByKey("URUKIKO RUSANZE");
+        assertEquals(4, subsectionArray.getSize());
+    }
+
+    @Test
+    public void case_030_FourthSubsectionHasExpectedHeading() {
+        JsonObject caseBody = CaseBodyParserHelpers.getCaseBodySubsection(30, 3);
+        assertTrue(caseBody.hasKey("Kubera iyo mpamvu"));
+    }
+
+    @Test
+    public void case_030_FourthCaseBodySubsectionHasExpectedLength() {
+        JsonObject secondSubsection = CaseBodyParserHelpers.getCaseBodySubsection(30, 3);
         JsonArray subsectionArray = secondSubsection.getArrayByKey("Kubera iyo mpamvu");
         assertEquals(3, subsectionArray.getSize());
     }
@@ -1409,6 +1436,63 @@ public class CaseBodyParserNewFormatTests {
         String expectedSubsection = CaseBodyParserHelpers.getExpectedCaseSubsection(38,
                 2, heading).toString();
         assertEquals(expectedSubsection, actualSubsection);
+    }
+
+    @Test
+    public void case_039_CaseBodyHasExpectedLength() {
+        JsonArray caseBody = CaseBodyParserHelpers.getActualCaseBody(39);
+        assertEquals(4, caseBody.getSize());
+    }
+
+    @Test
+    public void case_039_firstSubsectionHasExpectedHeading() {
+        JsonObject caseBody = CaseBodyParserHelpers.getCaseBackground(39);
+        assertTrue(caseBody.hasKey("URUKIKO RUSHINGIYE"));
+    }
+
+    @Test
+    public void case_039_firstCaseBodySubsectionHasExpectedLength() {
+        JsonArray caseBackground = CaseBodyParserHelpers.getCaseBackgroundSection(39, "URUKIKO RUSHINGIYE");
+        assertEquals(1, caseBackground.getSize());
+    }
+
+    @Test
+    public void case_039_SecondSubsectionHasExpectedHeading() {
+        JsonObject caseBody = CaseBodyParserHelpers.getCaseBodySubsection(39, 1);
+        assertTrue(caseBody.hasKey("URUKIKO RUMAZE"));
+    }
+
+    @Test
+    public void case_038_secondCaseBodySubsectionHasExpectedLength() {
+        JsonObject secondSubsection = CaseBodyParserHelpers.getCaseBodySubsection(39, 1);
+        JsonArray subsectionArray = secondSubsection.getArrayByKey("URUKIKO RUMAZE");
+        assertEquals(6, subsectionArray.getSize());
+    }
+
+    @Test
+    public void case_039_ThridSubsectionHasExpectedHeading() {
+        JsonObject caseBody = CaseBodyParserHelpers.getCaseBodySubsection(39, 2);
+        assertTrue(caseBody.hasKey("URUKIKO RUSANZE"));
+    }
+
+    @Test
+    public void case_039_ThirdCaseBodySubsectionHasExpectedLength() {
+        JsonObject secondSubsection = CaseBodyParserHelpers.getCaseBodySubsection(39, 2);
+        JsonArray subsectionArray = secondSubsection.getArrayByKey("URUKIKO RUSANZE");
+        assertEquals(8, subsectionArray.getSize());
+    }
+
+    @Test
+    public void case_039_FourthSubsectionHasExpectedHeading() {
+        JsonObject caseBody = CaseBodyParserHelpers.getCaseBodySubsection(39, 3);
+        assertTrue(caseBody.hasKey("KUBERA IZO MPAMVU"));
+    }
+
+    @Test
+    public void case_039_FourthCaseBodySubsectionHasExpectedLength() {
+        JsonObject secondSubsection = CaseBodyParserHelpers.getCaseBodySubsection(39, 3);
+        JsonArray subsectionArray = secondSubsection.getArrayByKey("KUBERA IZO MPAMVU");
+        assertEquals(2, subsectionArray.getSize());
     }
 
 }

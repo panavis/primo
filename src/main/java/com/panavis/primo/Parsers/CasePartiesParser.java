@@ -58,11 +58,11 @@ public class CasePartiesParser implements ICaseSectionParser {
             String subheading = (String) subsection.getKeys().toArray()[0];
             String subsectionContent = getSubsectionContent(subsection, subheading);
             subsectionContent = StringFormatting.trimPeriods(subsectionContent);
-            if (subheading.equals(DEFAULT_PARTY_SUBHEADING) &&
+            if (subheading.equalsIgnoreCase(DEFAULT_PARTY_SUBHEADING) &&
                 endsWithPlaintiffHeading(subsectionContent)) {
                 copy = getCopyWithHeadingReplaced(copy, i, UREGA);
             }
-            if (subheading.equals(DEFAULT_PARTY_SUBHEADING) &&
+            if (subheading.equalsIgnoreCase(DEFAULT_PARTY_SUBHEADING) &&
                 endsWithDefendantHeading(subsectionContent)) {
                 copy = getCopyWithHeadingReplaced(copy, i, UREGWA);
             }
@@ -138,7 +138,7 @@ public class CasePartiesParser implements ICaseSectionParser {
         for (int i=0; i < this.partiesSubsections.getSize(); i++) {
             JsonObject nestedSubsection = this.partiesSubsections.getJsonByIndex(i);
             String subsectionHeading = (String) nestedSubsection.getKeys().toArray()[0];
-            if (!seenHeadings.contains(subsectionHeading) || subsectionHeading.equals(DEFAULT_PARTY_SUBHEADING)) {
+            if (!seenHeadings.contains(subsectionHeading) || subsectionHeading.equalsIgnoreCase(DEFAULT_PARTY_SUBHEADING)) {
                 copy.putValue(nestedSubsection);
                 seenHeadings.add(subsectionHeading);
             }
@@ -161,7 +161,7 @@ public class CasePartiesParser implements ICaseSectionParser {
         for (int i = 0; i < subsections.getSize(); i++) {
             JsonObject nestedSubsection = subsections.getJsonByIndex(i);
             String subsectionHeading = (String) nestedSubsection.getKeys().toArray()[0];
-            if (subsectionHeading.equals(heading)) {
+            if (subsectionHeading.equalsIgnoreCase(heading)) {
                 content = nestedSubsection.getArrayByKey(subsectionHeading);
                 break;
             }
@@ -182,7 +182,7 @@ public class CasePartiesParser implements ICaseSectionParser {
         for (int i = 0; i < subsections.getSize(); i++) {
             JsonObject nestedSubsection = subsections.getJsonByIndex(i);
             String subsectionHeading = (String) nestedSubsection.getKeys().toArray()[0];
-            if (!subsectionHeading.equals(heading)) {
+            if (!subsectionHeading.equalsIgnoreCase(heading)) {
                 copy.putValue(nestedSubsection);
             }
         }
@@ -316,7 +316,7 @@ public class CasePartiesParser implements ICaseSectionParser {
         String text = "";
         if (caseParagraph.paragraphExists(paragraphIndex + 1))
             text = caseParagraph.getParagraphText(paragraphIndex + 1);
-        return text.toLowerCase().equals(AND_CONJUNCTION) ;
+        return text.toLowerCase().equalsIgnoreCase(AND_CONJUNCTION) ;
     }
 
     private boolean previousParagraphIsNotSubsectionHeading(int paragraphIndex) {
@@ -328,7 +328,7 @@ public class CasePartiesParser implements ICaseSectionParser {
 
     private void parseAndAddPartyWithoutExplicitHeading(int paragraphIndex) {
         String textContent = caseParagraph.getParagraphText(paragraphIndex);
-        boolean isConjunction = textContent.toLowerCase().equals(AND_CONJUNCTION);
+        boolean isConjunction = textContent.equalsIgnoreCase(AND_CONJUNCTION);
         int blanksAfter = caseParagraph.getNumberOfPostParagraphBlanks(paragraphIndex);
 
         if (isConjunction && ongoingSubsectionWithoutHeading.size() != 0) {
