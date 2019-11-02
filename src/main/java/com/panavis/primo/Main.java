@@ -28,6 +28,8 @@ public class Main {
         ParsingValidator validator = new ParsingValidator(parsedCase);
         if (validator.isParsedCaseValid()) {
             Map<String, SectionResult> parsedCaseAsMap = parsedCase.getParsedCaseAsMap();
+            SectionResult inputFilePath = getInputFilePathAsSectionResult(wordInputPath);
+            parsedCaseAsMap.put("input_file_path", inputFilePath);
             JSONObject gson = JsonObject.toParsedGson(parsedCaseAsMap);
             createFile(jsonOutputPath, gson.toJSONString());
             successfulParsing = true;
@@ -35,6 +37,12 @@ public class Main {
         updateValidParsingStats(validator);
 
         return successfulParsing;
+    }
+
+    private SectionResult getInputFilePathAsSectionResult(String wordFileInputPath) {
+        JsonObject filePath = new JsonObject();
+        filePath.addNameValuePair("path", wordFileInputPath);
+        return new SectionResult(filePath, -1);
     }
 
     private void updateValidParsingStats(ParsingValidator validator) {
