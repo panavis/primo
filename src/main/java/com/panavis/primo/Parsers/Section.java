@@ -1,5 +1,6 @@
 package com.panavis.primo.Parsers;
 
+import com.panavis.primo.Constants.Keywords;
 import com.panavis.primo.Constants.Headings;
 import com.panavis.primo.ResultTypes.TextParagraphIndex;
 import com.panavis.primo.Style.CaseParagraph;
@@ -128,7 +129,7 @@ public abstract class Section  {
             if ((caseParagraph.isParagraphBoldOrUnderlined(paragraphIndex) ||
                     hasNumberedHeading(paragraphIndex)) &&
                     !isRegularBodyParagraph(paragraphText)) {
-                paragraphText = "<bold/>" + paragraphText;
+                paragraphText = Keywords.BOLD + paragraphText;
                 blankLinesAfterParagraph = StringFormatting.duplicateLineSeparator(2);
                 if (!previousContent.toString().endsWith(blankLinesAfterParagraph)) {
                     previousContent.append(StringFormatting.duplicateLineSeparator(1));

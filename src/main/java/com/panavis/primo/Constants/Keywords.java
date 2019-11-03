@@ -19,4 +19,5 @@ public class Keywords {
     public static final String RUMAZE = "rumaze";
     public static final String RUSANZE = "rusanze";
     public static final String PRE_CASE_BODY = "pre_case_body";
+    public static final String BOLD = "__bld__";
 }
