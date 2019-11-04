@@ -116,8 +116,12 @@ public class ParsingValidator extends Validator {
         if (parsedCase.hasSection(CASE_BODY)) {
             JsonObject caseBodyJson = parsedCase.get(CASE_BODY).getSectionContent();
             JsonArray sectionArray = caseBodyJson.getArrayByKey(CASE_BODY);
-            caseBodyValid = (sectionArray.getSize() >= 3 && allSubsectionsHaveContent(sectionArray)) ||
-                    (sectionArray.getSize() >= 2 && hasOldCaseBodyFormat(sectionArray));
+            caseBodyValid = (
+                                (sectionArray.getSize() >= 3 && allSubsectionsHaveContent(sectionArray)) ||
+                                (sectionArray.getSize() >= 2 && hasOldCaseBodyFormat(sectionArray))
+                            )
+                            &&
+                            !(sectionArray.getSize() > 10);
         }
         return caseBodyValid;
     }

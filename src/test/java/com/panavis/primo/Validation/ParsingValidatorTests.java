@@ -273,6 +273,20 @@ public class ParsingValidatorTests {
     }
 
     @Test
+    public void caseBodyOldOrNewFormatWithMoreThanTenSubsecctionIsNotValid() {
+        JsonObject subsection = getSubsectionJson("CASE_BACKGROUND", "some content");
+        JsonArray bodyArray = getArrayWithSubsectionNtimes(subsection, 11);
+        JsonObject caseBodyJson = new JsonObject();
+        caseBodyJson.addNameValuePair(CASE_BODY, bodyArray);
+        SectionResult caseBodyResult = new SectionResult(caseBodyJson, 0);
+        parsedCase.set(CASE_BODY, caseBodyResult);
+
+        ParsingValidator validator = new ParsingValidator(parsedCase);
+
+        assertFalse(validator.isCaseBodyValid());
+    }
+
+    @Test
     public void caseWithOldFormatAndOneCaseBodySubsectionIsNotValid() {
         JsonObject subsection = getSubsectionJson("Urukiko", "some content");
         JsonArray bodyArray = getArrayWithSubsectionNtimes(subsection, 1);
