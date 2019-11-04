@@ -100,7 +100,7 @@ public class Primo {
 
     private void parseCasePanel() {
         SectionResult casePanel = casePanelParser.parse(nextParagraph);
-        parsedCase.set(INTEKO, casePanel);
+        parsedCase.set(PANEL, casePanel);
         parsedCase.setSkippedParagraphs(casePanelParser.skippedParagraphs());
     }
 

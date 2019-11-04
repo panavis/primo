@@ -60,7 +60,7 @@ public class CasePanelParser implements ICaseSectionParser {
             hasReachedEnding = hasReachedCaseWriter(namesAndTitles.titles) && !hasNonWriterTitlesBelow(nextParagraph);
         }
         JsonObject casePanel = new JsonObject();
-        casePanel.addNameValuePair(INTEKO, panelArray);
+        casePanel.addNameValuePair(PANEL, panelArray);
         return new SectionResult(casePanel, 0);
     }
 

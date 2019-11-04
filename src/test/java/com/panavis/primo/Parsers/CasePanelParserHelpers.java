@@ -8,8 +8,7 @@ import com.panavis.primo.Wrappers.JsonObject;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.panavis.primo.Constants.Keywords.CASE;
-import static com.panavis.primo.Constants.Keywords.INTEKO;
+import static com.panavis.primo.Constants.Keywords.*;
 
 class CasePanelParserHelpers {
 
@@ -35,7 +34,7 @@ class CasePanelParserHelpers {
 
     static JsonArray parseAndReturnCasePanelArray(int caseIndex) {
         JsonObject casePanel = getActualCasePanelObject(caseIndex);
-        return casePanel.getArrayByKey(INTEKO);
+        return casePanel.getArrayByKey(PANEL);
     }
 
     static JsonArray getActualCasePanelArray(int caseIndex) {
@@ -44,9 +43,9 @@ class CasePanelParserHelpers {
 
     private static JsonObject getActualCasePanelObject(int caseIndex) {
         String wordFilePath = TestsSetup.wordFilePaths.get(caseIndex);
-        Primo primo = TestsSetup.getConverterObject(wordFilePath, INTEKO);
+        Primo primo = TestsSetup.getConverterObject(wordFilePath, PANEL);
         primo.parseCaseSections();
-        return primo.getParsedCaseSection(INTEKO).getSectionContent();
+        return primo.getParsedCaseSection(PANEL).getSectionContent();
     }
 
     static JsonObject getActualPanelistObject(int caseIndex, int panelistIndex) {
@@ -57,7 +56,7 @@ class CasePanelParserHelpers {
     private static JsonArray getExpectedCasePanel(int caseIndex) {
         JsonObject expectedCase = TestsSetup.expectedJsonContent.get(caseIndex);
         JsonObject expectedCasePanel = expectedCase.getArrayByKey(CASE).getJsonByIndex(6);
-        return expectedCasePanel.getArrayByKey(INTEKO);
+        return expectedCasePanel.getArrayByKey(PANEL);
     }
 
     static JsonObject getExpectedPanelistObject(int caseIndex, int panelistIndex) {

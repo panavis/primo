@@ -12,6 +12,7 @@ public class Keywords {
     public static final String IMITERERE = "miterere";
     public static final String URUBANZA = "urubanza";
     public static final String INTEKO = "inteko";
+    public static final String PANEL = "panel";
     public static final String RUKIJIJWE = "rukijijwe";
     public static final String RUSOMEWE = "somewe";
     public static final String DEFAULT_PARTY_SUBHEADING = "__party__";
