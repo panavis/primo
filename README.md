@@ -3,7 +3,8 @@
 
 #### Scope
 
-Conversion of post-2009 cases (docx) to layout-aware json objects. 
+Conversion of Word documents of Rwandan cases    
+to layout-aware JSON objects (semi-structured data). 
 
 #### Java Version
 
@@ -11,7 +12,7 @@ Java 10
 
 #### Major Dependencies
 
-Apache POI
+PrimoCore (using Apache POI)
 
 #### How To Run Tests
 
