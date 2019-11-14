@@ -40,8 +40,7 @@ public class CasePartiesParser implements ICaseSectionParser {
         verifySubsectionsStructure();
         sanitizePartiesSubsections();
         JsonObject parties = new JsonObject();
-        String sectionHeading = partiesSectionHeading.getHeadingName().toUpperCase();
-        parties.addNameValuePair(sectionHeading, this.partiesSubsections);
+        parties.addNameValuePair(CASE_PARTIES, this.partiesSubsections);
         return new SectionResult(parties, paragraphIndex);
     }
 

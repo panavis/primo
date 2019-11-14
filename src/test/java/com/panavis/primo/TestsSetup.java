@@ -97,12 +97,12 @@ public class TestsSetup {
     }
 
     private static boolean isSectionBeyondTitle(String section) {
-        return section.equalsIgnoreCase(PARTIES) ||
+        return section.equalsIgnoreCase(CASE_PARTIES) ||
                 section.equalsIgnoreCase(SUBJECT_MATTER) ||
                 section.equalsIgnoreCase(PRE_CASE_BODY) ||
                 section.equalsIgnoreCase(CASE_BODY) ||
                 section.equalsIgnoreCase(CASE_CLOSING) ||
-                section.equalsIgnoreCase(PANEL);
+                section.equalsIgnoreCase(CASE_PANEL);
     }
 
     private static boolean isSectionBeyondParties(String section) {
@@ -110,29 +110,29 @@ public class TestsSetup {
                 section.equalsIgnoreCase(PRE_CASE_BODY) ||
                 section.equalsIgnoreCase(CASE_BODY) ||
                 section.equalsIgnoreCase(CASE_CLOSING) ||
-                section.equalsIgnoreCase(PANEL);
+                section.equalsIgnoreCase(CASE_PANEL);
     }
 
     private static boolean isSectionBeyondSubjectMatter(String section) {
         return section.equalsIgnoreCase(PRE_CASE_BODY) ||
                 section.equalsIgnoreCase(CASE_BODY) ||
                 section.equalsIgnoreCase(CASE_CLOSING) ||
-                section.equalsIgnoreCase(PANEL);
+                section.equalsIgnoreCase(CASE_PANEL);
     }
 
     private static boolean isSectionBeyondPreCaseBody(String section) {
       return section.equalsIgnoreCase(CASE_BODY) ||
                 section.equalsIgnoreCase(CASE_CLOSING) ||
-                section.equalsIgnoreCase(PANEL);
+                section.equalsIgnoreCase(CASE_PANEL);
     }
 
     private static boolean isSectionBeyondBody(String section) {
         return section.equalsIgnoreCase(CASE_CLOSING) ||
-                section.equalsIgnoreCase(PANEL);
+                section.equalsIgnoreCase(CASE_PANEL);
     }
 
     private static boolean isSectionBeyondClosing(String section) {
-        return section.equalsIgnoreCase(PANEL);
+        return section.equalsIgnoreCase(CASE_PANEL);
     }
 }
 

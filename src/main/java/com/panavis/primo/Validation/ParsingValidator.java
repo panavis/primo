@@ -18,9 +18,9 @@ public class ParsingValidator extends Validator {
 
     public boolean isTitleValid() {
         boolean validTitle = false;
-        if (parsedCase.hasSection(TITLE)) {
-            JsonObject titleJson = parsedCase.get(TITLE).getSectionContent();
-            String titleText = titleJson.getStringByKey(TITLE);
+        if (parsedCase.hasSection(CASE_TITLE)) {
+            JsonObject titleJson = parsedCase.get(CASE_TITLE).getSectionContent();
+            String titleText = titleJson.getStringByKey(CASE_TITLE);
             validTitle = !titleText.isEmpty();
         }
         return validTitle;
@@ -28,8 +28,8 @@ public class ParsingValidator extends Validator {
 
     public boolean arePartiesValid() {
         boolean validParties = false;
-        if (parsedCase.hasSection(PARTIES)) {
-            JsonObject partiesJson = parsedCase.get(PARTIES).getSectionContent();
+        if (parsedCase.hasSection(CASE_PARTIES)) {
+            JsonObject partiesJson = parsedCase.get(CASE_PARTIES).getSectionContent();
             Set<String> keys = partiesJson.getKeys();
             if (hasPartiesSectionHeading(keys)) {
                 JsonArray partiesSubjections = getArrayFromJsonObject(partiesJson, keys);

@@ -51,9 +51,9 @@ public class ParsingValidatorTests {
 
     @Test
     public void caseWithEmptyTitleIsNotValid() {
-        JsonObject titleJson = createJsonWithText(TITLE, "");
+        JsonObject titleJson = createJsonWithText(CASE_TITLE, "");
         SectionResult titleResult = new SectionResult(titleJson, 0);
-        parsedCase.set(TITLE, titleResult);
+        parsedCase.set(CASE_TITLE, titleResult);
 
         ParsingValidator validator = new ParsingValidator(parsedCase);
 
@@ -68,9 +68,9 @@ public class ParsingValidatorTests {
 
     @Test
     public void titleSectionIsValidWhenNonEmpty() {
-        JsonObject titleJson = createJsonWithText(TITLE, "Some title");
+        JsonObject titleJson = createJsonWithText(CASE_TITLE, "Some title");
         SectionResult titleResult = new SectionResult(titleJson, 0);
-        parsedCase.set(TITLE, titleResult);
+        parsedCase.set(CASE_TITLE, titleResult);
 
         ParsingValidator validator = new ParsingValidator(parsedCase);
 
@@ -87,7 +87,7 @@ public class ParsingValidatorTests {
     public void caseWithEmptyPartiesIsNotValid() {
         JsonObject partiesJson = createJsonWithEmptyArray("HABURANA");
         SectionResult partiesResult = new SectionResult(partiesJson, 0);
-        parsedCase.set(PARTIES, partiesResult);
+        parsedCase.set(CASE_PARTIES, partiesResult);
 
         ParsingValidator validator = new ParsingValidator(parsedCase);
 
@@ -101,7 +101,7 @@ public class ParsingValidatorTests {
         JsonObject partiesJson = new JsonObject();
         partiesJson.addNameValuePair(Headings.HABURANA, sectionArray);
         SectionResult partiesResult = new SectionResult(partiesJson, 0);
-        parsedCase.set(PARTIES, partiesResult);
+        parsedCase.set(CASE_PARTIES, partiesResult);
 
         ParsingValidator validator = new ParsingValidator(parsedCase);
 
@@ -115,7 +115,7 @@ public class ParsingValidatorTests {
         JsonObject partiesJson = new JsonObject();
         partiesJson.addNameValuePair(Headings.HABURANA, sectionArray);
         SectionResult partiesResult = new SectionResult(partiesJson, 0);
-        parsedCase.set(PARTIES, partiesResult);
+        parsedCase.set(CASE_PARTIES, partiesResult);
 
         ParsingValidator validator = new ParsingValidator(parsedCase);
 
@@ -130,7 +130,7 @@ public class ParsingValidatorTests {
         JsonObject partiesJson = new JsonObject();
         partiesJson.addNameValuePair(Headings.HABURANA, sectionArray);
         SectionResult partiesResult = new SectionResult(partiesJson, 0);
-        parsedCase.set(PARTIES, partiesResult);
+        parsedCase.set(CASE_PARTIES, partiesResult);
 
         ParsingValidator validator = new ParsingValidator(parsedCase);
 
@@ -144,7 +144,7 @@ public class ParsingValidatorTests {
         JsonObject partiesJson = new JsonObject();
         partiesJson.addNameValuePair(Headings.HABURANA, sectionArray);
         SectionResult partiesResult = new SectionResult(partiesJson, 0);
-        parsedCase.set(PARTIES, partiesResult);
+        parsedCase.set(CASE_PARTIES, partiesResult);
 
         ParsingValidator validator = new ParsingValidator(parsedCase);
 

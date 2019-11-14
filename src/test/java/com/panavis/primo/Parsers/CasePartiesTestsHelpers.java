@@ -40,9 +40,9 @@ class CasePartiesTestsHelpers {
 
     static SectionResult parseOneCaseAndReturnPartiesSection(int i) {
         String wordFilePath = TestsSetup.wordFilePaths.get(i);
-        Primo primo = TestsSetup.getConverterObject(wordFilePath, PARTIES);
+        Primo primo = TestsSetup.getConverterObject(wordFilePath, CASE_PARTIES);
         primo.parseCaseSections();
-        return primo.getParsedCaseSection(PARTIES);
+        return primo.getParsedCaseSection(CASE_PARTIES);
     }
 
     private static void setUpExpectedJsons() {
@@ -54,14 +54,9 @@ class CasePartiesTestsHelpers {
         }
     }
 
-    static void assertJsonContainsPartiesSection(int caseIndex, String heading) {
+    static void assertCorrectNumberOfSubsections(int caseIndex, int numberOfSubsections) {
         JsonObject partiesSectionContent = getActualPartiesWholeSection(caseIndex);
-        assertTrue(partiesSectionContent.hasKey(heading));
-    }
-
-    static void assertCorrectNumberOfSubsections(int caseIndex, String heading, int numberOfSubsections) {
-        JsonObject partiesSectionContent = getActualPartiesWholeSection(caseIndex);
-        JsonArray partiesSubSections = partiesSectionContent.getArrayByKey(heading);
+        JsonArray partiesSubSections = partiesSectionContent.getArrayByKey(CASE_PARTIES);
         assertEquals(numberOfSubsections, partiesSubSections.getSize());
     }
 
@@ -70,26 +65,26 @@ class CasePartiesTestsHelpers {
     }
 
     static ExpectedActualContent getExpectedAndActualContentForSubsection(int caseIndex, int subsectionIndex,
-                                                                          String heading, String subheading) {
+                                                                          String subheading) {
         JsonObject partiesActualContent = getActualPartiesWholeSection(caseIndex);
         String actualPartyContent = getActualContentForSubsection(
-                partiesActualContent, subsectionIndex, subheading, heading).toString();
-        JsonObject expectedParty = getExpectedSubsection(caseIndex, subsectionIndex, heading);
+                partiesActualContent, subsectionIndex, subheading).toString();
+        JsonObject expectedParty = getExpectedSubsection(caseIndex, subsectionIndex, CASE_PARTIES);
         String expectedPartyContent = expectedParty.getArrayByKey(subheading).toString();
         return new ExpectedActualContent(expectedPartyContent,
                 actualPartyContent);
     }
 
-    static JsonObject getActualPartiesSubsection(int caseIndex, String heading, int subsectionIndex) {
+    static JsonObject getActualPartiesSubsection(int caseIndex, int subsectionIndex) {
         JsonObject partiesSectionContent = getActualPartiesWholeSection(caseIndex);
-        JsonArray partiesSubSections = partiesSectionContent.getArrayByKey(heading);
+        JsonArray partiesSubSections = partiesSectionContent.getArrayByKey(CASE_PARTIES);
         return partiesSubSections.getJsonByIndex(subsectionIndex);
     }
 
     private static JsonArray getActualContentForSubsection(JsonObject partiesSectionContent,
-                                                   int subsectionIndex, String subsectionName, String sectionName) {
+                                                           int subsectionIndex, String subsectionName) {
 
-        JsonArray partiesSubSections = partiesSectionContent.getArrayByKey(sectionName);
+        JsonArray partiesSubSections = partiesSectionContent.getArrayByKey(CASE_PARTIES);
         JsonObject actualPlaintiff = partiesSubSections.getJsonByIndex(subsectionIndex);
         return actualPlaintiff.getArrayByKey(subsectionName);
     }

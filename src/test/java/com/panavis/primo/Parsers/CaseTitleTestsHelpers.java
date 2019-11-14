@@ -23,11 +23,11 @@ class CaseTitleTestsHelpers {
 
     private static void setupActualCaseTitles() {
         for (String wordFilePath : TestsSetup.wordFilePaths) {
-            Primo primo = TestsSetup.getConverterObject(wordFilePath, TITLE);
+            Primo primo = TestsSetup.getConverterObject(wordFilePath, CASE_TITLE);
             primo.parseCaseSections();
-            SectionResult titleResult = primo.getParsedCaseSection(TITLE);
+            SectionResult titleResult = primo.getParsedCaseSection(CASE_TITLE);
             JsonObject titleObject = titleResult.getSectionContent();
-            String jsonTitle = titleObject.getStringByKey(TITLE);
+            String jsonTitle = titleObject.getStringByKey(CASE_TITLE);
             allActualCaseTitles.add(jsonTitle);
         }
     }
@@ -36,7 +36,7 @@ class CaseTitleTestsHelpers {
         for (JsonObject caseFile : TestsSetup.expectedJsonContent) {
             JsonArray caseContent =  caseFile.getArrayByKey(CASE);
             JsonObject titleObject = caseContent.getJsonByIndex(0);
-            allExpectedCaseTitles.add(titleObject.getStringByKey(TITLE));
+            allExpectedCaseTitles.add(titleObject.getStringByKey(CASE_TITLE));
         }
     }
 

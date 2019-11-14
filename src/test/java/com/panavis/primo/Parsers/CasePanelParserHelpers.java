@@ -34,7 +34,7 @@ class CasePanelParserHelpers {
 
     static JsonArray parseAndReturnCasePanelArray(int caseIndex) {
         JsonObject casePanel = getActualCasePanelObject(caseIndex);
-        return casePanel.getArrayByKey(PANEL);
+        return casePanel.getArrayByKey(CASE_PANEL);
     }
 
     static JsonArray getActualCasePanelArray(int caseIndex) {
@@ -43,9 +43,9 @@ class CasePanelParserHelpers {
 
     private static JsonObject getActualCasePanelObject(int caseIndex) {
         String wordFilePath = TestsSetup.wordFilePaths.get(caseIndex);
-        Primo primo = TestsSetup.getConverterObject(wordFilePath, PANEL);
+        Primo primo = TestsSetup.getConverterObject(wordFilePath, CASE_PANEL);
         primo.parseCaseSections();
-        return primo.getParsedCaseSection(PANEL).getSectionContent();
+        return primo.getParsedCaseSection(CASE_PANEL).getSectionContent();
     }
 
     static JsonObject getActualPanelistObject(int caseIndex, int panelistIndex) {
@@ -56,7 +56,7 @@ class CasePanelParserHelpers {
     private static JsonArray getExpectedCasePanel(int caseIndex) {
         JsonObject expectedCase = TestsSetup.expectedJsonContent.get(caseIndex);
         JsonObject expectedCasePanel = expectedCase.getArrayByKey(CASE).getJsonByIndex(6);
-        return expectedCasePanel.getArrayByKey(PANEL);
+        return expectedCasePanel.getArrayByKey(CASE_PANEL);
     }
 
     static JsonObject getExpectedPanelistObject(int caseIndex, int panelistIndex) {

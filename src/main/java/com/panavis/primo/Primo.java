@@ -51,13 +51,13 @@ public class Primo {
 
     private void parseCaseTitle() {
         SectionResult caseTitle = titleParser.parse(0);
-        parsedCase.set(TITLE, caseTitle);
+        parsedCase.set(CASE_TITLE, caseTitle);
         nextParagraph = caseTitle.getNextParagraph();
     }
 
     private void parseCaseParties() {
         SectionResult caseParties = partiesParser.parse(nextParagraph);
-        parsedCase.set(PARTIES, caseParties);
+        parsedCase.set(CASE_PARTIES, caseParties);
         nextParagraph = caseParties.getNextParagraph();
     }
 
@@ -100,7 +100,7 @@ public class Primo {
 
     private void parseCasePanel() {
         SectionResult casePanel = casePanelParser.parse(nextParagraph);
-        parsedCase.set(PANEL, casePanel);
+        parsedCase.set(CASE_PANEL, casePanel);
         parsedCase.setSkippedParagraphs(casePanelParser.skippedParagraphs());
     }
 
