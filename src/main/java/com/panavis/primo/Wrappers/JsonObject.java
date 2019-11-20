@@ -46,6 +46,7 @@ public class JsonObject {
     }
 
     public static org.json.simple.JSONObject toParsedGson(Map<String, SectionResult> parsedCase) {
+        org.json.simple.JSONObject wordPath = getWordDocPath(parsedCase.get(WORD_DOC_PATH).getSectionContent());
         org.json.simple.JSONObject title = getTitle(parsedCase.get(CASE_TITLE).getSectionContent());
         org.json.simple.JSONObject parties = getParties(parsedCase.get(CASE_PARTIES).getSectionContent());
         org.json.simple.JSONObject subjectMatter = getSubjectMatter(parsedCase.get(SUBJECT_MATTER).getSectionContent());
@@ -54,6 +55,7 @@ public class JsonObject {
         org.json.simple.JSONObject panel = getCasePanel(parsedCase.get(CASE_PANEL).getSectionContent());
         org.json.simple.JSONObject wholeCase = new org.json.simple.JSONObject();
         JSONArray caseArray = new JSONArray();
+        caseArray.add(wordPath);
         caseArray.add(title);
         caseArray.add(parties);
         caseArray.add(subjectMatter);
@@ -63,6 +65,14 @@ public class JsonObject {
         wholeCase.put(CASE, caseArray);
         return wholeCase;
     }
+
+    private static org.json.simple.JSONObject getWordDocPath(JsonObject docPath) {
+        String formattedPath = docPath.getStringByKey(WORD_DOC_PATH);
+        org.json.simple.JSONObject newObject = new org.json.simple.JSONObject();
+        newObject.put(WORD_DOC_PATH, formattedPath);
+        return newObject;
+    }
+
 
     private static org.json.simple.JSONObject getTitle(JsonObject title) {
         String titleString = title.getStringByKey(CASE_TITLE);

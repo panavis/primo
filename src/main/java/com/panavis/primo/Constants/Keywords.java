@@ -3,6 +3,7 @@ package com.panavis.primo.Constants;
 public class Keywords {
 
     public static final String CASE = "case";
+    public static final String WORD_DOC_PATH = "wordDocPath";
     public static final String CASE_TITLE = "caseTitle";
     public static final String CASE_PARTIES = "caseParties";
     public static final String SUBJECT_MATTER = "subjectMatter";

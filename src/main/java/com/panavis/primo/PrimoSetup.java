@@ -1,5 +1,6 @@
 package com.panavis.primo;
 
+import com.panavis.primo.Constants.Keywords;
 import com.panavis.primo.Parsers.*;
 import com.panavis.primo.ResultTypes.SectionResult;
 import com.panavis.primo.Style.CaseParagraph;
@@ -33,7 +34,7 @@ public class PrimoSetup {
         if (validator.isParsedCaseValid()) {
             Map<String, SectionResult> parsedCaseAsMap = parsedCase.getParsedCaseAsMap();
             SectionResult inputFilePath = getInputFilePathAsSectionResult(wordDocPath);
-            parsedCaseAsMap.put("wordDocPath", inputFilePath);
+            parsedCaseAsMap.put(Keywords.WORD_DOC_PATH, inputFilePath);
             JSONObject gson = JsonObject.toParsedGson(parsedCaseAsMap);
             createFile(jsonOutputPath, gson.toJSONString());
             successfulParsing = true;
@@ -57,7 +58,7 @@ public class PrimoSetup {
 
     private SectionResult getInputFilePathAsSectionResult(String wordFileInputPath) {
         JsonObject filePath = new JsonObject();
-        filePath.addNameValuePair("path", wordFileInputPath);
+        filePath.addNameValuePair(Keywords.WORD_DOC_PATH, wordFileInputPath);
         return new SectionResult(filePath, -1);
     }
 
