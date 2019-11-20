@@ -322,9 +322,9 @@ public class ParsingValidatorTests {
 
     @Test
     public void caseWithEmptyCasePanelIsNotValid() {
-        JsonObject casePanelJson = createJsonWithEmptyArray(INTEKO);
+        JsonObject casePanelJson = createJsonWithEmptyArray(CASE_PANEL);
         SectionResult casePanelResult = new SectionResult(casePanelJson, 0);
-        parsedCase.set(INTEKO, casePanelResult);
+        parsedCase.set(CASE_PANEL, casePanelResult);
 
         ParsingValidator validator = new ParsingValidator(parsedCase);
 
@@ -336,9 +336,9 @@ public class ParsingValidatorTests {
         JsonObject panelist = createJsonWithText("title", "full name");
         JsonArray panelArray = getArrayWithSubsectionNtimes(panelist, 1);
         JsonObject casePanelJson = new JsonObject();
-        casePanelJson.addNameValuePair(INTEKO, panelArray);
+        casePanelJson.addNameValuePair(CASE_PANEL, panelArray);
         SectionResult casePanelResult = new SectionResult(casePanelJson, 0);
-        parsedCase.set(INTEKO, casePanelResult);
+        parsedCase.set(CASE_PANEL, casePanelResult);
 
         ParsingValidator validator = new ParsingValidator(parsedCase);
 
@@ -350,9 +350,9 @@ public class ParsingValidatorTests {
         JsonObject panelist = createJsonWithText("title", "full name");
         JsonArray panelArray = getArrayWithSubsectionNtimes(panelist, 2);
         JsonObject casePanelJson = new JsonObject();
-        casePanelJson.addNameValuePair(INTEKO, panelArray);
+        casePanelJson.addNameValuePair(CASE_PANEL, panelArray);
         SectionResult casePanelResult = new SectionResult(casePanelJson, 0);
-        parsedCase.set(INTEKO, casePanelResult);
+        parsedCase.set(CASE_PANEL, casePanelResult);
 
         ParsingValidator validator = new ParsingValidator(parsedCase);
 
@@ -365,9 +365,9 @@ public class ParsingValidatorTests {
         panelist.addNameValuePair("titleTwo", "full name"); // Two key/isValid pairs
         JsonArray panelArray = getArrayWithSubsectionNtimes(panelist, 2);
         JsonObject casePanelJson = new JsonObject();
-        casePanelJson.addNameValuePair(INTEKO, panelArray);
+        casePanelJson.addNameValuePair(CASE_PANEL, panelArray);
         SectionResult casePanelResult = new SectionResult(casePanelJson, 0);
-        parsedCase.set(INTEKO, casePanelResult);
+        parsedCase.set(CASE_PANEL, casePanelResult);
 
         ParsingValidator validator = new ParsingValidator(parsedCase);
 

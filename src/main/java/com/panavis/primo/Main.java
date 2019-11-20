@@ -44,10 +44,15 @@ public class Main {
     }
 
     private static String getNormalizedDocPath(String wordInputPath) {
-        String uniqueDocPath = wordInputPath.split("cases_Word/")[1];
-        String withoutBackslash = uniqueDocPath.replaceAll("/", INTER_FOLDER_DELIMITER);
-        // removes .docx
-        return withoutBackslash.substring(0, withoutBackslash.length() - 5);
+        String wordDocsParentFolder = "cases_Word";
+        String wordDocPath = "";
+        if (wordInputPath.contains(wordDocsParentFolder)) {
+            String uniqueDocPath = wordInputPath.split("cases_Word/")[1];
+            String withoutBackslash = uniqueDocPath.replaceAll("/", INTER_FOLDER_DELIMITER);
+            // removes .docx
+            wordDocPath = withoutBackslash.substring(0, withoutBackslash.length() - 5);
+        }
+        return wordDocPath;
     }
 
     private SectionResult getInputFilePathAsSectionResult(String wordFileInputPath) {

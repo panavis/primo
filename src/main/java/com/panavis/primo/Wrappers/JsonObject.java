@@ -51,7 +51,7 @@ public class JsonObject {
         org.json.simple.JSONObject subjectMatter = getSubjectMatter(parsedCase.get(SUBJECT_MATTER).getSectionContent());
         org.json.simple.JSONObject body = getBody(parsedCase.get(CASE_BODY).getSectionContent());
         org.json.simple.JSONObject closing = getCaseClosing(parsedCase.get(CASE_CLOSING).getSectionContent());
-        org.json.simple.JSONObject panel = getCasePanel(parsedCase.get(INTEKO).getSectionContent());
+        org.json.simple.JSONObject panel = getCasePanel(parsedCase.get(CASE_PANEL).getSectionContent());
         org.json.simple.JSONObject wholeCase = new org.json.simple.JSONObject();
         JSONArray caseArray = new JSONArray();
         caseArray.add(title);

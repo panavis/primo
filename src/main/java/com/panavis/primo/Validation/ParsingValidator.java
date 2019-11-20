@@ -4,6 +4,7 @@ import static com.panavis.primo.Constants.Headings.IKIREGO;
 import static com.panavis.primo.Constants.Headings.URUKIKO;
 import  static com.panavis.primo.Constants.Keywords.*;
 
+import com.panavis.primo.Constants.Keywords;
 import com.panavis.primo.Parsers.ParsedCase;
 import com.panavis.primo.Wrappers.JsonArray;
 import com.panavis.primo.Wrappers.JsonObject;
@@ -136,9 +137,9 @@ public class ParsingValidator extends Validator {
 
     public boolean isCasePanelValid() {
         boolean casePanelValid = false;
-        if (parsedCase.hasSection(INTEKO)) {
-            JsonObject casePanelJson = parsedCase.get(INTEKO).getSectionContent();
-            JsonArray panelArray = casePanelJson.getArrayByKey(INTEKO);
+        if (parsedCase.hasSection(CASE_PANEL)) {
+            JsonObject casePanelJson = parsedCase.get(CASE_PANEL).getSectionContent();
+            JsonArray panelArray = casePanelJson.getArrayByKey(CASE_PANEL);
             casePanelValid = panelArray.getSize() >= 2 && eachPanelistHasTitleAndName(panelArray);
         }
         return casePanelValid;
