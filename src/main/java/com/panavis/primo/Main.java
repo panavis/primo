@@ -20,16 +20,20 @@ public class Main {
     public boolean validCaseBody;
     public boolean validPanel;
     public boolean skippedParagraphs;
+    // 4 underscores
+    private static final String INTER_FOLDER_DELIMITER = "_" + "_" + "_" + "_";
 
     public boolean run(String wordInputPath, String jsonOutputPath) {
         boolean successfulParsing = false;
 
         ParsedCase parsedCase = getParsedCaseFromWordDoc(wordInputPath);
         ParsingValidator validator = new ParsingValidator(parsedCase);
+        String wordDocPath = getNormalizedDocPath(wordInputPath);
+
         if (validator.isParsedCaseValid()) {
             Map<String, SectionResult> parsedCaseAsMap = parsedCase.getParsedCaseAsMap();
-            SectionResult inputFilePath = getInputFilePathAsSectionResult(wordInputPath);
-            parsedCaseAsMap.put("input_file_path", inputFilePath);
+            SectionResult inputFilePath = getInputFilePathAsSectionResult(wordDocPath);
+            parsedCaseAsMap.put("wordDocPath", inputFilePath);
             JSONObject gson = JsonObject.toParsedGson(parsedCaseAsMap);
             createFile(jsonOutputPath, gson.toJSONString());
             successfulParsing = true;
@@ -37,6 +41,13 @@ public class Main {
         updateValidParsingStats(validator);
 
         return successfulParsing;
+    }
+
+    private static String getNormalizedDocPath(String wordInputPath) {
+        String uniqueDocPath = wordInputPath.split("cases_Word/")[1];
+        String withoutBackslash = uniqueDocPath.replaceAll("/", INTER_FOLDER_DELIMITER);
+        // removes .docx
+        return withoutBackslash.substring(0, withoutBackslash.length() - 5);
     }
 
     private SectionResult getInputFilePathAsSectionResult(String wordFileInputPath) {

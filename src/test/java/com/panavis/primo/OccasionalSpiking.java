@@ -12,5 +12,6 @@ public class OccasionalSpiking {
         System.out.println("valid parties: " + runner.validParties);
         System.out.println("valid subject matter: " + runner.validSubjectMatter);
         System.out.println("valid case body: " + runner.validCaseBody);
+        System.out.println("valid case panel: " + runner.validPanel);
     }
 }
