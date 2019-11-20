@@ -109,6 +109,7 @@ public class CasePartiesParser implements ICaseSectionParser {
     private void sanitizePartiesSubsections() {
         placeProsecutorInContentIfNoContent();
         combineDuplicatedHeadings();
+        jsonEscapeHeadingsAndContent();
     }
 
     private void placeProsecutorInContentIfNoContent() {
@@ -188,6 +189,9 @@ public class CasePartiesParser implements ICaseSectionParser {
         return copy;
     }
 
+    private void jsonEscapeHeadingsAndContent() {
+        this.partiesSubsections = JsonArray.escapeSubsections(this.partiesSubsections);
+    }
     private HeadingParagraphIndex findPartiesSectionHeading(int startParagraph) {
         HeadingParagraphIndex headingAndIndex = findFirstHeading(startParagraph);
         String partiesHeading = headingAndIndex.getHeadingName();

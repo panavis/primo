@@ -6,6 +6,7 @@ import com.panavis.primo.Primo;
 import com.panavis.primo.ResultTypes.SectionResult;
 import com.panavis.primo.TestsSetup;
 import com.panavis.primo.Wrappers.*;
+import org.json.JSONArray;
 
 import java.util.*;
 
@@ -33,11 +34,16 @@ class CaseTitleTestsHelpers {
     }
 
     private static void setUpExpectedCaseTitles() {
-        for (JsonObject caseFile : TestsSetup.expectedJsonContent) {
-            JsonArray caseContent =  caseFile.getArrayByKey(CASE);
-            JsonObject titleObject = caseContent.getJsonByIndex(0);
-            allExpectedCaseTitles.add(titleObject.getStringByKey(CASE_TITLE));
+        for (int i = 0; i < TestsSetup.expectedJsonContent.size(); i++) {
+            allExpectedCaseTitles.add(getExpectedCaseTitle(i));
         }
+    }
+
+    static String getExpectedCaseTitle(int caseIndex) {
+        JsonObject caseFile = TestsSetup.expectedJsonContent.get(caseIndex);
+        JsonArray caseContent =  caseFile.getArrayByKey(CASE);
+        JsonObject titleObject = caseContent.getJsonByIndex(0);
+        return titleObject.getStringByKey(CASE_TITLE);
     }
 
     static void assertActualTitleMatchesExactlyExpectedTitle(int docIndex) {

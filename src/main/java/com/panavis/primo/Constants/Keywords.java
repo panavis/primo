@@ -20,5 +20,5 @@ public class Keywords {
     public static final String RUMAZE = "rumaze";
     public static final String RUSANZE = "rusanze";
     public static final String PRE_CASE_BODY = "preCaseBody";
-    public static final String BOLD = "__bld__";
+    public static final String BOLD = "<+>";
 }

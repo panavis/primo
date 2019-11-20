@@ -1,5 +1,7 @@
 package com.panavis.primo.Utils;
 
+import org.json.simple.JSONValue;
+
 import java.util.regex.Pattern;
 
 public class StringFormatting {
@@ -89,5 +91,9 @@ public class StringFormatting {
         if (text.endsWith(PERIOD))
             text = text.substring(0, text.length() - 1).trim();
         return text;
+    }
+
+    public static  String getJsonString(String text) {
+        return JSONValue.escape(text);
     }
 }

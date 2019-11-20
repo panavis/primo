@@ -11,6 +11,13 @@ public class CaseTitleParserTests {
         CaseTitleTestsHelpers.setupActualAndExpectedCaseTitles();
     }
 
+    @Ignore
+    @Test
+    public void troubleshootOneCaseSeparately() {
+        String caseTitle = CaseTitleTestsHelpers.getExpectedCaseTitle(0);
+        System.out.println(caseTitle);
+    }
+
     @Test
     public void case_000_caseHasExpectedTitle() {
         CaseTitleTestsHelpers.assertActualTitleMatchesExactlyExpectedTitle(0);
@@ -111,12 +118,12 @@ public class CaseTitleParserTests {
     }
 
     @Test
-    public void case_20_caseHasExpectedTitle() {
+    public void case_020_caseHasExpectedTitle() {
         CaseTitleTestsHelpers.assertActualTitleMatchesExactlyExpectedTitle(20);
     }
 
     @Test
-    public void case_21_caseHasExpectedTitle() {
+    public void case_021_caseHasExpectedTitle() {
         CaseTitleTestsHelpers.assertActualTitleMatchesExactlyExpectedTitle(21);
     }
 }

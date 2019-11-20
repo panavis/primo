@@ -222,7 +222,7 @@ public class CaseParagraph extends WordParagraph {
         String paragraphText = getParagraphText(paragraphIndex);
         String[] textParts = paragraphText.split(StringFormatting.COLON);
         int numberOfParts = textParts.length;
-        String firstPart = textParts[0];
+        String firstPart = textParts.length > 0 ? textParts[0] : "";
 
         boolean colonAndCapitalizedOrBold = false;
         if (preColonPartHasStyle(paragraphIndex, numberOfParts, firstPart))

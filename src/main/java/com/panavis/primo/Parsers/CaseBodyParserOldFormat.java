@@ -35,7 +35,7 @@ public class CaseBodyParserOldFormat extends CaseBodyParser implements ICaseSect
         heading = StringFormatting.trimColonsAndSemicolons(heading);
         JsonArray sectionBody = section.getBody();
 
-        String firstParagraph = sectionBody.getStringByIndex(0);
+        String firstParagraph = sectionBody.getSize() > 0 ? sectionBody.getStringByIndex(0) : "";
         String firstWordOfParagraph = firstParagraph.split(" ")[0];
 
 

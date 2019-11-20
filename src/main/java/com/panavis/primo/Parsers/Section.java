@@ -85,7 +85,9 @@ public abstract class Section  {
         String paragraphText = caseParagraph.getParagraphText(paragraphIndex);
         int nestedPartSize = nestedHeading.length() + getNextNumbering().length();
         int paragraphSize = paragraphText.length();
-        return paragraphText.substring(0, paragraphSize - nestedPartSize + 1).trim();
+        int endIndex = paragraphSize - nestedPartSize + 1;
+        endIndex = endIndex < 0 ? paragraphSize : endIndex;
+        return paragraphText.substring(0, endIndex).trim();
     }
 
     private String getNestedHeading(int paragraphIndex) {

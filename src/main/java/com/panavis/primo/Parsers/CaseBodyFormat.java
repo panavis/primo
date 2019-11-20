@@ -32,6 +32,8 @@ public class CaseBodyFormat {
     }
 
     public Result isNewFormatCaseBody(int paragraphIndex) {
+        if (!caseParagraph.paragraphExists(paragraphIndex)) return new Result(false);
+
         if (isParagraphNewCaseBodyStart(paragraphIndex)) {
             return new Result(true, paragraphIndex);
         }

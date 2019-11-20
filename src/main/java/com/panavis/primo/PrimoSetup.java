@@ -12,7 +12,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Map;
 
-public class Main {
+public class PrimoSetup {
 
     public boolean validTitle;
     public boolean validParties;

@@ -7,7 +7,7 @@ public class OccasionalSpiking {
 
         String word = folder + "/case_000.docx";
         String json = folder + "/case_000.json";
-        Main runner = new Main();
+        PrimoSetup runner = new PrimoSetup();
         System.out.println("Success: " + runner.run(word, json));
         System.out.println("valid parties: " + runner.validParties);
         System.out.println("valid subject matter: " + runner.validSubjectMatter);

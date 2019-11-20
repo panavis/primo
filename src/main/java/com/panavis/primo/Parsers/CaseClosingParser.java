@@ -3,6 +3,7 @@ package com.panavis.primo.Parsers;
 import com.panavis.primo.Constants.Keywords;
 import com.panavis.primo.ResultTypes.SectionResult;
 import com.panavis.primo.Style.CaseParagraph;
+import com.panavis.primo.Utils.StringFormatting;
 import com.panavis.primo.Wrappers.JsonArray;
 import com.panavis.primo.Wrappers.JsonObject;
 
@@ -35,8 +36,18 @@ public class CaseClosingParser implements ICaseSectionParser{
             closingText.putValue("");
         }
         JsonObject caseClosing = new JsonObject();
-        caseClosing.addNameValuePair(Keywords.CASE_CLOSING, closingText);
+        JsonArray escapedClosingText = getEscapedClosingText(closingText);
+        caseClosing.addNameValuePair(Keywords.CASE_CLOSING, escapedClosingText);
         return new SectionResult(caseClosing, nextSectionStart);
+    }
+
+    private JsonArray getEscapedClosingText(JsonArray closingText) {
+        JsonArray escapedClosing = new JsonArray();
+        for (int i = 0; i < closingText.getSize(); i++) {
+            String paragraph = closingText.getStringByIndex(i);
+            escapedClosing.putValue(StringFormatting.getJsonString(paragraph));
+        }
+        return escapedClosing;
     }
 
     @Override
