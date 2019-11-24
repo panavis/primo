@@ -45,26 +45,6 @@ public abstract class Validator {
     public abstract boolean isCaseBodyValid();
     public abstract boolean isCasePanelValid();
 
-    public boolean getTitleParsingStatus() {
-        return validTitle;
-    }
-
-    public boolean getPartiesParsingStatus() {
-        return validParties;
-    }
-
-    public boolean getSubjectMatterParsingStatus() {
-        return validSubjectMatter;
-    }
-
-    public boolean getCaseBodyParsingStatus() {
-        return validCaseBody;
-    }
-
-    public boolean getPanelParsingStatus() {
-        return validPanel;
-    }
-
     public boolean getSkippedParagraphsStatus() {
         return skippedParagraphs;
     }

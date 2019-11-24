@@ -274,16 +274,16 @@ public class CasePanelParserTests {
     @Test
     public void case_007_secondPanelistShouldBeWriter() {
         JsonObject panelist = CasePanelParserHelpers.getActualPanelistObject(7, 1);
-        assertTrue(panelist.hasKey("UMWANDITSI W\\u2019URUKIKO"));
+        assertTrue(panelist.hasKey("UMWANDITSI W\u2019URUKIKO"));
     }
 
     @Test
     public void case_007_secondPanelistShouldHaveExpectedName() {
         JsonObject panelist = CasePanelParserHelpers.getActualPanelistObject(7, 1);
-        String actualName = panelist.getStringByKey("UMWANDITSI W\\u2019URUKIKO");
+        String actualName = panelist.getStringByKey("UMWANDITSI W\u2019URUKIKO");
 
         JsonObject expectedPanelist = CasePanelParserHelpers.getActualPanelistObject(7, 1);
-        String expectedName = expectedPanelist.getStringByKey("UMWANDITSI W\\u2019URUKIKO");
+        String expectedName = expectedPanelist.getStringByKey("UMWANDITSI W\u2019URUKIKO");
         assertEquals(expectedName, actualName);
     }
 
@@ -528,16 +528,16 @@ public class CasePanelParserTests {
     @Test
     public void case_019_fourthPanelistShouldBeWriter() {
         JsonObject panelist = CasePanelParserHelpers.getActualPanelistObject(19, 3);
-        assertTrue(panelist.hasKey("Umwanditsi w\\u2018Urukiko"));
+        assertTrue(panelist.hasKey("Umwanditsi w\u2018Urukiko"));
     }
 
     @Test
     public void case_019_fourthPanelistShouldHaveExpectedName() {
         JsonObject panelist = CasePanelParserHelpers.getActualPanelistObject(19, 3);
-        String actualName = panelist.getStringByKey("Umwanditsi w\\u2018Urukiko");
+        String actualName = panelist.getStringByKey("Umwanditsi w\u2018Urukiko");
 
         JsonObject expectedPanelist = CasePanelParserHelpers.getExpectedPanelistObject(19, 3);
-        String expectedName = expectedPanelist.getStringByKey("Umwanditsi w\\u2019Urukiko");
+        String expectedName = expectedPanelist.getStringByKey("Umwanditsi w\u2019Urukiko");
         assertEquals(expectedName, actualName);
     }
 
@@ -598,16 +598,16 @@ public class CasePanelParserTests {
     @Test
     public void case_020_fourthPanelistShouldBeWriter() {
         JsonObject panelist = CasePanelParserHelpers.getActualPanelistObject(20, 3);
-        assertTrue(panelist.hasKey("Umwanditsi w\\u2019Urukiko"));
+        assertTrue(panelist.hasKey("Umwanditsi w\u2019Urukiko"));
     }
 
     @Test
     public void case_020_fourthPanelistShouldHaveExpectedName() {
         JsonObject panelist = CasePanelParserHelpers.getActualPanelistObject(20, 3);
-        String actualName = panelist.getStringByKey("Umwanditsi w\\u2019Urukiko");
+        String actualName = panelist.getStringByKey("Umwanditsi w\u2019Urukiko");
 
         JsonObject expectedPanelist = CasePanelParserHelpers.getExpectedPanelistObject(20, 3);
-        String expectedName = expectedPanelist.getStringByKey("Umwanditsi w\\u2019Urukiko");
+        String expectedName = expectedPanelist.getStringByKey("Umwanditsi w\u2019Urukiko");
         assertEquals(expectedName, actualName);
     }
 
@@ -668,16 +668,16 @@ public class CasePanelParserTests {
     @Test
     public void case_021_fourthPanelistShouldBeWriter() {
         JsonObject panelist = CasePanelParserHelpers.getActualPanelistObject(21, 3);
-        assertTrue(panelist.hasKey("Umwanditsi w\\u2019Urukiko"));
+        assertTrue(panelist.hasKey("Umwanditsi w\u2019Urukiko"));
     }
 
     @Test
     public void case_021_fourthPanelistShouldHaveExpectedName() {
         JsonObject panelist = CasePanelParserHelpers.getActualPanelistObject(21, 3);
-        String actualName = panelist.getStringByKey("Umwanditsi w\\u2019Urukiko");
+        String actualName = panelist.getStringByKey("Umwanditsi w\u2019Urukiko");
 
         JsonObject expectedPanelist = CasePanelParserHelpers.getExpectedPanelistObject(21, 3);
-        String expectedName = expectedPanelist.getStringByKey("Umwanditsi w\\u2019Urukiko");
+        String expectedName = expectedPanelist.getStringByKey("Umwanditsi w\u2019Urukiko");
         assertEquals(expectedName, actualName);
     }
 

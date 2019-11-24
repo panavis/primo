@@ -1,10 +1,11 @@
 package com.panavis.primo;
 
-import com.panavis.primo.Constants.Keywords;
+import static com.panavis.primo.Constants.Keywords.*;
 import com.panavis.primo.Parsers.*;
 import com.panavis.primo.ResultTypes.SectionResult;
 import com.panavis.primo.Style.CaseParagraph;
 import com.panavis.primo.Validation.ParsingValidator;
+import com.panavis.primo.Wrappers.JsonArray;
 import com.panavis.primo.Wrappers.JsonObject;
 
 import org.json.simple.JSONObject;
@@ -26,22 +27,53 @@ public class PrimoSetup {
 
     public boolean run(String wordInputPath, String jsonOutputPath) {
         boolean successfulParsing = false;
+        String wordDocPath = getNormalizedDocPath(wordInputPath);
 
         ParsedCase parsedCase = getParsedCaseFromWordDoc(wordInputPath);
         ParsingValidator validator = new ParsingValidator(parsedCase);
-        String wordDocPath = getNormalizedDocPath(wordInputPath);
-
-        if (validator.isParsedCaseValid()) {
-            Map<String, SectionResult> parsedCaseAsMap = parsedCase.getParsedCaseAsMap();
-            SectionResult inputFilePath = getInputFilePathAsSectionResult(wordDocPath);
-            parsedCaseAsMap.put(Keywords.WORD_DOC_PATH, inputFilePath);
-            JSONObject gson = JsonObject.toParsedGson(parsedCaseAsMap);
-            createFile(jsonOutputPath, gson.toJSONString());
-            successfulParsing = true;
-        }
         updateValidParsingStats(validator);
 
+        if (!validator.isParsedCaseValid()) {
+            SectionResult inputFilePath = getInputFilePathAsSectionResult(wordDocPath);
+            parsedCase.set(WORD_DOC_PATH, inputFilePath);
+            Map<String, SectionResult> parsedCaseAsMap = parsedCase.getParsedCaseAsMap();
+            useEmptyStringForNonValidSections(parsedCaseAsMap);
+            String parserOutput = ParsedCase.toJsonString(parsedCaseAsMap);
+            createFile(jsonOutputPath, parserOutput);
+//            successfulParsing = true;
+        }
+
         return successfulParsing;
+    }
+
+    private void useEmptyStringForNonValidSections(Map<String, SectionResult> parsedCaseAsMap) {
+        if (!this.validTitle) {
+            JsonObject emptyTitle = new JsonObject();
+            emptyTitle.addNameValuePair(CASE_TITLE, "");
+            SectionResult newTitle = new SectionResult(emptyTitle, -1);
+            parsedCaseAsMap.put(CASE_TITLE, newTitle);
+        }
+        if (!this.validParties) {
+            parsedCaseAsMap.put(CASE_PARTIES, getEmptySectionResult(CASE_PARTIES));
+        }
+        if (!this.validSubjectMatter) {
+            parsedCaseAsMap.put(SUBJECT_MATTER, getEmptySectionResult(SUBJECT_MATTER));
+        }
+        if (!this.validCaseBody) {
+            parsedCaseAsMap.put(CASE_BODY, getEmptySectionResult(CASE_BODY));
+        }
+        if (!this.validPanel) {
+            parsedCaseAsMap.put(CASE_PANEL, getEmptySectionResult(CASE_PANEL));
+        }
+
+        parsedCaseAsMap.put(PRE_CASE_BODY, getEmptySectionResult(PRE_CASE_BODY));
+        parsedCaseAsMap.put(CASE_CLOSING, getEmptySectionResult(CASE_CLOSING));
+    }
+
+    private SectionResult getEmptySectionResult(String sectionName) {
+        JsonObject section = new JsonObject();
+        section.addNameValuePair(sectionName, new JsonArray());
+        return new SectionResult(section, -1);
     }
 
     private static String getNormalizedDocPath(String wordInputPath) {
@@ -58,16 +90,16 @@ public class PrimoSetup {
 
     private SectionResult getInputFilePathAsSectionResult(String wordFileInputPath) {
         JsonObject filePath = new JsonObject();
-        filePath.addNameValuePair(Keywords.WORD_DOC_PATH, wordFileInputPath);
+        filePath.addNameValuePair(WORD_DOC_PATH, wordFileInputPath);
         return new SectionResult(filePath, -1);
     }
 
     private void updateValidParsingStats(ParsingValidator validator) {
-        validTitle = validator.getTitleParsingStatus();
-        validParties = validator.getPartiesParsingStatus();
-        validSubjectMatter = validator.getSubjectMatterParsingStatus();
-        validCaseBody = validator.getCaseBodyParsingStatus();
-        validPanel = validator.getPanelParsingStatus();
+        validTitle = validator.isTitleValid();
+        validParties = validator.arePartiesValid();
+        validSubjectMatter = validator.isSubjectMatterValid();
+        validCaseBody = validator.isCaseBodyValid();
+        validPanel = validator.isCasePanelValid();
         skippedParagraphs = validator.getSkippedParagraphsStatus();
     }
 
