@@ -56,8 +56,8 @@ public class JsonObject {
         org.json.simple.JSONObject panel = getCasePanel(parsedCase.get(CASE_PANEL).getSectionContent());
         org.json.simple.JSONObject wholeCase = new org.json.simple.JSONObject();
         JSONArray caseArray = new JSONArray();
-        caseArray.add(wordPath);
-        caseArray.add(title);
+        caseArray.add(wordPath.toJSONString());
+        caseArray.add(title.toJSONString());
         caseArray.add(parties.toJSONString());
         caseArray.add(subjectMatter.toJSONString());
         caseArray.add(preBody.toJSONString());
