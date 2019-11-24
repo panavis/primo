@@ -36,7 +36,7 @@ public class CaseSubjectMatterParser implements ICaseSectionParser {
             updateSubsectionStartAndNumber(section, nextParagraph);
             numberOfSubsections--;
         }
-        sectionArray = JsonArray.escapeSubsections(sectionArray);
+
         sectionContent.addNameValuePair(SUBJECT_MATTER, sectionArray);
         return new SectionResult(sectionContent, nextParagraph);
     }

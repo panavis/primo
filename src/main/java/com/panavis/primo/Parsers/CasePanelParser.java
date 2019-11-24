@@ -60,25 +60,8 @@ public class CasePanelParser implements ICaseSectionParser {
             hasReachedEnding = hasReachedCaseWriter(namesAndTitles.titles) && !hasNonWriterTitlesBelow(nextParagraph);
         }
         JsonObject casePanel = new JsonObject();
-        panelArray = jsonEscapeText(panelArray);
         casePanel.addNameValuePair(CASE_PANEL, panelArray);
         return new SectionResult(casePanel, 0);
-    }
-
-    private JsonArray jsonEscapeText(JsonArray panelArray) {
-        JsonArray escapedPanel = new JsonArray();
-        for (int i = 0; i < panelArray.getSize(); i++) {
-            JsonObject panelist = panelArray.getJsonByIndex(i);
-            String title = (String) panelist.getKeys().toArray()[0];
-            String name = panelist.getStringByKey(title);
-            JsonObject escapedPanelist = new JsonObject();
-            escapedPanelist.addNameValuePair(
-                    StringFormatting.getJsonString(title),
-                    StringFormatting.getJsonString(name)
-            );
-            escapedPanel.putValue(escapedPanelist);
-        }
-        return escapedPanel;
     }
 
     private int getFirstParagraphOfPanelSection(int startParagraph) {

@@ -36,18 +36,8 @@ public class CaseClosingParser implements ICaseSectionParser{
             closingText.putValue("");
         }
         JsonObject caseClosing = new JsonObject();
-        JsonArray escapedClosingText = getEscapedClosingText(closingText);
-        caseClosing.addNameValuePair(Keywords.CASE_CLOSING, escapedClosingText);
+        caseClosing.addNameValuePair(Keywords.CASE_CLOSING, closingText);
         return new SectionResult(caseClosing, nextSectionStart);
-    }
-
-    private JsonArray getEscapedClosingText(JsonArray closingText) {
-        JsonArray escapedClosing = new JsonArray();
-        for (int i = 0; i < closingText.getSize(); i++) {
-            String paragraph = closingText.getStringByIndex(i);
-            escapedClosing.putValue(StringFormatting.getJsonString(paragraph));
-        }
-        return escapedClosing;
     }
 
     @Override

@@ -105,8 +105,7 @@ abstract class CaseBodyParser {
 
     private JsonObject getCaseBody() {
         JsonObject caseBody = new JsonObject();
-        JsonArray escapedSubsections = JsonArray.escapeSubsections(getBodySubsections());
-        caseBody.addNameValuePair(Keywords.CASE_BODY, escapedSubsections);
+        caseBody.addNameValuePair(Keywords.CASE_BODY, getBodySubsections());
         return caseBody;
     }
 

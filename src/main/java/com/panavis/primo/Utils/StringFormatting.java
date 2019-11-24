@@ -92,8 +92,4 @@ public class StringFormatting {
             text = text.substring(0, text.length() - 1).trim();
         return text;
     }
-
-    public static  String getJsonString(String text) {
-        return JSONValue.escape(text);
-    }
 }

@@ -50,6 +50,7 @@ public class JsonObject {
         org.json.simple.JSONObject title = getTitle(parsedCase.get(CASE_TITLE).getSectionContent());
         org.json.simple.JSONObject parties = getParties(parsedCase.get(CASE_PARTIES).getSectionContent());
         org.json.simple.JSONObject subjectMatter = getSubjectMatter(parsedCase.get(SUBJECT_MATTER).getSectionContent());
+        org.json.simple.JSONObject preBody = getPreBody(parsedCase.get(PRE_CASE_BODY).getSectionContent());
         org.json.simple.JSONObject body = getBody(parsedCase.get(CASE_BODY).getSectionContent());
         org.json.simple.JSONObject closing = getCaseClosing(parsedCase.get(CASE_CLOSING).getSectionContent());
         org.json.simple.JSONObject panel = getCasePanel(parsedCase.get(CASE_PANEL).getSectionContent());
@@ -57,11 +58,12 @@ public class JsonObject {
         JSONArray caseArray = new JSONArray();
         caseArray.add(wordPath);
         caseArray.add(title);
-        caseArray.add(parties);
-        caseArray.add(subjectMatter);
-        caseArray.add(body);
-        caseArray.add(closing);
-        caseArray.add(panel);
+        caseArray.add(parties.toJSONString());
+        caseArray.add(subjectMatter.toJSONString());
+        caseArray.add(preBody.toJSONString());
+        caseArray.add(body.toJSONString());
+        caseArray.add(closing.toJSONString());
+        caseArray.add(panel.toJSONString());
         wholeCase.put(CASE, caseArray);
         return wholeCase;
     }
@@ -87,6 +89,9 @@ public class JsonObject {
 
     private static org.json.simple.JSONObject getSubjectMatter(JsonObject subjectMatter) {
         return JsonObject.getGsonObject(subjectMatter);
+    }
+    private static org.json.simple.JSONObject getPreBody(JsonObject preBody) {
+        return JsonObject.getGsonObject(preBody);
     }
 
     private static org.json.simple.JSONObject getBody(JsonObject body) {
