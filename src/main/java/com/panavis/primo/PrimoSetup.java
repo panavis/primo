@@ -34,12 +34,12 @@ public class PrimoSetup {
         updateValidParsingStats(validator);
 
         if (!validator.isParsedCaseValid()) {
-            Map<String, SectionResult> parsedCaseAsMap = parsedCase.getParsedCaseAsMap();
             SectionResult inputFilePath = getInputFilePathAsSectionResult(wordDocPath);
-            parsedCaseAsMap.put(WORD_DOC_PATH, inputFilePath);
+            parsedCase.set(WORD_DOC_PATH, inputFilePath);
+            Map<String, SectionResult> parsedCaseAsMap = parsedCase.getParsedCaseAsMap();
             useEmptyStringForNonValidSections(parsedCaseAsMap);
-            JSONObject gson = JsonObject.toParsedGson(parsedCaseAsMap);
-            createFile(jsonOutputPath, gson.toJSONString());
+            String parserOutput = ParsedCase.toJsonString(parsedCaseAsMap);
+            createFile(jsonOutputPath, parserOutput);
 //            successfulParsing = true;
         }
 
